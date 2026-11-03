@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import {
   checkBackendHealth,
   getSisStats,
@@ -236,9 +237,12 @@ export function useDashboardLogic() {
   const [activeModule, setActiveModule] = useState<ActiveModule>("dashboard");
   const [activeRole, setActiveRole] = useState<RoleType>("SuperAdmin");
   const [currentSchool, setCurrentSchool] = useState({
-    name: "Ravindra English Medium High School",
-    code: "RAV",
+    name: "My Class Assist Campus",
+    code: "MCA",
   });
+
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
 
   // EduPulse UI States
   const [searchQuery, setSearchQuery] = useState("");
@@ -292,10 +296,51 @@ export function useDashboardLogic() {
       }
     }
 
+    if (typeof window !== "undefined") {
+      const storedName = window.sessionStorage.getItem("erp_user_name");
+      const email = window.sessionStorage.getItem("erp_user_email") || "";
+      setUserEmail(email);
+      if (storedName) {
+        setUserName(storedName);
+      } else if (email === "hariharunsince92@gmail.com") {
+        setUserName("Hari Haran");
+      } else if (email) {
+        const rawName = email.split("@")[0].replace(/[._-]/g, " ");
+        setUserName(rawName.charAt(0).toUpperCase() + rawName.slice(1));
+      }
+    }
+
+    // Always fetch latest Supabase Auth display name
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const meta = { ...user.app_metadata, ...user.user_metadata };
+        const name = meta.full_name || meta.display_name || meta.name || (user.email === "hariharunsince92@gmail.com" ? "Hari Haran" : "");
+        if (name) {
+          setUserName(name);
+          if (typeof window !== "undefined") {
+            window.sessionStorage.setItem("erp_user_name", name);
+          }
+        }
+      }
+    }).catch(() => {});
+
     const schoolCodeParam = searchParams.get("schoolCode");
     const targetCode = schoolCodeParam || (typeof window !== "undefined" ? window.sessionStorage.getItem("erp_school_code") : null);
+    const storedSchoolName = typeof window !== "undefined" ? window.sessionStorage.getItem("erp_school_name") : null;
 
-    if (targetCode) {
+    if (targetCode === "ALL" || roleParam === "SuperAdmin") {
+      setCurrentSchool({
+        name: "My Class Assist Multi-Campus Group",
+        code: "ALL",
+      });
+    } else if (targetCode && storedSchoolName) {
+      setCurrentSchool({
+        name: storedSchoolName,
+        code: targetCode,
+      });
+    }
+
+    if (targetCode && targetCode !== "ALL") {
       getSchoolByCode(targetCode)
         .then(({ school }) => {
           setCurrentSchool({
@@ -316,13 +361,7 @@ export function useDashboardLogic() {
 
       const hour = now.getHours();
       const timeOfDay = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
-      if (activeRole === "Principal") {
-        setGreeting(`${timeOfDay}, Principal`);
-      } else if (activeRole === "SuperAdmin") {
-        setGreeting(`${timeOfDay}, Super Administrator`);
-      } else {
-        setGreeting(`${timeOfDay}, ${activeRole}`);
-      }
+      setGreeting(timeOfDay);
     };
 
     updateTime();
@@ -487,5 +526,6 @@ export function useDashboardLogic() {
     activeDetailModule, setActiveDetailModule,
     toasts, addToast,
     currentTime, currentDate, greeting,
+    userName, userEmail,
   };
 }

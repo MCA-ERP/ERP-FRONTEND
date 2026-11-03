@@ -7,15 +7,15 @@ import {
   Building2,
   GraduationCap,
   UserCheck,
-  CreditCard,
   Bus,
   Utensils,
   Boxes,
   BookOpen,
   Bed,
-  ShieldCheck,
+  Settings,
   MessageSquare,
   Box,
+  Store,
 } from "lucide-react";
 
 interface ModuleIconProps {
@@ -37,11 +37,11 @@ export function ModuleIcon({ name, className = "w-6 h-6", size = 24 }: ModuleIco
     case "user-check":
       return <UserCheck className={className} size={size} />;
     case "credit-card":
-      return <CreditCard className={className} size={size} />;
+      return <span style={{ fontSize: size * 0.95, fontWeight: 800, lineHeight: 1 }}>₹</span>;
     case "bus":
       return <Bus className={className} size={size} />;
     case "utensils":
-      return <Utensils className={className} size={size} />;
+      return <Store className={className} size={size} /> || <Utensils className={className} size={size} />;
     case "boxes":
       return <Boxes className={className} size={size} />;
     case "book-open":
@@ -49,7 +49,8 @@ export function ModuleIcon({ name, className = "w-6 h-6", size = 24 }: ModuleIco
     case "bed":
       return <Bed className={className} size={size} />;
     case "shield-check":
-      return <ShieldCheck className={className} size={size} />;
+    case "admin":
+      return <Settings className={className} size={size} />;
     case "message-square":
       return <MessageSquare className={className} size={size} />;
     default:

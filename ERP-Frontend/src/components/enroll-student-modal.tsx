@@ -16,8 +16,8 @@ export function EnrollStudentModal({
   isOpen,
   onClose,
   onStudentEnrolled,
-  schoolName = "Ravindra English Medium High School",
-  schoolCode = "RAV",
+  schoolName = "My Class Assist Campus",
+  schoolCode = "MCA",
   existingCount = 0,
 }: EnrollStudentModalProps) {
   const [firstName, setFirstName] = useState("");
@@ -39,7 +39,7 @@ export function EnrollStudentModal({
   if (!isOpen) return null;
 
   // Formula: [First 3 letters of School in uppercase] + ST + [001, 002...]
-  const schoolPrefix = (schoolCode || schoolName.replace(/[^a-zA-Z]/g, "").substring(0, 3) || "RAV").toUpperCase();
+  const schoolPrefix = (schoolCode || schoolName.replace(/[^a-zA-Z]/g, "").substring(0, 3) || "MCA").toUpperCase();
   const nextSeq = String(existingCount + 1).padStart(3, "0");
   const previewStudentId = `${schoolPrefix}ST${nextSeq}`;
 

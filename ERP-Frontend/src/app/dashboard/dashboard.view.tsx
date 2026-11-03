@@ -1,6 +1,8 @@
 "use client";
 
 import { Suspense, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import LogoutButton from "@/components/logout";
 import { EnrollStudentModal } from "@/components/enroll-student-modal";
 import { RegisterSchoolModal } from "@/components/register-school-modal";
@@ -55,6 +57,22 @@ export default function DashboardView() {
   );
 }
 
+const MODULE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  employee: { bg: "#FEF3C7", text: "#D97706", border: "#FDE68A" },
+  organization: { bg: "#EFF6FF", text: "#2563EB", border: "#BFDBFE" },
+  campus: { bg: "#FEF3C7", text: "#B45309", border: "#FDE68A" },
+  class: { bg: "#E0F2FE", text: "#0284C7", border: "#BAE6FD" },
+  "front-office": { bg: "#FFEDD5", text: "#EA580C", border: "#FED7AA" },
+  fee: { bg: "#E0F2FE", text: "#0284C7", border: "#BAE6FD" },
+  fleet: { bg: "#FEF9C3", text: "#CA8A04", border: "#FEF08A" },
+  cafeteria: { bg: "#FFE4E6", text: "#E11D48", border: "#FECDD3" },
+  inventory: { bg: "#FEF08A", text: "#854D0E", border: "#FDE047" },
+  library: { bg: "#EDE9FE", text: "#7C3AED", border: "#DDD6FE" },
+  hostel: { bg: "#F3E8FF", text: "#9333EA", border: "#E9D5FF" },
+  admin: { bg: "#CFFAFE", text: "#0891B2", border: "#A5F3FC" },
+  communication: { bg: "#DBEAFE", text: "#2563EB", border: "#BFDBFE" },
+};
+
 // ── Inner dashboard component ──────────────────────────────────
 function DashboardContent() {
   const {
@@ -90,6 +108,7 @@ function DashboardContent() {
     activeDetailModule, setActiveDetailModule,
     toasts, addToast,
     currentTime, currentDate, greeting,
+    userName, userEmail,
   } = useDashboardLogic();
 
   const isOnline = backendHealth.status === "healthy" || backendHealth.status === "ok";
@@ -178,31 +197,39 @@ function DashboardContent() {
 
           {/* Left Brand Area */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#0294CE] to-[#1E40AF] flex items-center justify-center text-white shadow-lg shadow-[#0294CE]/20 font-extrabold text-lg select-none shrink-0">
-              {isSuperAdmin ? "🌐" : "🏫"}
-            </div>
+            <Link href="/dashboard" className="flex items-center shrink-0" aria-label="MCA Dashboard">
+              <Image
+                src="/mca-logo.svg"
+                alt="MCA Logo"
+                width={100}
+                height={56}
+                priority
+                style={{ width: "auto", height: "36px" }}
+              />
+            </Link>
+            <div className="h-7 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white leading-tight">
-                  {isSuperAdmin ? "My Class Assist Group Administration" : currentSchool.name}
+                  {isSuperAdmin ? "My Class Assist Multi-Campus ERP" : currentSchool.name}
                 </span>
                 <span className="font-mono text-[11px] font-extrabold px-2 py-0.5 rounded-md bg-[#0294CE]/10 text-[#0294CE] dark:text-sky-300 border border-[#0294CE]/20">
-                  {isSuperAdmin ? "SUPERADMIN" : currentSchool.code}
+                  {isSuperAdmin ? "erp.myclassassist.in" : "sch.myclassassist.in"}
                 </span>
               </div>
               <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2 mt-0.5">
                 {isSuperAdmin ? (
                   <>
-                    <span>Multi-Campus Trust Network</span>
+                    <span>Enterprise Group Console</span>
                     <span>•</span>
                     <span className="text-[#0294CE] font-semibold">{schools.length} Affiliated Institutions</span>
                   </>
                 ) : (
                   <>
-                    <span>Session 2024–2025</span>
+                    <span>Campus Code: <strong className="text-[#0A7F5B]">{currentSchool.code}</strong></span>
                     <span>•</span>
                     <span className="text-sky-600 dark:text-sky-400 font-semibold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0A7F5B] animate-pulse" />
                       Active Campus Portal
                     </span>
                   </>
@@ -316,10 +343,10 @@ function DashboardContent() {
               />
               <div className="hidden sm:block text-left">
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-none">
-                  {isPrincipal ? "Dr. R. K. Sharma" : "Super Administrator"}
+                  {userName || (isPrincipal ? "Campus Principal" : "Super Administrator")}
                 </div>
-                <div className="text-[11px] font-semibold text-[#0294CE] dark:text-sky-400 mt-1">
-                  {isPrincipal ? "Principal Desk" : "Group Super Admin"}
+                <div className="text-[11px] font-semibold text-[#0294CE] dark:text-sky-400 mt-1 max-w-[150px] truncate">
+                  {userEmail || (isPrincipal ? "Principal Desk" : "Group Super Admin")}
                 </div>
               </div>
             </div>
@@ -459,38 +486,64 @@ function DashboardContent() {
         {/* ── DASHBOARD VIEW (Differentiated by Role) ─────────── */}
         {activeModule === "dashboard" && (
           <>
-            {/* Welcome Banner with Dynamic Clock */}
-            <section className="glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-glass border border-white/80 dark:border-slate-800">
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            {/* Welcome Banner with Dynamic Clock (Clean - No below matter in the box) */}
+            <section className="glass-panel rounded-3xl p-6 sm:p-7 relative overflow-hidden shadow-glass border border-white/80 dark:border-slate-800">
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0294CE]/10 text-[#0294CE] dark:text-sky-400 text-xs font-bold mb-3">
-                    <span className="w-2 h-2 rounded-full bg-[#0294CE] animate-ping" />
-                    {isSuperAdmin ? "Group Trust Administration Active" : `Principal Console Active: ${currentSchool.name}`}
-                  </div>
-                  <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                    {greeting}
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                    {greeting}{" "}
+                    <span className="text-[#0294CE]">
+                      {userName || (isSuperAdmin ? "Super Administrator" : "Principal")}
+                    </span>
                   </h1>
-                  <p className="text-slate-500 dark:text-slate-400 mt-1.5 text-sm sm:text-base max-w-xl">
-                    {isSuperAdmin
-                      ? "Multi-Campus Trust Command Center. Monitor registered schools, audit global fee revenues, and configure group governance."
-                      : `Welcome to the Executive Principal Console for ${currentSchool.name}. Monitor daily student attendance, faculty duty rosters, live timetable schedules, and campus collections.`}
-                  </p>
                 </div>
 
                 {/* Live Clock & Date Badge */}
-                <div className="bg-white/80 dark:bg-slate-900/80 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-sm flex items-center gap-4 shrink-0">
-                  <div className="p-3 rounded-2xl bg-[#0294CE]/10 text-[#0294CE]">
-                    <Clock className="w-6 h-6" />
+                <div className="bg-white/90 dark:bg-slate-900/90 rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm flex items-center gap-3.5 shrink-0 self-start sm:self-auto">
+                  <div className="p-2.5 rounded-xl bg-[#0294CE]/10 text-[#0294CE]">
+                    <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight font-mono">
+                    <div className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight font-mono leading-none">
                       {currentTime}
                     </div>
-                    <div className="text-xs font-semibold text-[#0294CE] dark:text-sky-400 mt-0.5">
+                    <div className="text-xs font-semibold text-[#0294CE] dark:text-sky-400 mt-1">
                       {currentDate}
                     </div>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            {/* ── EDMATIX STYLE ICON LAUNCHER GRID (Image 2) ── */}
+            <section className="glass-panel rounded-3xl p-6 sm:p-8 shadow-glass border border-white/80 dark:border-slate-800">
+              <div className="flex flex-wrap items-start justify-center gap-6 sm:gap-8 lg:gap-10 py-3">
+                {ENTERPRISE_MODULES.map((mod) => {
+                  const style = MODULE_STYLES[mod.id] || { bg: "#F1F5F9", text: "#0294CE", border: "#E2E8F0" };
+                  return (
+                    <button
+                      key={mod.id}
+                      type="button"
+                      onClick={() => handleLaunchConsole(mod)}
+                      className="group flex flex-col items-center text-center focus:outline-none transition-transform hover:-translate-y-1.5 duration-200"
+                      style={{ width: "88px" }}
+                    >
+                      <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2.5 shadow-sm border transition-all duration-300 group-hover:scale-110 group-hover:shadow-md"
+                        style={{
+                          backgroundColor: style.bg,
+                          color: style.text,
+                          borderColor: style.border,
+                        }}
+                      >
+                        <ModuleIcon name={mod.icon} size={30} className="w-7 h-7" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 group-hover:text-[#0294CE] transition-colors leading-tight">
+                        {mod.title}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </section>
 
@@ -499,23 +552,35 @@ function DashboardContent() {
               <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="glass-panel p-4 rounded-2xl border border-sky-200 dark:border-emerald-900/40 bg-sky-50/40 dark:bg-sky-950/20">
                   <span className="text-[11px] font-bold uppercase text-sky-700 dark:text-emerald-300">Today&apos;s Attendance</span>
-                  <div className="text-2xl font-extrabold text-sky-800 dark:text-emerald-200 mt-0.5">96.4%</div>
-                  <p className="text-xs text-sky-600 mt-0.5">1,205 Present • 45 Absent</p>
+                  <div className="text-2xl font-extrabold text-sky-800 dark:text-emerald-200 mt-0.5">
+                    {stats.attendanceRate || "—"}
+                  </div>
+                  <p className="text-xs text-sky-600 mt-0.5">
+                    {students.length ? `${students.length} Enrolled Students` : "Live Campus Attendance"}
+                  </p>
                 </div>
                 <div className="glass-panel p-4 rounded-2xl border border-sky-200 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-950/20">
                   <span className="text-[11px] font-bold uppercase text-sky-700 dark:text-sky-300">Faculty On-Duty</span>
-                  <div className="text-2xl font-extrabold text-sky-800 dark:text-sky-200 mt-0.5">42 / 46</div>
-                  <p className="text-xs text-sky-600 mt-0.5">4 On Leave • 2 Substitutions Set</p>
+                  <div className="text-2xl font-extrabold text-sky-800 dark:text-sky-200 mt-0.5">
+                    {stats.totalFaculty ? `${stats.totalFaculty} Active` : "Active Staff"}
+                  </div>
+                  <p className="text-xs text-sky-600 mt-0.5">
+                    {stats.totalDepartments ? `${stats.totalDepartments} Departments` : "Faculty Roster"}
+                  </p>
                 </div>
                 <div className="glass-panel p-4 rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/20">
-                  <span className="text-[11px] font-bold uppercase text-blue-700 dark:text-blue-300">Today&apos;s Collections</span>
-                  <div className="text-2xl font-extrabold text-blue-800 dark:text-blue-200 mt-0.5">₹ 1.84 L</div>
+                  <span className="text-[11px] font-bold uppercase text-blue-700 dark:text-blue-300">Fee Accounts</span>
+                  <div className="text-2xl font-extrabold text-blue-800 dark:text-blue-200 mt-0.5">
+                    {students.length ? `${students.length} Active` : "Fee Ledger"}
+                  </div>
                   <p className="text-xs text-blue-600 mt-0.5">Counter & Online Fee Inflows</p>
                 </div>
                 <div className="glass-panel p-4 rounded-2xl border border-purple-200 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-950/20">
                   <span className="text-[11px] font-bold uppercase text-purple-700 dark:text-purple-300">Class Schedule</span>
-                  <div className="text-2xl font-extrabold text-purple-800 dark:text-purple-200 mt-0.5">Period 4</div>
-                  <p className="text-xs text-purple-600 mt-0.5">Science & Computer Lab Active</p>
+                  <div className="text-2xl font-extrabold text-purple-800 dark:text-purple-200 mt-0.5">
+                    {timetable.length ? `${timetable.length} Classes` : "Academic Roster"}
+                  </div>
+                  <p className="text-xs text-purple-600 mt-0.5">Active Academic Timetable</p>
                 </div>
               </section>
             )}
@@ -573,133 +638,7 @@ function DashboardContent() {
               </section>
             )}
 
-            {/* Category Tab Navigation */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("all")}
-                className={`category-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 ${
-                  selectedCategory === "all"
-                    ? "bg-[#0294CE] text-white shadow-lg shadow-[#0294CE]/25"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 border border-slate-200 dark:border-slate-800"
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" /> All Modules ({ENTERPRISE_MODULES.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("Academic")}
-                className={`category-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 ${
-                  selectedCategory === "Academic"
-                    ? "bg-[#0294CE] text-white shadow-lg shadow-[#0294CE]/25"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 border border-slate-200 dark:border-slate-800"
-                }`}
-              >
-                <GraduationCap className="w-3.5 h-3.5 text-[#0EA5E9]" /> Academic & Life
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("Operations")}
-                className={`category-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 ${
-                  selectedCategory === "Operations"
-                    ? "bg-[#0294CE] text-white shadow-lg shadow-[#0294CE]/25"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 border border-slate-200 dark:border-slate-800"
-                }`}
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-[#0294CE]" /> Operations
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("Services")}
-                className={`category-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 ${
-                  selectedCategory === "Services"
-                    ? "bg-[#0294CE] text-white shadow-lg shadow-[#0294CE]/25"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 border border-slate-200 dark:border-slate-800"
-                }`}
-              >
-                <Wrench className="w-3.5 h-3.5 text-[#E53A35]" /> Services & Logistics
-              </button>
-            </div>
 
-            {/* Module Cards Grid */}
-            <section>
-              {displayedModules.length === 0 ? (
-                <div className="text-center py-16 glass-panel rounded-3xl">
-                  <SearchX className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">No matching modules found</h3>
-                  <p className="text-xs text-slate-500 mt-1">Try searching for terms like &quot;Fee&quot;, &quot;Class&quot;, &quot;Fleet&quot;, or &quot;Library&quot;</p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedCategory("all");
-                    }}
-                    className="mt-4 px-4 py-2 bg-[#0294CE] text-white font-semibold text-xs rounded-xl shadow-md"
-                  >
-                    Reset Search
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-                  {displayedModules.map((mod) => {
-                    const isRedBadge = mod.badgeType === "red";
-                    const badgeBg = isRedBadge
-                      ? "bg-[#E53A35]/10 text-[#E53A35]"
-                      : "bg-[#0EA5E9]/10 text-[#0EA5E9] dark:text-sky-400";
-
-                    return (
-                      <div
-                        key={mod.id}
-                        onClick={() => setActiveDetailModule(mod)}
-                        className={`glass-panel card-top-indicator ${
-                          isRedBadge ? "alert-card" : ""
-                        } rounded-2xl p-5 flex flex-col justify-between cursor-pointer group hover:-translate-y-1.5 transition-all duration-300 shadow-glass hover:shadow-glass-hover border border-white/80 dark:border-slate-800/80 relative`}
-                      >
-                        <div>
-                          {/* Top Row: Badge & Arrow */}
-                          <div className="flex items-center justify-between gap-2 mb-3">
-                            <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${badgeBg} truncate`}>
-                              {mod.badge}
-                            </span>
-                            <ArrowUpRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-[#0294CE] transition-colors" />
-                          </div>
-
-                          {/* Center Icon */}
-                          <div
-                            className="w-12 h-12 rounded-2xl flex items-center justify-center my-2 transition-all duration-300 group-hover:scale-110 shadow-sm"
-                            style={{
-                              backgroundColor: isRedBadge ? "#E53A3515" : "#0294CE15",
-                              color: isRedBadge ? "#E53A35" : "#0294CE",
-                            }}
-                          >
-                            <ModuleIcon name={mod.icon} className="w-6 h-6" />
-                          </div>
-
-                          {/* Card Titles */}
-                          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base group-hover:text-[#0294CE] transition-colors">
-                            {mod.title}
-                          </h3>
-                          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mb-2">
-                            {mod.subtitle}
-                          </p>
-
-                          {/* Description Snippet */}
-                          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                            {mod.description}
-                          </p>
-                        </div>
-
-                        {/* Bottom Action Link */}
-                        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-[#0294CE]">
-                          <span>Access Portal</span>
-                          <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
 
             {/* Quick Stats Widgets Row */}
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -713,10 +652,10 @@ function DashboardContent() {
                     {isPrincipal ? "Enrolled Students" : "Total Network Students"}
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
-                    {stats.totalStudents ? stats.totalStudents.toLocaleString() : "1,250"}
+                    {stats.totalStudents ? stats.totalStudents.toLocaleString() : (students.length || "0")}
                   </div>
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0EA5E9] dark:text-sky-400">
-                    <TrendingUp className="w-3 h-3" /> {stats.attendanceRate || "96.4%"} Attendance
+                    <TrendingUp className="w-3 h-3" /> {stats.attendanceRate || "Active SIS"}
                   </span>
                 </div>
               </div>
@@ -729,10 +668,10 @@ function DashboardContent() {
                 <div>
                   <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Faculty Present</div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
-                    {stats.totalFaculty ? `${stats.totalFaculty} Teachers` : "42 / 46"}
+                    {stats.totalFaculty ? `${stats.totalFaculty} Teachers` : "0 Staff"}
                   </div>
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0294CE]">
-                    <CheckCircle className="w-3 h-3" /> 96.8% Duty Rate
+                    <CheckCircle className="w-3 h-3" /> Duty Roster
                   </span>
                 </div>
               </div>

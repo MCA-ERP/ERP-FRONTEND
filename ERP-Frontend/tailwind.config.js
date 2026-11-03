@@ -8,27 +8,52 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'Arial', 'sans-serif'],
+      },
       colors: {
+        // Official MCA Brand Guidelines Palette
+        mca: {
+          green: '#0A7F5B',        // Growth Green (Letter M)
+          'green-deep': '#065740', // Deep Green
+          'green-mint': '#D9EFE8', // Mint tint
+          'green-light': '#D9EFE8',
+          blue: '#0294CE',         // Class Blue (Lead UI color, Letter C)
+          'blue-sky': '#DCEFF9',   // Sky tint
+          'blue-tint': '#41AFDA',  // 25% tint
+          'blue-soft': '#81CAE7',  // 50% tint
+          'blue-shade': '#026F9B', // 25% shade
+          'blue-dark': '#014A67',  // Deep shade
+          'blue-deep': '#012534',
+          red: '#E53A35',          // Assist Red (Call to Action CTA, Letter A)
+          'red-blush': '#FCE0DF',  // Blush tint
+          'red-hover': '#AC2C28',  // Deep red hover
+          ink: '#111827',          // Ink (Text neutral)
+          cloud: '#F3F5F7',        // Cloud (Card/Neutral bg)
+        },
         brand: {
-          sky: '#0EA5E9',
-          'sky-light': '#0EA5E915',
-          'sky-hover': '#0284C7',
-          'sky-dark': '#0369A1',
-          blue: '#3B82F6',
-          'blue-hover': '#2563EB',
-          'blue-light': '#3B82F615',
+          sky: '#0294CE',
+          'sky-light': '#DCEFF9',
+          'sky-hover': '#026F9B',
+          'sky-dark': '#014A67',
+          blue: '#0294CE',
+          'blue-hover': '#026F9B',
+          'blue-light': '#DCEFF9',
           red: '#E53A35',
-          'red-hover': '#c82824',
-          'red-light': '#E53A3515',
-          cyan: '#06B6D4',
-          'cyan-light': '#06B6D415',
+          'red-hover': '#AC2C28',
+          'red-light': '#FCE0DF',
+          green: '#0A7F5B',
+          'green-light': '#D9EFE8',
+          cyan: '#0294CE',
+          'cyan-light': '#DCEFF9',
         }
       },
       boxShadow: {
-        'glass': '0 10px 30px -5px rgba(14, 165, 233, 0.08), 0 0 15px -3px rgba(59, 130, 246, 0.05)',
-        'glass-hover': '0 20px 40px -10px rgba(14, 165, 233, 0.2), 0 0 20px -3px rgba(59, 130, 246, 0.1)',
-        'glow-sky': '0 0 20px rgba(14, 165, 233, 0.35)',
-        'glow-blue': '0 0 20px rgba(59, 130, 246, 0.35)',
+        'glass': '0 10px 30px -5px rgba(2, 148, 206, 0.08), 0 0 15px -3px rgba(10, 127, 91, 0.05)',
+        'glass-hover': '0 20px 40px -10px rgba(2, 148, 206, 0.2), 0 0 20px -3px rgba(2, 148, 206, 0.1)',
+        'glow-sky': '0 0 20px rgba(2, 148, 206, 0.35)',
+        'glow-blue': '0 0 20px rgba(2, 148, 206, 0.35)',
+        'glow-red': '0 0 20px rgba(229, 58, 53, 0.35)',
       }
     },
   },

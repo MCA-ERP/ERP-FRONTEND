@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 190" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&amp;display=swap');
+      .brand-char {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        font-weight: 800;
+        fill: #FFFFFF;
+        text-anchor: middle;
+        dominant-baseline: central;
+      }
+      .brand-title {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        fill: #111827;
+      }
+    </style>
+  </defs>
+
+  <!-- White Pill Container -->
+  <rect x="6" y="6" width="328" height="178" rx="28" fill="#FFFFFF" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.08))" />
+
+  <!-- M Box - Growth Green #0A7F5B -->
+  <rect x="32" y="28" width="82" height="82" rx="14" fill="#0A7F5B" />
+  <text x="73" y="70" font-size="50" class="brand-char">M</text>
+
+  <!-- C Box - Class Blue #0294CE -->
+  <rect x="122" y="28" width="82" height="82" rx="14" fill="#0294CE" />
+  <text x="163" y="70" font-size="50" class="brand-char">C</text>
+
+  <!-- A Box - Assist Red #E53A35 -->
+  <rect x="212" y="28" width="82" height="82" rx="14" fill="#E53A35" />
+  <text x="253" y="70" font-size="50" class="brand-char">A</text>
+  
+  <!-- Growth Arrow on A Box -->
+  <path d="M 276 18 L 302 18 L 302 44 L 294 44 L 294 31 L 275 50 L 269 44 L 288 25 L 276 25 Z" fill="#E53A35" />
+
+  <!-- Subtitle Text: MY CLASS ASSIST -->
+  <text x="170" y="142" font-size="20" class="brand-title" text-anchor="middle">MY CLASS ASSIST</text>
+</svg>
+

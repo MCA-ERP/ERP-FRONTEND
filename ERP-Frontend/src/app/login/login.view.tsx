@@ -1,336 +1,223 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { Eye, EyeOff, Check, ArrowRight, ShieldCheck, Building2 } from "lucide-react";
 import styles from "./login.module.scss";
-import { useLoginLogic, LoginRole } from "./login.logic";
+import { useLoginLogic } from "./login.logic";
 
 /**
- * Login View — pure JSX/HTML.
- * Blue & White Enterprise Theme (Reference: MyClassBoard MCB & Edmatix ERP).
- * On login page: Generic Enterprise Portal.
- * School details appear AFTER login on the dashboard.
+ * MCA Educational ERP — Enterprise Login View
+ * Strictly authenticated & verified users only.
+ * 70% White / Light Neutral Hero Canvas & 30% Class Blue Portal Panel.
  */
 export default function LoginView() {
   const {
-    loginMode, setLoginMode,
-    schoolCode,
-    userId, setUserId,
-    handleSchoolCodeChange,
-    handleQuickSchoolSelect,
-    selectedRole, setSelectedRole,
-    verifiedSchool,
-    isVerifyingSchool,
-    enterWithSchoolCode,
-    email, setEmail,
-    password, setPassword,
+    portalType,
+    setPortalType,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    showPassword,
+    setShowPassword,
     isCheckingSession,
     isSubmitting,
-    feedback, feedbackType,
-    signIn, signUp,
+    feedback,
+    feedbackType,
+    handleLogin,
   } = useLoginLogic();
 
   if (isCheckingSession) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}>
-          <span className={styles.spinIcon} />
-          Checking secure session...
-        </div>
+      <div className={styles.loadingState}>
+        <div className={styles.spinner} />
+        <span>Verifying secure enterprise session...</span>
       </div>
     );
   }
 
   return (
     <main className={styles.root}>
-
-      {/* ── Left Hero Panel (Blue & White Enterprise Branding) ────── */}
-      <section className={styles.hero}>
-        <span className={`${styles.glow} ${styles.glowBottom}`} />
-        <span className={`${styles.glow} ${styles.glowTop}`} />
-
-        <Link href="/login" className={styles.brand}>
-          <div className={styles.brandLogo}>
-            M
-          </div>
-          <div>
-            <span className={styles.brandName}>My Class Assist</span>
-            <span className={styles.brandSub}>Enterprise Campus Cloud</span>
-          </div>
-        </Link>
-
-        <div className={styles.heroContent}>
-          <div className={styles.heroBadge}>
-            <span />
-            SECURE CAMPUS CLOUD ERP
-          </div>
-          <h1 className={styles.heroTitle}>
-            Empowering modern
-            <span>campus operations.</span>
-          </h1>
-          <p className={styles.heroDesc}>
-            Unified academic administration, admissions CRM, fee ledgers, and student tracking in one intelligent platform.
-          </p>
-
-          <div className={styles.avatarRow}>
-            <div className={styles.avatars}>
-              {["P", "F", "S", "A"].map((initial) => (
-                <span key={initial}>{initial}</span>
-              ))}
-            </div>
-            <p className={styles.avatarText}>
-              <strong>Multi-Campus Management</strong>
-              <br />
-              Principals • Faculty • Students • Parents
-            </p>
-          </div>
+      {/* ── Left Column: 70% White Canvas (MCA Logo, Educational System Illustration) ── */}
+      <section className={styles.leftCanvas}>
+        {/* Top: Official MCA Brand Logo */}
+        <div className={styles.logoArea}>
+          <Link href="/login" className={styles.brandLogoLink} aria-label="My Class Assist Home">
+            <Image
+              src="/mca-logo.svg"
+              alt="My Class Assist Logo"
+              width={180}
+              height={100}
+              priority
+              style={{ width: "auto", height: "64px" }}
+            />
+          </Link>
         </div>
 
-        <p className={styles.heroFooter}>
-          © {new Date().getFullYear()} My Class Assist Enterprise Portal. All rights reserved.
-        </p>
+        {/* Center: Educational Vector Illustration & System Title */}
+        <div className={styles.illustrationArea}>
+          <Image
+            src="/login-illustration.svg"
+            alt="Educational Management System Illustration"
+            width={540}
+            height={400}
+            priority
+            className={styles.illustrationImg}
+          />
+          <h2 className={styles.systemTitle}>Educational Management System</h2>
+          <p className={styles.systemSub}>Unified Academic Administration, Multi-Campus &amp; Student Information System</p>
+        </div>
+
+        {/* Bottom Left: Enterprise Security & Brand Tag */}
+        <div className={styles.leftFooter}>
+          <span>MCA Cloud Campus • Multi-Tenant Institutional Platform</span>
+          <span>© {new Date().getFullYear()} My Class Assist</span>
+        </div>
       </section>
 
-      {/* ── Right Form Panel (Crisp White Card & Blue Accents) ────── */}
-      <section className={styles.formPanel}>
-        <div className={styles.formWrap}>
-
-          {/* Mobile brand */}
-          <div className={styles.mobileBrand}>
-            <Link href="/login" style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}>
-              <div style={{
-                width: "2.75rem", height: "2.75rem", borderRadius: "0.75rem",
-                background: "linear-gradient(135deg, #2563eb, #38bdf8)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: 800, fontSize: "1.25rem",
-              }}>
-                M
-              </div>
-              <div>
-                <span style={{ display: "block", fontWeight: 800, fontSize: "1.1rem", color: "#0f172a", lineHeight: 1.2 }}>
-                  My Class Assist
-                </span>
-                <span style={{ display: "block", fontSize: "0.72rem", color: "#2563eb", fontWeight: 600 }}>
-                  Campus Cloud Portal
-                </span>
-              </div>
-            </Link>
+      {/* ── Right Column: 30% Class Blue (#0294CE) Authentication Panel ── */}
+      <section className={styles.rightColumn}>
+        <div className={styles.formWrapper}>
+          {/* Header */}
+          <div className={styles.headerBox}>
+            <h1 className={styles.welcomeHeading}>Welcome !</h1>
+            <p className={styles.welcomeSub}>Sign in to your account</p>
           </div>
 
-          <div className={styles.card}>
-            {/* Header */}
-            <div className={styles.cardHeader}>
-              <p>Institutional Portal</p>
-              <h2>Sign in to Campus ERP</h2>
-              <small>
-                Enter your institution&apos;s Organization Code or sign in with your account credentials.
-              </small>
+          {/* Portal Switcher (SuperAdmin ERP vs School Campus) */}
+          <div className={styles.portalTabs} role="tablist" aria-label="Select ERP Portal">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={portalType === "SuperAdmin"}
+              className={`${styles.portalTab} ${portalType === "SuperAdmin" ? styles.portalTabActive : ""}`}
+              onClick={() => setPortalType("SuperAdmin")}
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}>
+                <ShieldCheck size={15} /> SuperAdmin ERP
+              </span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={portalType === "School"}
+              className={`${styles.portalTab} ${portalType === "School" ? styles.portalTabActive : ""}`}
+              onClick={() => setPortalType("School")}
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}>
+                <Building2 size={15} /> School Campus
+              </span>
+            </button>
+          </div>
+
+          {/* Form with Unique Email & Password (Strictly Verified Authentication) */}
+          <form onSubmit={handleLogin} className={styles.loginForm} noValidate>
+            {/* Email Field */}
+            <div className={styles.inputGroup}>
+              <label htmlFor="user-email" className={styles.inputLabel}>
+                {portalType === "SuperAdmin" ? "SuperAdmin Email" : "Institutional User Email"}
+              </label>
+              <input
+                id="user-email"
+                type="email"
+                autoComplete="email"
+                required
+                disabled={isSubmitting}
+                placeholder={
+                  portalType === "SuperAdmin"
+                    ? "Enter administrator email"
+                    : "Enter your registered school email"
+                }
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={styles.inputField}
+              />
             </div>
 
-            {/* Login Mode Switcher */}
-            <div className={styles.loginTabs}>
-              <button
-                type="button"
-                className={`${styles.tabBtn} ${loginMode === "schoolCode" ? styles.tabBtnActive : ""}`}
-                onClick={() => setLoginMode("schoolCode")}
-              >
-                🏢 Org / School Code Access
-              </button>
-              <button
-                type="button"
-                className={`${styles.tabBtn} ${loginMode === "credentials" ? styles.tabBtnActive : ""}`}
-                onClick={() => setLoginMode("credentials")}
-              >
-                ✉️ Email Sign-In
-              </button>
-            </div>
-
-            {/* TAB 1: School Code / Org Code Access (Edmatix & MCB pattern) */}
-            {loginMode === "schoolCode" && (
-              <form onSubmit={enterWithSchoolCode} className={styles.form}>
-                <div className={styles.field}>
-                  <label htmlFor="login-school-code">
-                    Institution / Organization Code (Org Code)
-                    <span style={{ fontSize: "0.75rem", fontWeight: 400, color: "#64748b", marginLeft: "0.35rem" }}>
-                      {selectedRole === "SuperAdmin" ? "— Optional for Multi-Campus Admin" : "— e.g. RAV for Ravindra High School"}
-                    </span>
-                  </label>
-                  <input
-                    id="login-school-code"
-                    type="text"
-                    placeholder={selectedRole === "SuperAdmin" ? "Optional: Enter Org Code or leave blank for all campuses" : "Enter Org Code (e.g. RAV)"}
-                    value={schoolCode}
-                    onChange={(e) => handleSchoolCodeChange(e.target.value)}
-                    required={selectedRole !== "SuperAdmin"}
-                    maxLength={10}
-                    className={`${styles.input} ${styles.schoolCodeInput}`}
-                  />
-                  <div className={styles.quickSelectRow}>
-                    <span style={{ fontSize: "0.72rem", color: "#64748b" }}>Quick demo:</span>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickSchoolSelect("RAV")}
-                      className={styles.quickPill}
-                    >
-                      🏫 Fill &apos;RAV&apos; (Ravindra High School)
-                    </button>
-                  </div>
-                </div>
-
-                {isVerifyingSchool && (
-                  <p style={{ fontSize: "0.75rem", color: "#2563eb", fontWeight: 600 }}>Verifying institution code...</p>
-                )}
-
-                {/* Institution Verified Box in Blue & White */}
-                {verifiedSchool && (
-                  <div className={styles.verifiedBadge}>
-                    <span style={{ fontSize: "1rem" }}>✓</span>
-                    <div>
-                      <strong style={{ display: "block", color: "#1e40af" }}>{verifiedSchool.name}</strong>
-                      <span style={{ display: "block", fontSize: "0.72rem", color: "#2563eb" }}>
-                        Verified Org Code: {verifiedSchool.code} • {verifiedSchool.type || "High School"}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* User ID / Roll Number (Edmatix / MCB style) */}
-                <div className={styles.field}>
-                  <label htmlFor="login-user-id">User ID / Admission No (Optional)</label>
-                  <input
-                    id="login-user-id"
-                    type="text"
-                    placeholder="e.g. RAVST001 or Employee ID"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-
-                {/* Role Selection */}
-                <div className={styles.field}>
-                  <label htmlFor="login-role-select">Access Portal As</label>
-                  <select
-                    id="login-role-select"
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value as LoginRole)}
-                    className={styles.input}
-                    style={{ fontWeight: 600, color: "#1e293b" }}
-                  >
-                    <option value="Principal">School Principal (Campus Head)</option>
-                    <option value="SuperAdmin">Trust Super Admin (Multi-Campus Group)</option>
-                    <option value="Registrar">Registrar / Administrative Officer</option>
-                    <option value="Faculty">Teacher / Faculty</option>
-                    <option value="Student">Student Portal</option>
-                    <option value="Parent">Parent Portal</option>
-                  </select>
-                </div>
-
-                {feedback && (
-                  <p
-                    role="status"
-                    aria-live="polite"
-                    className={`${styles.feedback} ${feedbackType === "error" ? styles.error : styles.success}`}
-                  >
-                    {feedback}
-                  </p>
-                )}
-
-                <button type="submit" disabled={isSubmitting} className={styles.submitBtn}>
-                  {isSubmitting
-                    ? "Validating & Authenticating..."
-                    : `Access Portal as ${
-                        selectedRole === "SuperAdmin"
-                          ? "Trust Super Admin"
-                          : selectedRole === "Principal"
-                          ? "School Principal"
-                          : selectedRole
-                      }`}
-                  {!isSubmitting && (
-                    <svg viewBox="0 0 20 20" fill="none" style={{ width: "1.1rem", height: "1.1rem" }} aria-hidden="true">
-                      <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </button>
-              </form>
-            )}
-
-            {/* TAB 2: Email & Password */}
-            {loginMode === "credentials" && (
-              <>
-                <form onSubmit={signIn} className={styles.form}>
-                  <div className={styles.field}>
-                    <label htmlFor="login-email">Email address</label>
-                    <input
-                      id="login-email"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@school.edu"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className={styles.input}
-                    />
-                  </div>
-
-                  <div className={styles.field}>
-                    <label htmlFor="login-password">Password</label>
-                    <input
-                      id="login-password"
-                      type="password"
-                      autoComplete="current-password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className={styles.input}
-                    />
-                  </div>
-
-                  {feedback && (
-                    <p
-                      role="status"
-                      aria-live="polite"
-                      className={`${styles.feedback} ${feedbackType === "error" ? styles.error : styles.success}`}
-                    >
-                      {feedback}
-                    </p>
-                  )}
-
-                  <button type="submit" disabled={isSubmitting} className={styles.submitBtn}>
-                    {isSubmitting ? "Signing in..." : "Sign in to Console"}
-                    {!isSubmitting && (
-                      <svg viewBox="0 0 20 20" fill="none" style={{ width: "1.1rem", height: "1.1rem" }} aria-hidden="true">
-                        <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </button>
-                </form>
-
-                {/* Divider + Sign-up */}
-                <div className={styles.divider}>
-                  <span />
-                  <p>New to Campus ERP?</p>
-                  <span />
-                </div>
-
+            {/* Password Field with Eye Toggle */}
+            <div className={styles.inputGroup}>
+              <label htmlFor="user-password" className={styles.inputLabel}>
+                Password
+              </label>
+              <div className={styles.passwordWrap}>
+                <input
+                  id="user-password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  disabled={isSubmitting}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`${styles.inputField} ${styles.passwordInput}`}
+                />
                 <button
                   type="button"
-                  onClick={signUp}
-                  disabled={isSubmitting || !email || !password}
-                  className={styles.secondaryBtn}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={styles.eyeButton}
+                  tabIndex={-1}
                 >
-                  {isSubmitting ? "Please wait..." : "Create an Account"}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
-              </>
+              </div>
+            </div>
+
+            {/* Feedback Alert */}
+            {feedback && (
+              <div
+                role="alert"
+                className={`${styles.feedbackMsg} ${feedbackType === "error" ? styles.error : styles.success}`}
+              >
+                {feedback}
+              </div>
             )}
 
-            <p className={styles.legalText}>
-              By continuing, you agree to your educational group&apos;s terms of service and privacy policy.
-            </p>
+            {/* CTA Button: 10% Accent (Assist Red #E53A35) */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={styles.loginBtn}
+            >
+              {isSubmitting ? (
+                "Signing In..."
+              ) : (
+                <>
+                  <span>
+                    {portalType === "SuperAdmin" ? "Login to SuperAdmin ERP" : "Login to School Portal"}
+                  </span>
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Technical Assistance Block */}
+          <div className={styles.assistanceSection}>
+            <h3 className={styles.assistanceHeader}>FOR TECHNICAL ASSISTANCE</h3>
+            <ul className={styles.assistanceList}>
+              <li className={styles.assistanceItem}>
+                <Check size={16} className={styles.checkIcon} />
+                <span>Contact - 18002003022 / 07674999569</span>
+              </li>
+              <li className={styles.assistanceItem}>
+                <Check size={16} className={styles.checkIcon} />
+                <span>(From 9:30am to 6:30pm)</span>
+              </li>
+              <li className={styles.assistanceItem}>
+                <Check size={16} className={styles.checkIcon} />
+                <span>Drop an E-mail to - techsupport@gmail.com</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </section>
 
+        {/* Bottom Right: Powered By */}
+        <div className={styles.poweredBy}>
+          <span>Powered by <strong>My Class Assist</strong></span>
+        </div>
+      </section>
     </main>
   );
 }

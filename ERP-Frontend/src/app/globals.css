@@ -2,151 +2,166 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --color-primary: #0EA5E9;
-  --color-primary-hover: #0284C7;
-  --color-primary-dark: #0369A1;
-  --color-primary-light: rgba(14, 165, 233, 0.12);
-  --color-secondary: #3B82F6;
-  --color-secondary-light: rgba(59, 130, 246, 0.10);
-  --color-accent: #06B6D4;
-  --color-bg: #F0F9FF;
-  --color-surface: #FFFFFF;
-  --color-border: rgba(14, 165, 233, 0.18);
+  /* MCA Brand Guidelines Primary Palette */
+  --color-class-blue: #0294CE;
+  --color-growth-green: #0A7F5B;
+  --color-assist-red: #E53A35;
+
+  /* Neutrals & Secondary */
+  --color-deep-green: #065740;
+  --color-mint: #D9EFE8;
+  --color-sky: #DCEFF9;
+  --color-blush: #FCE0DF;
+  --color-ink: #111827;
+  --color-cloud: #F3F5F7;
+
+  /* UI Tokens aligned with 60-30-10 Rule */
+  /* 60% Whites & Neutrals */
+  --color-bg: #FFFFFF;
+  --color-surface: #F3F5F7;
+  --color-border: #E5E7EB;
+
+  /* 30% Class Blue (Headers, Navigation, Panels) */
+  --color-primary: #0294CE;
+  --color-primary-hover: #026F9B;
+  --color-primary-light: #DCEFF9;
+
+  /* 10% Accents: Red (CTA) & Green (Success) */
+  --color-cta: #E53A35;
+  --color-cta-hover: #AC2C28;
+  --color-success: #0A7F5B;
+  --color-success-light: #D9EFE8;
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background-color: var(--color-bg);
-  color: #0F172A;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* --- Sky Blue Glass Panel --- */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(14, 165, 233, 0.18);
+/* ── Brand Typography Hierarchy (Guidelines Page 9) ── */
+h1, .h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(14, 165, 233, 0.12);
+h2, .h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-/* --- Card Top Accent Bar (Sky Blue) --- */
-.card-top-indicator {
-  position: relative;
-  overflow: hidden;
-}
-
-.card-top-indicator::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3.5px;
-  background: linear-gradient(90deg, #0EA5E9, #3B82F6);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.card-top-indicator.alert-card::before {
-  background: linear-gradient(90deg, #E53A35, #0EA5E9);
-}
-
-.card-top-indicator:hover::before {
-  opacity: 1;
-}
-
-/* --- Sky Blue Button --- */
-.btn-primary {
-  background: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%);
-  color: white;
-  border: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%);
-  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
-  transform: translateY(-1px);
-}
-
-/* --- Sky Blue Sidebar Highlight --- */
-.sidebar-active {
-  background: linear-gradient(90deg, rgba(14, 165, 233, 0.15), rgba(59, 130, 246, 0.08));
-  border-left: 3px solid #0EA5E9;
-  color: #0284C7;
+h3, h4, .subheading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 600;
 }
 
-/* --- Sky Blue Input Focus --- */
+/* ── 60-30-10 Visual Elements ── */
+/* 10% Accent CTA Button (Assist Red) */
+.btn-cta, .btn-primary {
+  background-color: var(--color-cta);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(229, 58, 53, 0.28);
+}
+
+.btn-cta:hover, .btn-primary:hover {
+  background-color: var(--color-cta-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(229, 58, 53, 0.38);
+}
+
+/* 30% Lead Blue Button / Pill */
+.btn-blue {
+  background-color: var(--color-class-blue);
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-blue:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Glass & Card Panels */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(2, 148, 206, 0.15);
+}
+
+/* Active Sidebar Navigation (Class Blue) */
+.sidebar-active {
+  background: var(--color-sky);
+  border-left: 3px solid var(--color-class-blue);
+  color: var(--color-class-blue);
+  font-weight: 700;
+}
+
+/* Input Focus (Class Blue outline) */
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: #0EA5E9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+  border-color: var(--color-class-blue);
+  box-shadow: 0 0 0 3px rgba(2, 148, 206, 0.2);
 }
 
-/* --- Sky Badge --- */
-.badge-sky {
-  background: rgba(14, 165, 233, 0.12);
-  color: #0284C7;
-  border: 1px solid rgba(14, 165, 233, 0.25);
+/* Status Badges */
+.badge-green {
+  background: var(--color-mint);
+  color: var(--color-deep-green);
+  border: 1px solid rgba(10, 127, 91, 0.25);
   border-radius: 9999px;
-  padding: 2px 10px;
+  padding: 3px 10px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* --- Scrollbar --- */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.badge-blue {
+  background: var(--color-sky);
+  color: var(--color-class-blue);
+  border: 1px solid rgba(2, 148, 206, 0.25);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
+.badge-red {
+  background: var(--color-blush);
+  color: var(--color-assist-red);
+  border: 1px solid rgba(229, 58, 53, 0.25);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F0F9FF;
+  background: var(--color-cloud);
 }
 ::-webkit-scrollbar-thumb {
-  background: #BAE6FD;
+  background: var(--color-sky);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0EA5E9;
-}
-
-/* --- Toast Animation --- */
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-.toast-enter {
-  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* --- Sky Gradient Hero/Header --- */
-.sky-gradient {
-  background: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 50%, #EFF6FF 100%);
-}
-
-/* --- Glow effect --- */
-.glow-sky {
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.30);
+  background: var(--color-class-blue);
 }

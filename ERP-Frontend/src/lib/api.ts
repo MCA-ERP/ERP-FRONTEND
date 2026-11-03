@@ -1,6 +1,6 @@
 import { supabase } from "./supabase/client";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 const HEALTH_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000/health";
 
 export interface BackendHealth {
@@ -45,7 +45,7 @@ export interface TimetableSlot {
   faculty: string;
 }
 
-async function getAuthHeaders(): Promise<HeadersInit> {
+export async function getAuthHeaders(): Promise<HeadersInit> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
@@ -60,6 +60,38 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   }
 
   return headers;
+}
+
+export interface ServerUser {
+  id: string;
+  email: string;
+  role: string;
+  roleDisplayName?: string;
+  institutionId?: string;
+  campusId?: string;
+  /** Module codes the school may use; empty for SuperAdmin (who bypasses module checks). */
+  modules?: string[];
+}
+
+/**
+ * Resolve the signed-in user's ERP role from the backend (source of truth).
+ */
+export async function fetchServerUser(accessToken: string): Promise<ServerUser> {
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/auth/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    });
+  } catch {
+    throw new Error("Cannot reach the ERP backend. Please try again shortly.");
+  }
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Access denied (${res.status}).`);
+  }
+  const data = await res.json();
+  return data.user as ServerUser;
 }
 
 export async function checkBackendHealth(): Promise<BackendHealth> {
@@ -127,11 +159,7 @@ export async function getTimetable(): Promise<TimetableSlot[]> {
     const data = await res.json();
     return data.schedule || [];
   } catch {
-    return [
-      { day: "Monday", time: "09:00 - 10:00", subject: "English Literature", code: "ENG10", room: "Room 102", faculty: "Mrs. S. Sharma" },
-      { day: "Monday", time: "10:15 - 11:15", subject: "Mathematics & Algebra", code: "MTH10", room: "Room 104", faculty: "Mr. R. Verma" },
-      { day: "Monday", time: "11:30 - 12:30", subject: "Physical Science", code: "SCI10", room: "Science Lab", faculty: "Dr. A. Rao" },
-    ];
+    return [];
   }
 }
 
@@ -178,52 +206,19 @@ export interface SchoolRecord {
 export async function enrollStudent(
   payload: StudentEnrollmentPayload
 ): Promise<{ success: boolean; message: string; student: StudentRecord }> {
-  try {
-    const headers = await getAuthHeaders();
-    const res = await fetch(`${API_BASE}/sis/students`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-    });
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/sis/students`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `Server responded with ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch {
-    // Graceful offline fallback: Generate Student ID matching user's exact formula
-    const schoolPrefix = (
-      payload.school_code ||
-      payload.school_name?.replace(/[^a-zA-Z]/g, "").substring(0, 3) ||
-      "RAV"
-    ).toUpperCase();
-    const roleCode = "ST";
-    const randomSeq = String(Math.floor(Math.random() * 899) + 100);
-    const generatedStudentId = payload.registration_no || `${schoolPrefix}${roleCode}00${randomSeq.substring(0, 1)}`;
-
-    const fallbackRecord: StudentRecord = {
-      id: `std-${Date.now()}`,
-      registration_no: generatedStudentId,
-      roll_no: payload.roll_no || `R-${randomSeq}`,
-      name: `${payload.first_name} ${payload.last_name}`.trim(),
-      email: payload.email || `${generatedStudentId.toLowerCase()}@${schoolPrefix.toLowerCase()}.edu`,
-      program: `${payload.grade || "Class 10"} (Section ${payload.section || "A"})`,
-      department: "High School Division",
-      semester: parseInt(payload.grade?.replace(/[^0-9]/g, "") || "10"),
-      status: "Enrolled",
-      cgpa: "Pending",
-      attendance: "100%",
-    };
-
-    return {
-      success: true,
-      message: `Student enrolled successfully with Student ID: ${generatedStudentId}`,
-      student: fallbackRecord,
-    };
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || `Server responded with ${res.status}`);
   }
+
+  return await res.json();
 }
 
 /**
@@ -231,13 +226,12 @@ export async function enrollStudent(
  */
 export async function getAllSchools(): Promise<{ schools: SchoolRecord[] }> {
   try {
-    const res = await fetch(`${API_BASE}/institution/all`, { cache: "no-store" });
+    const headers = await getAuthHeaders();
+    const res = await fetch(`${API_BASE}/institution/all`, { headers, cache: "no-store" });
     if (!res.ok) throw new Error("Failed to fetch schools");
     return await res.json();
   } catch {
-    return {
-      schools: [],
-    };
+    return { schools: [] };
   }
 }
 
@@ -245,41 +239,20 @@ export async function getAllSchools(): Promise<{ schools: SchoolRecord[] }> {
  * SuperAdmin register new school
  */
 export async function registerSchool(schoolData: Partial<SchoolRecord>): Promise<{ success: boolean; school: SchoolRecord }> {
-  try {
-    const res = await fetch(`${API_BASE}/institution/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(schoolData),
-    });
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/institution/register`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(schoolData),
+  });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || `Failed with status ${res.status}`);
-    }
-
-    const data = await res.json();
-    return { success: true, school: data.school };
-  } catch {
-    const schoolCode = (
-      schoolData.code ||
-      schoolData.name?.replace(/[^a-zA-Z]/g, "").substring(0, 3) ||
-      "SCH"
-    ).toUpperCase();
-
-    return {
-      success: true,
-      school: {
-        id: `sch-${Date.now()}`,
-        name: schoolData.name || "New School",
-        code: schoolCode,
-        type: schoolData.type || "High School",
-        contact_email: schoolData.contact_email,
-        contact_phone: schoolData.contact_phone,
-        city: schoolData.city,
-        student_count: 0,
-      },
-    };
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Failed with status ${res.status}`);
   }
+
+  const data = await res.json();
+  return { success: true, school: data.school };
 }
 
 /**
@@ -297,22 +270,6 @@ export async function getSchoolByCode(code: string): Promise<{ school: SchoolRec
     }
     return await res.json();
   } catch (e: unknown) {
-    if (upper === "RAV" || upper === "REMHS01") {
-      return {
-        school: {
-          id: "sch-1",
-          code: "RAV",
-          name: "Ravindra English Medium High School",
-          type: "High School",
-          contact_email: "contact@myclassassist.in",
-          contact_phone: "+91-9876543210",
-          city: "Bangalore",
-          student_count: 1250,
-          faculty_count: 48,
-          is_active: true,
-        },
-      };
-    }
     throw new Error(e instanceof Error ? e.message : `School code '${upper}' not found.`);
   }
 }

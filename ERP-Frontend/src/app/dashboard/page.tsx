@@ -1,3 +1,6 @@
-// page.tsx — Next.js App Router entry point for /dashboard
-// All logic → dashboard.logic.ts  |  All JSX → dashboard.view.tsx  |  All styles → dashboard.module.scss
-export { default } from "./dashboard.view";
+import { redirect } from "next/navigation";
+
+/** The old demo dashboard has been replaced by the school portal. */
+export default function LegacyDashboard() {
+  redirect("/school");
+}

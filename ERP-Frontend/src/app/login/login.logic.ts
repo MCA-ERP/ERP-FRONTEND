@@ -4,7 +4,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { fetchServerUser } from "@/lib/api";
+import { API_BASE, fetchServerUser, homePathFor } from "@/lib/api";
+
+const DEVICE_KEY = "mca_trusted_device";
+const readDeviceToken = (): string | undefined => {
+  try { return window.localStorage.getItem(DEVICE_KEY) ?? undefined; } catch { return undefined; }
+};
+const writeDeviceToken = (t: string) => {
+  try { window.localStorage.setItem(DEVICE_KEY, t); } catch { /* the code will simply be asked for again next time */ }
+};
 
 export type UserRole = "SuperAdmin" | "Principal" | "Registrar" | "Faculty" | "Student" | "Parent";
 export type PortalType = "SuperAdmin" | "School";
@@ -16,6 +24,8 @@ export interface VerifiedUserProfile {
   role: UserRole;
   schoolCode: string;
   schoolName: string;
+  mustChangePassword: boolean;
+  home: string;
 }
 
 /**
@@ -39,6 +49,10 @@ export function useLoginLogic() {
   // States
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState<"signin" | "forgot" | "code">("signin");
+  const [challenge, setChallenge] = useState<{ id: string; channel: string; sentTo: string } | null>(null);
+  const [code, setCode] = useState("");
+  const [trustDevice, setTrustDevice] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState<"error" | "success">("error");
 
@@ -75,6 +89,11 @@ export function useLoginLogic() {
     };
 
     verifyActiveSession();
+    // arriving after signing out
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("signedout") === "1") {
+      setFeedback("You've signed out.");
+      setFeedbackType("success");
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
@@ -138,6 +157,8 @@ export function useLoginLogic() {
       role,
       schoolCode,
       schoolName,
+      mustChangePassword: serverUser.mustChangePassword === true,
+      home: homePathFor(serverUser),
     };
   };
 
@@ -163,18 +184,18 @@ export function useLoginLogic() {
           return;
         }
         if (profile.role !== "SuperAdmin" && schoolDashboardUrl && !window.location.href.startsWith(schoolDashboardUrl)) {
-          window.location.href = `${schoolDashboardUrl}/dashboard`;
+          window.location.href = `${schoolDashboardUrl}/school`;
           return;
         }
       }
     }
 
-    if (profile.role === "SuperAdmin") {
-      router.replace("/admin");
+    if (profile.mustChangePassword) {
+      router.replace("/change-password");
       return;
     }
 
-    router.replace(`/dashboard?role=${encodeURIComponent(profile.role)}&schoolCode=${encodeURIComponent(profile.schoolCode)}`);
+    router.replace(profile.home);
   };
 
   // ── 5. Strict User Sign-In Handler ────────────────────────────────────
@@ -189,9 +210,10 @@ export function useLoginLogic() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(cleanEmail)) {
-      setFeedback("Please enter a valid email address format.");
+    // an email, or a student's registration number
+    const looksValid = cleanEmail.includes("@") ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) : /^[a-z0-9._-]{3,60}$/.test(cleanEmail);
+    if (!looksValid) {
+      setFeedback("Please enter a valid email address (students can use their registration number).");
       setFeedbackType("error");
       return;
     }
@@ -203,51 +225,17 @@ export function useLoginLogic() {
     }
 
     setIsSubmitting(true);
-
     try {
-      // Authenticate strictly with Supabase Auth
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password,
-      });
-
-      if (error) {
-        let message = error.message;
-        if (error.message.includes("Invalid login credentials")) {
-          message = "Invalid email or password. Please verify your credentials and try again.";
-        } else if (error.message.includes("Email not confirmed")) {
-          message = "Your email address has not been verified yet. Please check your inbox and verify your email to access the ERP.";
-        } else if (error.message.includes("Too many requests")) {
-          message = "Too many failed attempts. Please wait a few moments before trying again.";
-        }
-
-        setFeedback(message);
-        setFeedbackType("error");
+      const body = await postLogin("/auth/login", { email: cleanEmail, password, deviceToken: readDeviceToken() });
+      if (!body) return;
+      if (body.code_required) {
+        setChallenge({ id: body.challenge_id, channel: body.channel, sentTo: body.sent_to });
+        setCode("");
+        setStep("code");
+        setFeedback("");
         return;
       }
-
-      if (!data?.user) {
-        setFeedback("Authentication failed: User account not found.");
-        setFeedbackType("error");
-        return;
-      }
-
-      if (!isUserVerified(data.user)) {
-        setFeedback("Your account requires email confirmation before you can sign in.");
-        setFeedbackType("error");
-        await supabase.auth.signOut();
-        return;
-      }
-
-      setFeedbackType("success");
-      setFeedback(`Verified! Accessing ${portalType === "SuperAdmin" ? "Trust SuperAdmin ERP" : "School Campus"}...`);
-
-      const profile = await resolveUserProfile(data.user, data.session.access_token);
-      if (!profile) {
-        await supabase.auth.signOut();
-        return;
-      }
-      persistAndRedirect(profile);
+      await completeSignIn(body);
     } catch (err) {
       setFeedback(err instanceof Error ? err.message : "An unexpected network error occurred. Please try again.");
       setFeedbackType("error");
@@ -256,7 +244,128 @@ export function useLoginLogic() {
     }
   };
 
+  /** Posts to the backend; returns the reply, or null after showing why it failed. */
+  const postLogin = async (path: string, payload: Record<string, unknown>) => {
+    let reply: Response;
+    try {
+      reply = await fetch(`${API_BASE}${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    } catch {
+      setFeedback("Cannot reach the ERP backend. Check your connection and try again.");
+      setFeedbackType("error");
+      return null;
+    }
+    const body = await reply.json().catch(() => ({}));
+    if (!reply.ok) {
+      let message: string = body.error || "Sign-in failed.";
+      if (/email not confirmed/i.test(message)) message = "Your email address has not been verified yet. Please check your inbox and verify your email to access the ERP.";
+      else if (reply.status === 429 && !body.error) message = "Too many sign-in attempts. Please wait a few minutes before trying again.";
+      setFeedback(message);
+      setFeedbackType("error");
+      return null;
+    }
+    return body;
+  };
+
+  /** The backend approved the sign-in: give the session to the Supabase client and go to the right portal. */
+  const completeSignIn = async (body: { token: string; refreshToken: string }) => {
+    const { data, error } = await supabase.auth.setSession({ access_token: body.token, refresh_token: body.refreshToken });
+    if (error || !data.session) {
+      setFeedback(error?.message ?? "Could not start your session. Please try again.");
+      setFeedbackType("error");
+      return;
+    }
+    if (!data?.user) {
+      setFeedback("Authentication failed: User account not found.");
+      setFeedbackType("error");
+      return;
+    }
+    if (!isUserVerified(data.user)) {
+      setFeedback("Your account requires email confirmation before you can sign in.");
+      setFeedbackType("error");
+      await supabase.auth.signOut();
+      return;
+    }
+    setFeedbackType("success");
+    setFeedback("Signed in. Opening your portal…");
+    const profile = await resolveUserProfile(data.user, data.session.access_token);
+    if (!profile) {
+      await supabase.auth.signOut();
+      return;
+    }
+    persistAndRedirect(profile);
+  };
+
+  // ── Step two: the code sent to the person's phone ─────────────────────
+  const handleVerify = async (e: FormEvent) => {
+    e.preventDefault();
+    setFeedback("");
+    if (!/^\d{6}$/.test(code)) {
+      setFeedback("Enter all 6 digits of the code.");
+      setFeedbackType("error");
+      return;
+    }
+    if (!challenge) return;
+    setIsSubmitting(true);
+    try {
+      const body = await postLogin("/auth/login/verify", { email: email.toLowerCase().trim(), password, challenge_id: challenge.id, code, trust_device: trustDevice });
+      if (!body) return;
+      if (body.deviceToken) writeDeviceToken(body.deviceToken);
+      await completeSignIn(body);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setFeedback("");
+    setIsSubmitting(true);
+    try {
+      const body = await postLogin("/auth/login", { email: email.toLowerCase().trim(), password });
+      if (body?.code_required) {
+        setChallenge({ id: body.challenge_id, channel: body.channel, sentTo: body.sent_to });
+        setCode("");
+        setFeedbackType("success");
+        setFeedback("A new code was sent.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ── Forgot password: email a reset link ───────────────────────────────
+  const handleForgot = async (e: FormEvent) => {
+    e.preventDefault();
+    setFeedback("");
+    const clean = email.toLowerCase().trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) {
+      setFeedback("Enter a valid email address.");
+      setFeedbackType("error");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await supabase.auth.resetPasswordForEmail(clean, { redirectTo: `${window.location.origin}/change-password` });
+    } catch {
+      /* the answer below is the same either way, so the page never reveals whether an account exists */
+    } finally {
+      setIsSubmitting(false);
+    }
+    setFeedback(`If ${clean} has an account, a reset link is on its way.`);
+    setFeedbackType("success");
+    setStep("signin");
+  };
+
   return {
+    step,
+    setStep: (s: "signin" | "forgot" | "code") => { setStep(s); setFeedback(""); if (s === "signin") { setCode(""); setChallenge(null); setPassword(""); } },
+    challenge,
+    code,
+    setCode,
+    trustDevice,
+    setTrustDevice,
+    handleVerify,
+    handleResend,
+    handleForgot,
     portalType,
     setPortalType,
     email,

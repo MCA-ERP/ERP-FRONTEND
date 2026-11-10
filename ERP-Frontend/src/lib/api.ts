@@ -34,6 +34,7 @@ export interface StudentRecord {
   status: string;
   cgpa?: string;
   attendance?: string;
+  guardian?: { name: string; phone: string; relation: string };
 }
 
 export interface TimetableSlot {
@@ -67,10 +68,14 @@ export interface ServerUser {
   email: string;
   role: string;
   roleDisplayName?: string;
+  /** The person's name. */
+  fullName?: string;
   institutionId?: string;
   campusId?: string;
   /** Module codes the school may use; empty for SuperAdmin (who bypasses module checks). */
   modules?: string[];
+  mustChangePassword?: boolean;
+  permissions?: string[];
 }
 
 /**
@@ -92,6 +97,12 @@ export async function fetchServerUser(accessToken: string): Promise<ServerUser> 
   }
   const data = await res.json();
   return data.user as ServerUser;
+}
+
+/** Where a signed-in user belongs: platform staff use the admin portal, everyone else the school portal. */
+export function homePathFor(user: ServerUser): string {
+  const staff = user.role === "SuperAdmin" || (!user.institutionId && (user.permissions ?? []).some((p) => p.startsWith("platform.")));
+  return staff ? "/admin" : "/school";
 }
 
 export async function checkBackendHealth(): Promise<BackendHealth> {

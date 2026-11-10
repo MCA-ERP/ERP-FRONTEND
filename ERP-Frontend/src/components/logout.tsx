@@ -3,63 +3,50 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
+import { API_BASE } from "@/lib/api";
 
-export default function LogoutButton() {
+/** Signs out: tells the backend (so the session is closed and recorded), clears the browser session, goes to the sign-in page. */
+export function useSignOut() {
   const router = useRouter();
-  const [isSigningOut, setIsSigningOut] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogout = async () => {
-    setIsSigningOut(true);
-    setErrorMessage("");
-
+  const signOut = async () => {
+    setBusy(true);
+    setError("");
     try {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        setErrorMessage(error.message);
+      const { data: s } = await supabase.auth.getSession();
+      if (s.session) {
+        await fetch(`${API_BASE}/auth/logout`, { method: "POST", headers: { Authorization: `Bearer ${s.session.access_token}` } }).catch(() => undefined);
+      }
+      const { error: err } = await supabase.auth.signOut();
+      if (err) {
+        setError(err.message);
         return;
       }
-
-      router.replace("/login");
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Unable to log out. Please try again.",
-      );
+      router.replace("/login?signedout=1");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to log out. Please try again.");
     } finally {
-      setIsSigningOut(false);
+      setBusy(false);
     }
   };
+  return { signOut, busy, error };
+}
 
+export default function LogoutButton() {
+  const { signOut, busy, error } = useSignOut();
   return (
     <div className="flex flex-col items-end gap-1">
       <button
         type="button"
-        onClick={handleLogout}
-        disabled={isSigningOut}
+        onClick={signOut}
+        disabled={busy}
         className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/15 disabled:cursor-wait disabled:opacity-60"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          className="size-4"
-          aria-hidden="true"
-        >
-          <path
-            d="M10 17l5-5-5-5m5 5H3m9-9h5a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {isSigningOut ? "Logging out..." : "Log out"}
+        {busy ? "Logging out…" : "Log out"}
       </button>
-      {errorMessage && (
-        <p role="alert" className="max-w-52 text-right text-xs text-rose-600">
-          {errorMessage}
-        </p>
-      )}
+      {error && <p role="alert" className="max-w-52 text-right text-xs text-rose-600">{error}</p>}
     </div>
   );
 }

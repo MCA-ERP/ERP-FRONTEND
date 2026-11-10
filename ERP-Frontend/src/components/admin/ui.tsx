@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { formatDateTime } from "@/lib/locale-format";
 
 export const inputCls =
   "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-mca-blue focus:ring-4 focus:ring-mca-blue/15 disabled:bg-slate-50 disabled:text-slate-500";
@@ -178,5 +179,4 @@ export function EmptyRow({ cols, loading, text }: { cols: number; loading: boole
   );
 }
 
-export const fmtDate = (iso?: string | null) =>
-  iso ? new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "—";
+export const fmtDate = (iso?: string | null) => (iso ? formatDateTime(iso) : "—");

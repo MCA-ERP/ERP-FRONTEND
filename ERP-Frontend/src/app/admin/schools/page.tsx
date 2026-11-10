@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import {
@@ -12,7 +13,7 @@ import {
   btnGhost, btnPrimary, fmtDate, inputCls, useDebounced, useLoad,
 } from "@/components/admin/ui";
 
-type Tab = "all" | "pending" | "active" | "inactive";
+type Tab = "all" | "pending" | "active" | "inactive" | "suspended";
 type Dialog =
   | { kind: "create" }
   | { kind: "edit"; school: SchoolRow }
@@ -24,12 +25,14 @@ const BOARDS = ["CBSE", "ICSE", "State Board", "IB", "Cambridge", "Montessori", 
 
 interface Form {
   name: string; code: string; type: string; board: string; city: string; state: string;
-  contact_name: string; contact_email: string; contact_phone: string; address: string; website: string;
+  contact_name: string; contact_email: string; contact_phone: string; address: string; website: string; gst_number: string;
   plan_code: string; status: "Pending" | "Trial" | "Active";
+  admin_first: string; admin_last: string; admin_email: string; admin_password: string;
 }
 const emptyForm: Form = {
   name: "", code: "", type: "School", board: "CBSE", city: "", state: "", contact_name: "", contact_email: "",
   contact_phone: "", address: "", website: "", plan_code: "standard", status: "Trial",
+  gst_number: "", admin_first: "", admin_last: "", admin_email: "", admin_password: "",
 };
 
 export default function SchoolsPage() {
@@ -41,7 +44,7 @@ export default function SchoolsPage() {
 
   useEffect(() => {
     const t = new URLSearchParams(window.location.search).get("tab");
-    if (t === "pending" || t === "active" || t === "inactive") setTab(t);
+    if (t === "pending" || t === "active" || t === "inactive" || t === "suspended") setTab(t);
   }, []);
 
   const plans = useLoad(() => adminFetch<{ plans: Plan[] }>("/plans"), []);
@@ -65,14 +68,22 @@ export default function SchoolsPage() {
     setFormError("");
     setDialog({ kind: "create" });
   };
-  const openEdit = (s: SchoolRow) => {
-    setForm({
-      ...emptyForm, name: s.name, code: s.code, type: s.type || "School", board: s.board || "", city: s.city || "",
-      state: s.state || "", contact_name: s.contact_name || "", contact_email: s.contact_email || "",
-      contact_phone: s.contact_phone || "",
-    });
-    setFormError("");
-    setDialog({ kind: "edit", school: s });
+  // address, website and GSTIN are not in the list row, so load the full record before editing
+  // (otherwise saving would blank them)
+  const openEdit = async (s: SchoolRow) => {
+    setActionError("");
+    try {
+      const { school: full } = await adminFetch<SchoolDetail>(`/schools/${s.id}`);
+      setForm({
+        ...emptyForm, name: s.name, code: s.code, type: s.type || "School", board: s.board || "", city: s.city || "",
+        state: s.state || "", contact_name: s.contact_name || "", contact_email: s.contact_email || "",
+        contact_phone: s.contact_phone || "", address: full.address || "", website: full.website || "", gst_number: full.gst_number || "",
+      });
+      setFormError("");
+      setDialog({ kind: "edit", school: s });
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Could not load the school.");
+    }
   };
   const openPlan = (s: SchoolRow) => {
     setPlanChoice(s.plan_code || "");
@@ -97,19 +108,29 @@ export default function SchoolsPage() {
   const submitForm = (e: FormEvent) => {
     e.preventDefault();
     if (!dialog) return;
-    const { plan_code, status, code, ...fields } = form;
+    const { plan_code, status, code, admin_first, admin_last, admin_email, admin_password, ...fields } = form;
     if (dialog.kind === "create") {
-      void run(() => adminFetch("/schools", json("POST", { ...fields, code, plan_code, status })), close);
+      const admin = admin_email.trim()
+        ? { first_name: admin_first, last_name: admin_last, email: admin_email, password: admin_password }
+        : undefined;
+      void run(() => adminFetch("/schools", json("POST", { ...fields, code, plan_code, status, admin })), close);
     } else if (dialog.kind === "edit") {
       void run(() => adminFetch(`/schools/${dialog.school.id}`, json("PATCH", fields)), close);
     }
   };
 
-  const changeStatus = async (s: SchoolRow, status: SchoolStatus, confirmText?: string) => {
-    if (confirmText && !window.confirm(confirmText)) return;
+  /** Status changes go through the status-action route so a reason is kept in the school's history. */
+  const changeStatus = async (s: SchoolRow, action: "suspend" | "deactivate" | "reactivate" | "activate", ask?: string) => {
+    let reason: string | undefined;
+    if (ask) {
+      const answer = window.prompt(ask);
+      if (answer === null) return;
+      reason = answer.trim();
+      if (!reason) { setActionError("A reason is needed."); return; }
+    }
     setActionError("");
     try {
-      await adminFetch(`/schools/${s.id}/status`, json("POST", { status }));
+      await adminFetch(`/schools/${s.id}/status-action`, json("POST", { action, reason }));
       reload();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Update failed.");
@@ -136,6 +157,7 @@ export default function SchoolsPage() {
           ["pending", "Pending approval", counts?.pending],
           ["active", "Active", counts?.active],
           ["inactive", "Inactive", counts?.inactive],
+          ["suspended", "Suspended", counts?.suspended],
         ]}
       />
 
@@ -170,23 +192,21 @@ export default function SchoolsPage() {
                   <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500">{fmtDay(s.trial_ends_on ?? s.renews_on)}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-right">
                     <div className="flex justify-end gap-2">
+                      <Link href={`/admin/schools/${s.id}`} className={small}>Open</Link>
                       <button type="button" className={small} onClick={() => setDialog({ kind: "view", id: s.id })}>View</button>
                       <button type="button" className={small} onClick={() => openEdit(s)}>Edit</button>
                       {s.status !== "Pending" && <button type="button" className={small} onClick={() => openPlan(s)}>Plan</button>}
                       {s.status === "Pending" && (
-                        <button type="button" className={`${btnPrimary} !px-2.5 !py-1 text-xs`} onClick={() => changeStatus(s, "Trial")}>Approve</button>
+                        <Link href={`/admin/schools/${s.id}?tab=setup`} className={`${btnPrimary} !px-2.5 !py-1 text-xs`}>Review &amp; approve</Link>
                       )}
-                      {s.status === "Pending" && (
-                        <button type="button" className={small} onClick={() => changeStatus(s, "Suspended", `Reject ${s.name}? It will be marked Suspended.`)}>Reject</button>
-                      )}
-                      {(s.status === "Trial" || s.status === "Active" || s.status === "Overdue") && (
-                        <button type="button" className={small} onClick={() => changeStatus(s, "Suspended", `Suspend ${s.name}? Its users will lose access.`)}>Suspend</button>
+                      {(s.status === "Trial" || s.status === "Active" || s.status === "Overdue" || s.status === "Inactive" || s.status === "Expired") && (
+                        <button type="button" className={small} onClick={() => changeStatus(s, "suspend", `Why is ${s.name} being suspended? Its users will lose access.`)}>Suspend</button>
                       )}
                       {s.status === "Trial" && (
-                        <button type="button" className={small} onClick={() => changeStatus(s, "Active")}>Mark paid</button>
+                        <button type="button" className={small} onClick={() => adminFetch(`/schools/${s.id}/status`, json("POST", { status: "Active" })).then(reload, (e) => setActionError(e instanceof Error ? e.message : "Update failed."))}>Mark paid</button>
                       )}
-                      {(s.status === "Suspended" || s.status === "Expired") && (
-                        <button type="button" className={small} onClick={() => changeStatus(s, "Active")}>Reactivate</button>
+                      {(s.status === "Suspended" || s.status === "Expired" || s.status === "Inactive") && (
+                        <button type="button" className={small} onClick={() => changeStatus(s, "reactivate")}>Reactivate</button>
                       )}
                     </div>
                   </td>
@@ -228,6 +248,22 @@ export default function SchoolsPage() {
             <Field label="Contact phone"><input className={inputCls} value={form.contact_phone} onChange={set("contact_phone")} /></Field>
           </div>
           <Field label="Contact email"><input type="email" className={inputCls} value={form.contact_email} onChange={set("contact_email")} /></Field>
+          <Field label="GSTIN" hint="Used on GST reports. 15 characters."><input className={inputCls} maxLength={15} value={form.gst_number} onChange={set("gst_number")} /></Field>
+          {dialog?.kind === "create" && (
+            <fieldset className="rounded-xl border border-slate-200 p-3">
+              <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">School administrator (optional)</legend>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="First name"><input className={inputCls} required={!!form.admin_email} value={form.admin_first} onChange={set("admin_first")} /></Field>
+                  <Field label="Last name"><input className={inputCls} required={!!form.admin_email} value={form.admin_last} onChange={set("admin_last")} /></Field>
+                </div>
+                <Field label="Login email"><input type="email" autoComplete="off" className={inputCls} value={form.admin_email} onChange={set("admin_email")} /></Field>
+                <Field label="Temporary password" hint="At least 8 characters. They must change it at first sign-in.">
+                  <input type="password" autoComplete="new-password" className={inputCls} required={!!form.admin_email} minLength={8} value={form.admin_password} onChange={set("admin_password")} />
+                </Field>
+              </div>
+            </fieldset>
+          )}
           {dialog?.kind === "create" && (
             <div className="grid grid-cols-2 gap-3">
               <Field label="Plan">

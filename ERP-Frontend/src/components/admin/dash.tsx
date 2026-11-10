@@ -4,13 +4,15 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { adminFetch, type DashboardSummary, type SchoolRow, type SchoolStatus } from "@/lib/admin-api";
 import { Card, ErrorBanner, PageHeader, useLoad } from "./ui";
+import { formatDayOnly } from "@/lib/locale-format";
 
 // ── formatting ──────────────────────────────────────────────
 export const num = (n: number) => n.toLocaleString("en-IN");
 export const inr = (paise: number) => `₹${Math.round(paise / 100).toLocaleString("en-IN")}`;
+/** Rupees with paise, for invoices and receipts. */
+export const inr2 = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 export const lakh = (paise: number) => `₹${(paise / 100 / 100000).toLocaleString("en-IN", { maximumFractionDigits: 1 })}L`;
-export const fmtDay = (iso?: string | null) =>
-  iso ? new Date(`${iso}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
+export const fmtDay = (iso?: string | null) => (iso ? formatDayOnly(iso) : "—");
 
 export function daysTo(iso?: string | null): number | null {
   if (!iso) return null;
@@ -20,7 +22,7 @@ export function daysTo(iso?: string | null): number | null {
 }
 
 export const isLive = (s: SchoolRow) => s.status === "Active" || s.status === "Trial";
-export const isInactive = (s: SchoolRow) => s.status === "Overdue" || s.status === "Suspended" || s.status === "Expired";
+export const isInactive = (s: SchoolRow) => s.status === "Overdue" || s.status === "Suspended" || s.status === "Expired" || s.status === "Inactive";
 
 // ── small components ────────────────────────────────────────
 const statusCls: Record<SchoolStatus, string> = {
@@ -30,6 +32,7 @@ const statusCls: Record<SchoolStatus, string> = {
   Overdue: "bg-amber-100 text-amber-800",
   Suspended: "bg-mca-red-blush text-mca-red-hover",
   Expired: "bg-mca-red-blush text-mca-red-hover",
+  Inactive: "bg-slate-200 text-slate-700",
 };
 
 export function StatusPill({ status }: { status: SchoolStatus }) {
@@ -221,4 +224,39 @@ export function groupCount(schools: SchoolRow[], key: (s: SchoolRow) => string |
     m.set(k, (m.get(k) ?? 0) + 1);
   });
   return Array.from(m.entries()).sort((a, b) => b[1] - a[1]);
+}
+
+// ── shared bits for forms and mutations ─────────────────────
+/** Runs a mutation, keeps its error, and reloads the list on success. */
+export function useAction(reload: () => void) {
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const run = async (fn: () => Promise<unknown>): Promise<boolean> => {
+    setBusy(true);
+    setError("");
+    try {
+      await fn();
+      reload();
+      return true;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Request failed.");
+      return false;
+    } finally {
+      setBusy(false);
+    }
+  };
+  return { error, busy, run };
+}
+
+export function Row({ children }: { children: ReactNode }) {
+  return <div className="flex flex-wrap items-end gap-3 border-b border-slate-100 p-4">{children}</div>;
+}
+
+export function Labeled({ label, children, className = "" }: { label: string; children: ReactNode; className?: string }) {
+  return (
+    <label className={`block ${className}`}>
+      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</span>
+      {children}
+    </label>
+  );
 }

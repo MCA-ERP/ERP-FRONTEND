@@ -26,3 +26,7 @@ yarn-error.log*
 .DS_Store
 *.pem
 Thumbs.db
+
+# Environment files: real ones stay private, the .example templates are committed
+env/.env.*
+!env/.env.*.example

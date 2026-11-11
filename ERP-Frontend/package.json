@@ -9,7 +9,19 @@
     "lint": "eslint",
     "dev:node20": ".\\use-node20.cmd next dev",
     "build:node20": ".\\use-node20.cmd next build",
-    "start:node20": ".\\use-node20.cmd next start"
+    "start:node20": ".\\use-node20.cmd next start",
+    "dev:dev": "node scripts/run-with-env.js dev -- next dev",
+    "dev:uat": "node scripts/run-with-env.js uat -- next dev",
+    "build:uat": "node scripts/run-with-env.js uat -- next build",
+    "start:uat": "node scripts/run-with-env.js uat -- next start",
+    "dev:preprod": "node scripts/run-with-env.js preprod -- next dev",
+    "build:preprod": "node scripts/run-with-env.js preprod -- next build",
+    "start:preprod": "node scripts/run-with-env.js preprod -- next start",
+    "dev:prod": "node scripts/run-with-env.js prod -- next dev",
+    "build:prod": "node scripts/run-with-env.js prod -- next build",
+    "start:prod": "node scripts/run-with-env.js prod -- next start",
+    "build:dev": "node scripts/run-with-env.js dev -- next build",
+    "start:dev": "node scripts/run-with-env.js dev -- next start"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -344,7 +344,7 @@ export function useLoginLogic() {
     }
     setIsSubmitting(true);
     try {
-      await supabase.auth.resetPasswordForEmail(clean, { redirectTo: `${window.location.origin}/change-password` });
+      await supabase.auth.resetPasswordForEmail(clean, { redirectTo: `${window.location.origin}/reset-password` });
     } catch {
       /* the answer below is the same either way, so the page never reveals whether an account exists */
     } finally {

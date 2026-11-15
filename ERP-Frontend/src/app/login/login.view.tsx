@@ -48,7 +48,7 @@ function CodeBoxes({ value, onChange, disabled }: { value: string; onChange: (v:
   );
 }
 
-/** Sign-in: the Super Admin design. School staff, students and parents use the same page through the link under the form. */
+/** Sign-in: one page for everyone (platform team, school staff, students and parents). Where they land is decided by their role after sign-in. */
 export default function LoginView() {
   const L = useLoginLogic();
 
@@ -61,23 +61,19 @@ export default function LoginView() {
     );
   }
 
-  const school = L.portalType === "School";
-
   return (
     <main className={styles.root}>
       <section className={styles.brand}>
         <Link href="/login" className={styles.logoLink} aria-label="My Class Assist">
           <Image src="/mca-logo.svg" alt="My Class Assist" width={225} height={127} priority style={{ width: "225px", height: "auto" }} />
         </Link>
-        <h2 className={styles.headline}>{school ? "Your school, in one place." : "Run every school on one platform."}</h2>
+        <h2 className={styles.headline}>Your school, assisted.</h2>
         <p className={`${styles.lead} ${styles.hideSmall}`}>
-          {school
-            ? "The My Class Assist school portal: students, academics, billing and support for your school."
-            : "The Super Admin portal for My Class Assist: schools, subscriptions, payments and support in one place."}
+          My Class Assist runs admissions, fees, academics, attendance, transport and parent communication from one place.
         </p>
         <ul className={`${styles.points} ${styles.hideSmall}`}>
-          <li>Every school, plan and payment in one place</li>
-          <li>Role-based access for every team member</li>
+          <li>Everything for your school in one place</li>
+          <li>Access that matches each person&apos;s role</li>
           <li>Every sign-in and change is recorded</li>
         </ul>
       </section>
@@ -112,11 +108,11 @@ export default function LoginView() {
               <div>
                 <h1 className={styles.title}>Reset your password</h1>
               </div>
-              <p className={styles.sub}>Enter your {school ? "email" : "work email"}. We&apos;ll send a link to choose a new password.</p>
+              <p className={styles.sub}>Enter your email. We&apos;ll send a link to choose a new password.</p>
               {L.feedback && <div role={L.feedbackType === "error" ? "alert" : "status"} className={`${styles.alert} ${L.feedbackType === "error" ? styles.error : styles.success}`}>{L.feedback}</div>}
               <form onSubmit={L.handleForgot} className={styles.form} noValidate>
                 <div className={styles.field}>
-                  <label htmlFor="fg-email">{school ? "Email" : "Work email"}</label>
+                  <label htmlFor="fg-email">Email</label>
                   <input id="fg-email" type="email" autoComplete="email" value={L.email} onChange={(e) => L.setEmail(e.target.value)} disabled={L.isSubmitting} />
                 </div>
                 <button type="submit" className={styles.submit} disabled={L.isSubmitting}>{L.isSubmitting ? "Sending…" : "Send reset link"}</button>
@@ -126,16 +122,15 @@ export default function LoginView() {
           ) : (
             <>
               <div>
-                <span className={styles.eyebrow}>{school ? "School portal" : "Super Admin · Portal 01"}</span>
                 <h1 className={styles.title}>Sign in</h1>
               </div>
-              <p className={styles.sub}>{school ? "Use your school email, or your student ID." : "Use your platform team account."}</p>
+              <p className={styles.sub}>Use your email, or your student ID.</p>
               {L.feedback && <div role={L.feedbackType === "error" ? "alert" : "status"} className={`${styles.alert} ${L.feedbackType === "error" ? styles.error : styles.success}`}>{L.feedback}</div>}
               <form onSubmit={L.handleLogin} className={styles.form} noValidate>
                 <div className={styles.field}>
-                  <label htmlFor="user-email">{school ? "Email or student ID" : "Work email"}</label>
+                  <label htmlFor="user-email">Email or student ID</label>
                   <input
-                    id="user-email" type={school ? "text" : "email"} inputMode="email" autoCapitalize="none" autoComplete="username" required
+                    id="user-email" type="text" inputMode="email" autoCapitalize="none" autoComplete="username" required
                     disabled={L.isSubmitting} value={L.email} onChange={(e) => L.setEmail(e.target.value)}
                   />
                 </div>
@@ -152,17 +147,12 @@ export default function LoginView() {
                   </div>
                 </div>
                 <div className={styles.row}>
-                  <span className={styles.help}>{school ? "Students: use your registration number." : ""}</span>
+                  <span className={styles.help}>Students: use your registration number.</span>
                   <button type="button" className={styles.linkBtn} onClick={() => L.setStep("forgot")}>Forgot password?</button>
                 </div>
                 <button type="submit" className={styles.submit} disabled={L.isSubmitting}>{L.isSubmitting ? "Signing in…" : "Sign in"}</button>
               </form>
-              <p className={styles.help}>
-                {school ? "Trouble signing in? Contact your school administrator." : "Trouble signing in? Contact your Super Admin."}{" "}
-                <button type="button" className={styles.linkBtn} onClick={() => L.setPortalType(school ? "SuperAdmin" : "School")}>
-                  {school ? "Platform team sign-in" : "School staff, students or parents?"}
-                </button>
-              </p>
+              <p className={styles.help}>Trouble signing in? Contact your administrator.</p>
             </>
           )}
         </div>

@@ -58,7 +58,7 @@ export function useLoginLogic() {
 
   // Domain configurations
   const adminDashboardUrl = process.env.NEXT_PUBLIC_ADMIN_DASHBOARD_URL || "https://erp.myclassassist.in";
-  const schoolDashboardUrl = process.env.NEXT_PUBLIC_SCHOOL_DASHBOARD_URL || "https://sch.myclassassist.in";
+  const schoolDashboardUrl = process.env.NEXT_PUBLIC_SCHOOL_DASHBOARD_URL || "https://erp.myclassassist.in";
 
   // ── 1. Check existing verified session on mount ────────────────────────
   useEffect(() => {

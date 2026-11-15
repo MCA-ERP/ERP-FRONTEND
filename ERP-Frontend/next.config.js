@@ -55,6 +55,36 @@ const nextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 
+  // One project serves two addresses: the public front page on the main domain (myclassassist.in) and the ERP on the
+  // app address (NEXT_PUBLIC_ADMIN_DASHBOARD_URL, like https://erp.myclassassist.in). Sign-in and every portal belong on the
+  // app address, so they are sent there from the main domain, and "/" on the app address opens the sign-in page.
+  // When both are the same address (or on localhost) nothing is redirected.
+  async redirects() {
+    const appUrl = (process.env.NEXT_PUBLIC_ADMIN_DASHBOARD_URL || "").replace(/\/$/, "");
+    const rootDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || "";
+    let appHost = "";
+    try {
+      appHost = appUrl ? new URL(appUrl).host : "";
+    } catch {
+      appHost = "";
+    }
+    if (!appHost || !rootDomain || appHost === rootDomain) return [];
+
+    const escape = (host) => host.replace(/\./g, "\\.");
+    const onMainDomain = [{ type: "host", value: `(www\\.)?${escape(rootDomain)}` }];
+    const onAppAddress = [{ type: "host", value: escape(appHost) }];
+
+    return [
+      { source: "/", has: onAppAddress, destination: "/login", permanent: false },
+      ...["/login", "/change-password", "/reset-password", "/admin/:path*", "/school/:path*"].map((source) => ({
+        source,
+        has: onMainDomain,
+        destination: `${appUrl}${source}`,
+        permanent: false,
+      })),
+    ];
+  },
+
   // Type errors fail the build (CI also runs `tsc --noEmit`). Lint runs separately via `npm run lint`.
   typescript: {
     ignoreBuildErrors: false,

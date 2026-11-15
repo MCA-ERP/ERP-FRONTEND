@@ -35,7 +35,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
         const me = await fetchServerUser(data.session.access_token);
         if (!live) return;
         if (me.mustChangePassword) return router.replace("/change-password");
-        if (homePathFor(me) === "/admin") return router.replace("/admin");
+        if (homePathFor(me) === "/super-admin") return router.replace("/super-admin");
 
         const res = await fetch(`${API_BASE}/institution`, { headers: await getAuthHeaders(), cache: "no-store" });
         const body = await res.json().catch(() => ({}));

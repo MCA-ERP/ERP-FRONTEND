@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Image from "next/image";
 
 /**
@@ -7,7 +8,13 @@ import Image from "next/image";
  */
 const APP_URL = (process.env.NEXT_PUBLIC_ADMIN_DASHBOARD_URL || "https://erp.myclassassist.in").replace(/\/$/, "");
 
-export default function Home() {
+export default async function Home() {
+  // Only the public main domain sends people to the app address. On localhost or the app address itself, "Log in" stays on the same site.
+  const host = ((await headers()).get("host") ?? "").toLowerCase();
+  const rootDomain = (process.env.NEXT_PUBLIC_APP_DOMAIN || "").toLowerCase();
+  const onMainDomain = !!rootDomain && (host === rootDomain || host === `www.${rootDomain}`);
+  const loginHref = onMainDomain ? `${APP_URL}/login` : "/login";
+
   return (
     <main className="min-h-screen bg-white">
       <div role="status" className="border-b border-sky-200 bg-mca-blue-sky px-4 py-3 text-center text-sm text-slate-700">
@@ -18,7 +25,7 @@ export default function Home() {
 
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <Image src="/mca-logo.svg" alt="My Class Assist" width={160} height={90} priority style={{ width: "160px", height: "auto" }} />
-        <a href={`${APP_URL}/login`} className="rounded-full bg-mca-blue px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90">
+        <a href={loginHref} className="rounded-full bg-mca-blue px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90">
           Log in
         </a>
       </header>
@@ -31,7 +38,7 @@ export default function Home() {
           less time on paperwork and more time with students.
         </p>
         <div className="flex flex-wrap gap-3">
-          <a href={`${APP_URL}/login`} className="rounded-full bg-mca-blue px-7 py-3 text-sm font-semibold text-white shadow-sm hover:opacity-90">
+          <a href={loginHref} className="rounded-full bg-mca-blue px-7 py-3 text-sm font-semibold text-white shadow-sm hover:opacity-90">
             Log in to My Class Assist
           </a>
           <a href="mailto:support@myclassassist.in" className="rounded-full border border-mca-blue px-7 py-3 text-sm font-semibold text-mca-blue hover:bg-mca-blue-sky">

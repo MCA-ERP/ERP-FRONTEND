@@ -102,7 +102,7 @@ export async function fetchServerUser(accessToken: string): Promise<ServerUser> 
 /** Where a signed-in user belongs: platform staff use the admin portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
   const staff = user.role === "SuperAdmin" || (!user.institutionId && (user.permissions ?? []).some((p) => p.startsWith("platform.")));
-  return staff ? "/admin" : "/school";
+  return staff ? "/super-admin" : "/school";
 }
 
 export async function checkBackendHealth(): Promise<BackendHealth> {

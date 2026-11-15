@@ -1,0 +1,2066 @@
+{
+ "dashboard": {
+  "label": "Dashboard",
+  "area": "dashboard",
+  "sections": [
+   {
+    "key": "overview",
+    "label": "Overview",
+    "pages": [
+     {
+      "key": "platform",
+      "title": "Platform Overview",
+      "description": "Platform health across all registered schools."
+     },
+     {
+      "key": "kpi",
+      "title": "KPI Summary",
+      "description": "Every headline number, compared with the previous period and its target."
+     }
+    ]
+   },
+   {
+    "key": "schools",
+    "label": "School Statistics",
+    "pages": [
+     {
+      "key": "total",
+      "title": "Total Schools",
+      "description": "Every school on the platform, by status, board and state."
+     },
+     {
+      "key": "active",
+      "title": "Active Schools",
+      "description": "Schools using the platform on an active or trial subscription."
+     },
+     {
+      "key": "inactive",
+      "title": "Inactive Schools",
+      "description": "Schools that are pending, overdue, suspended or expired."
+     }
+    ]
+   },
+   {
+    "key": "users",
+    "label": "User Statistics",
+    "pages": [
+     {
+      "key": "total",
+      "title": "Total Users",
+      "description": "Everyone with an account, across all schools and the platform team."
+     },
+     {
+      "key": "admins",
+      "title": "Admins",
+      "description": "Platform team members and school administrators."
+     },
+     {
+      "key": "teachers",
+      "title": "Teachers",
+      "description": "Teacher accounts by school, with activity."
+     },
+     {
+      "key": "students",
+      "title": "Students",
+      "description": "Student accounts by school."
+     },
+     {
+      "key": "parents",
+      "title": "Parents",
+      "description": "Parent accounts by school."
+     }
+    ]
+   },
+   {
+    "key": "subs",
+    "label": "Subscription Statistics",
+    "pages": [
+     {
+      "key": "active",
+      "title": "Active",
+      "description": "Paid subscriptions in force."
+     },
+     {
+      "key": "expired",
+      "title": "Expired",
+      "description": "Subscriptions that ended or lapsed."
+     },
+     {
+      "key": "trial",
+      "title": "Trial",
+      "description": "Schools on a free trial."
+     },
+     {
+      "key": "renewal",
+      "title": "Renewal Due",
+      "description": "Subscriptions renewing soon."
+     }
+    ]
+   },
+   {
+    "key": "revenue",
+    "label": "Revenue Analytics",
+    "pages": [
+     {
+      "key": "monthly",
+      "title": "Monthly Revenue",
+      "description": "Money collected each month."
+     },
+     {
+      "key": "annual",
+      "title": "Annual Revenue",
+      "description": "Money collected each year."
+     },
+     {
+      "key": "outstanding",
+      "title": "Outstanding Payments",
+      "description": "Invoices not yet paid."
+     }
+    ]
+   },
+   {
+    "key": "activity",
+    "label": "Activity Monitor",
+    "pages": [
+     {
+      "key": "logins",
+      "title": "Recent Logins",
+      "description": "The latest sign-ins across the platform."
+     },
+     {
+      "key": "registrations",
+      "title": "Recent Registrations",
+      "description": "Schools and accounts added lately."
+     },
+     {
+      "key": "system",
+      "title": "System Activity",
+      "description": "Jobs, backups and other things the platform did."
+     }
+    ]
+   },
+   {
+    "key": "alerts",
+    "label": "Alerts",
+    "pages": [
+     {
+      "key": "subscription",
+      "title": "Subscription Alerts",
+      "description": "Trials ending, renewals due and expired subscriptions."
+     },
+     {
+      "key": "payment",
+      "title": "Payment Alerts",
+      "description": "Failed, pending and overdue payments."
+     },
+     {
+      "key": "security",
+      "title": "Security Alerts",
+      "description": "Suspicious sign-ins and security warnings."
+     }
+    ]
+   }
+  ]
+ },
+ "schools": {
+  "label": "School Management",
+  "area": "schools",
+  "sections": [
+   {
+    "key": "registration",
+    "label": "School Registration",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add School",
+      "description": "Register a new school in seven steps, from details to activation."
+     },
+     {
+      "key": "application",
+      "title": "School Application",
+      "description": "Applications from the website, demos and referrals."
+     },
+     {
+      "key": "approval",
+      "title": "Approval",
+      "description": "Check each school's documents, campus, plan and admin, then approve it."
+     }
+    ]
+   },
+   {
+    "key": "directory",
+    "label": "School Directory",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Schools",
+      "description": "Every school registered on the platform."
+     },
+     {
+      "key": "active",
+      "title": "Active",
+      "description": "Schools on an active or trial subscription."
+     },
+     {
+      "key": "inactive",
+      "title": "Inactive",
+      "description": "Schools that are pending, deactivated, overdue or expired."
+     },
+     {
+      "key": "suspended",
+      "title": "Suspended",
+      "description": "Schools blocked from signing in until reactivated."
+     }
+    ]
+   },
+   {
+    "key": "profile",
+    "label": "School Profile",
+    "pages": [
+     {
+      "key": "basic",
+      "title": "Basic Details",
+      "description": "The school's identity, board and size."
+     },
+     {
+      "key": "contact",
+      "title": "Contact Details",
+      "description": "Address and the people to contact at the school."
+     },
+     {
+      "key": "branding",
+      "title": "Logo & Branding",
+      "description": "How the school appears in its portal, apps, receipts and report cards."
+     }
+    ]
+   },
+   {
+    "key": "configuration",
+    "label": "School Configuration",
+    "pages": [
+     {
+      "key": "academic",
+      "title": "Academic Settings",
+      "description": "Academic year, terms, grading and attendance rules for the school."
+     },
+     {
+      "key": "regional",
+      "title": "Regional Settings",
+      "description": "Country, time zone, currency and formats for this school."
+     },
+     {
+      "key": "language",
+      "title": "Language",
+      "description": "Languages the school's portal, apps and documents use."
+     }
+    ]
+   },
+   {
+    "key": "campus",
+    "label": "Campus Management",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add Campus",
+      "description": "Add another branch or campus to a school."
+     },
+     {
+      "key": "list",
+      "title": "Campus List",
+      "description": "Every campus across all schools."
+     },
+     {
+      "key": "details",
+      "title": "Campus Details",
+      "description": "Everything about one campus."
+     }
+    ]
+   },
+   {
+    "key": "admin",
+    "label": "School Admin",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create Admin",
+      "description": "Add an administrator account for a school."
+     },
+     {
+      "key": "assign",
+      "title": "Assign Admin",
+      "description": "Choose who is the primary admin for each school."
+     },
+     {
+      "key": "access",
+      "title": "Admin Access",
+      "description": "What each school admin can do inside their school portal."
+     }
+    ]
+   },
+   {
+    "key": "status",
+    "label": "School Status",
+    "pages": [
+     {
+      "key": "activate",
+      "title": "Activate",
+      "description": "Turn on schools that are approved but not yet live."
+     },
+     {
+      "key": "deactivate",
+      "title": "Deactivate",
+      "description": "Turn a school off temporarily. Data is kept and nobody can sign in."
+     },
+     {
+      "key": "suspend",
+      "title": "Suspend",
+      "description": "Block a school, usually for non-payment or a policy breach."
+     },
+     {
+      "key": "reactivate",
+      "title": "Reactivate",
+      "description": "Bring back suspended, expired or deactivated schools."
+     }
+    ]
+   },
+   {
+    "key": "documents",
+    "label": "School Documents",
+    "pages": [
+     {
+      "key": "registration",
+      "title": "Registration Documents",
+      "description": "Certificates that prove the school is registered."
+     },
+     {
+      "key": "affiliation",
+      "title": "Affiliation Documents",
+      "description": "Board affiliation certificates and NOCs."
+     }
+    ]
+   },
+   {
+    "key": "history",
+    "label": "School History",
+    "pages": [
+     {
+      "key": "activity",
+      "title": "Activity History",
+      "description": "Everything that happened to this school on the platform."
+     },
+     {
+      "key": "subscription",
+      "title": "Subscription History",
+      "description": "Plans, renewals and payments for this school."
+     },
+     {
+      "key": "audit",
+      "title": "Audit Trail",
+      "description": "Every change to this school's records, with old and new values."
+     }
+    ]
+   }
+  ]
+ },
+ "subscriptions": {
+  "label": "Subscription Management",
+  "area": "subscriptions",
+  "sections": [
+   {
+    "key": "plans",
+    "label": "Plan Management",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create Plan",
+      "description": "Set up a new subscription plan."
+     },
+     {
+      "key": "edit",
+      "title": "Edit Plan",
+      "description": "Change a plan's price, limits and description."
+     },
+     {
+      "key": "list",
+      "title": "Plan List",
+      "description": "All plans and how many schools use each."
+     }
+    ]
+   },
+   {
+    "key": "features",
+    "label": "Plan Features",
+    "pages": [
+     {
+      "key": "modules",
+      "title": "Module Access",
+      "description": "Which modules each plan includes."
+     },
+     {
+      "key": "users",
+      "title": "User Limits",
+      "description": "How many students, staff and campuses each plan allows."
+     },
+     {
+      "key": "storage",
+      "title": "Storage Limits",
+      "description": "File storage for documents, photos and recorded classes."
+     }
+    ]
+   },
+   {
+    "key": "list",
+    "label": "Subscription List",
+    "pages": [
+     {
+      "key": "active",
+      "title": "Active",
+      "description": "Paid subscriptions in force."
+     },
+     {
+      "key": "trial",
+      "title": "Trial",
+      "description": "Schools on a free trial."
+     },
+     {
+      "key": "expired",
+      "title": "Expired",
+      "description": "Subscriptions that ended or lapsed."
+     },
+     {
+      "key": "cancelled",
+      "title": "Cancelled",
+      "description": "Schools that cancelled and left the platform."
+     }
+    ]
+   },
+   {
+    "key": "school",
+    "label": "School Subscription",
+    "pages": [
+     {
+      "key": "details",
+      "title": "Subscription Details",
+      "description": "One school's subscription, billing and usage."
+     },
+     {
+      "key": "plan",
+      "title": "Assigned Plan",
+      "description": "The plan this school is on and what it includes."
+     }
+    ]
+   },
+   {
+    "key": "renewal",
+    "label": "Renewal Management",
+    "pages": [
+     {
+      "key": "upcoming",
+      "title": "Upcoming Renewals",
+      "description": "Subscriptions renewing in the next 90 days."
+     },
+     {
+      "key": "history",
+      "title": "Renewal History",
+      "description": "Past renewals, upgrades and lapses."
+     }
+    ]
+   },
+   {
+    "key": "change",
+    "label": "Upgrade / Downgrade",
+    "pages": [
+     {
+      "key": "change",
+      "title": "Change Plan",
+      "description": "Move a school to another plan."
+     },
+     {
+      "key": "upgrade",
+      "title": "Upgrade Request",
+      "description": "Schools asking to move to a bigger plan."
+     },
+     {
+      "key": "downgrade",
+      "title": "Downgrade Request",
+      "description": "Schools asking to move to a smaller plan."
+     }
+    ]
+   },
+   {
+    "key": "trial",
+    "label": "Trial Management",
+    "pages": [
+     {
+      "key": "period",
+      "title": "Trial Period",
+      "description": "How free trials work for new schools."
+     },
+     {
+      "key": "expiry",
+      "title": "Trial Expiry",
+      "description": "Trials ending soon and what happened to past trials."
+     }
+    ]
+   },
+   {
+    "key": "discounts",
+    "label": "Discount Management",
+    "pages": [
+     {
+      "key": "coupons",
+      "title": "Coupons",
+      "description": "Codes schools enter at checkout."
+     },
+     {
+      "key": "offers",
+      "title": "Offers",
+      "description": "Automatic discounts that apply without a code."
+     },
+     {
+      "key": "special",
+      "title": "Special Pricing",
+      "description": "Negotiated prices for individual schools."
+     }
+    ]
+   },
+   {
+    "key": "billing",
+    "label": "Billing",
+    "pages": [
+     {
+      "key": "cycle",
+      "title": "Billing Cycle",
+      "description": "How often schools are billed."
+     },
+     {
+      "key": "invoice",
+      "title": "Invoice Settings",
+      "description": "Numbering, due dates and what appears on invoices."
+     },
+     {
+      "key": "tax",
+      "title": "Tax Settings",
+      "description": "GST and other taxes on subscriptions."
+     }
+    ]
+   }
+  ]
+ },
+ "modules": {
+  "label": "Module Management",
+  "area": "modules",
+  "sections": [
+   {
+    "key": "catalogue",
+    "label": "Module Catalogue",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Modules",
+      "description": "Every module on the platform."
+     },
+     {
+      "key": "details",
+      "title": "Module Details",
+      "description": "Everything about one module."
+     }
+    ]
+   },
+   {
+    "key": "academic",
+    "label": "Academic Modules",
+    "pages": [
+     {
+      "key": "academic",
+      "title": "Academic Modules",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "administrative",
+    "label": "Administrative Modules",
+    "pages": [
+     {
+      "key": "administrative",
+      "title": "Administrative Modules",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "communication",
+    "label": "Communication Modules",
+    "pages": [
+     {
+      "key": "communication",
+      "title": "Communication Modules",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "advanced",
+    "label": "Advanced Modules",
+    "pages": [
+     {
+      "key": "advanced",
+      "title": "Advanced Modules",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "configuration",
+    "label": "Module Configuration",
+    "pages": [
+     {
+      "key": "settings",
+      "title": "Settings",
+      "description": "Platform-wide rules for all modules."
+     },
+     {
+      "key": "dependencies",
+      "title": "Dependencies",
+      "description": "Modules that need other modules or integrations to work."
+     },
+     {
+      "key": "flags",
+      "title": "Feature Flags",
+      "description": "Turn new features on gradually for a share of schools."
+     }
+    ]
+   },
+   {
+    "key": "allocation",
+    "label": "School Module Allocation",
+    "pages": [
+     {
+      "key": "enable",
+      "title": "Enable",
+      "description": "Turn on modules for a school."
+     },
+     {
+      "key": "disable",
+      "title": "Disable",
+      "description": "Turn off modules for a school. Data is kept."
+     },
+     {
+      "key": "assign",
+      "title": "Assign Modules",
+      "description": "Choose the full set of modules for a school at once."
+     }
+    ]
+   },
+   {
+    "key": "pricing",
+    "label": "Module Pricing",
+    "pages": [
+     {
+      "key": "individual",
+      "title": "Individual Pricing",
+      "description": "Add-on price when a module isn't included in a school's plan."
+     },
+     {
+      "key": "bundle",
+      "title": "Bundle Pricing",
+      "description": "Groups of modules sold together for less."
+     }
+    ]
+   },
+   {
+    "key": "updates",
+    "label": "Module Updates",
+    "pages": [
+     {
+      "key": "version",
+      "title": "Version",
+      "description": "The live version of every module."
+     },
+     {
+      "key": "notes",
+      "title": "Release Notes",
+      "description": "What changed in recent releases."
+     },
+     {
+      "key": "deployment",
+      "title": "Deployment Status",
+      "description": "Where each release is in the rollout."
+     }
+    ]
+   }
+  ]
+ },
+ "users": {
+  "label": "User Management",
+  "area": "users",
+  "sections": [
+   {
+    "key": "platform",
+    "label": "Platform Users",
+    "pages": [
+     {
+      "key": "super",
+      "title": "Super Admin",
+      "description": "People with full control of the platform."
+     },
+     {
+      "key": "support",
+      "title": "Support Staff",
+      "description": "Your platform team: managers, finance, support and content."
+     }
+    ]
+   },
+   {
+    "key": "school",
+    "label": "School Users",
+    "pages": [
+     {
+      "key": "admins",
+      "title": "School Admin",
+      "description": "Administrators of each school."
+     },
+     {
+      "key": "principals",
+      "title": "Principal",
+      "description": "Principals of each school."
+     }
+    ]
+   },
+   {
+    "key": "staff",
+    "label": "Staff Users",
+    "pages": [
+     {
+      "key": "teachers",
+      "title": "Teachers",
+      "description": "Teacher accounts across all schools."
+     },
+     {
+      "key": "accountants",
+      "title": "Accountants",
+      "description": "Staff who collect fees and manage accounts."
+     },
+     {
+      "key": "other",
+      "title": "Other Staff",
+      "description": "Receptionists, librarians, transport and other staff."
+     }
+    ]
+   },
+   {
+    "key": "students",
+    "label": "Student Accounts",
+    "pages": [
+     {
+      "key": "logins",
+      "title": "Student Login Accounts",
+      "description": "Sign-in accounts for students in the student app."
+     }
+    ]
+   },
+   {
+    "key": "parents",
+    "label": "Parent Accounts",
+    "pages": [
+     {
+      "key": "logins",
+      "title": "Parent Login Accounts",
+      "description": "Parents sign in with their mobile number and a one-time password."
+     }
+    ]
+   },
+   {
+    "key": "directory",
+    "label": "User Directory",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Users",
+      "description": "Every account in one place."
+     },
+     {
+      "key": "active",
+      "title": "Active",
+      "description": "Accounts that can sign in."
+     },
+     {
+      "key": "inactive",
+      "title": "Inactive",
+      "description": "Accounts that are turned off or never activated."
+     },
+     {
+      "key": "locked",
+      "title": "Locked",
+      "description": "Accounts locked after too many wrong passwords or by an admin."
+     }
+    ]
+   },
+   {
+    "key": "accounts",
+    "label": "Account Management",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create",
+      "description": "Create an account for anyone on the platform."
+     },
+     {
+      "key": "edit",
+      "title": "Edit",
+      "description": "Change someone's details, role or school."
+     },
+     {
+      "key": "reset",
+      "title": "Reset Password",
+      "description": "Send a reset link or set a temporary password."
+     },
+     {
+      "key": "disable",
+      "title": "Disable",
+      "description": "Turn accounts off. They can be turned back on any time."
+     }
+    ]
+   },
+   {
+    "key": "login",
+    "label": "Login Activity",
+    "pages": [
+     {
+      "key": "history",
+      "title": "Login History",
+      "description": "Recent sign-ins across the platform."
+     },
+     {
+      "key": "failed",
+      "title": "Failed Attempts",
+      "description": "Sign-ins that failed, and accounts that were locked as a result."
+     },
+     {
+      "key": "sessions",
+      "title": "Sessions",
+      "description": "Who is signed in right now. End any session you don't recognise."
+     }
+    ]
+   }
+  ]
+ },
+ "roles": {
+  "label": "Role & Permissions",
+  "area": "roles",
+  "sections": [
+   {
+    "key": "catalogue",
+    "label": "Role Catalogue",
+    "pages": [
+     {
+      "key": "default",
+      "title": "Default Roles",
+      "description": "Roles every school gets, plus your platform team roles."
+     },
+     {
+      "key": "custom",
+      "title": "Custom Roles",
+      "description": "Roles created by schools or your team."
+     }
+    ]
+   },
+   {
+    "key": "creation",
+    "label": "Role Creation",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add Role",
+      "description": "Create a new role from scratch."
+     },
+     {
+      "key": "edit",
+      "title": "Edit Role",
+      "description": "Change a role's name, description and scope."
+     },
+     {
+      "key": "copy",
+      "title": "Copy Role",
+      "description": "Start a new role from an existing one."
+     }
+    ]
+   },
+   {
+    "key": "permissions",
+    "label": "Permission Management",
+    "pages": [
+     {
+      "key": "view",
+      "title": "View",
+      "description": "Who can see each menu."
+     },
+     {
+      "key": "create",
+      "title": "Create",
+      "description": "Who can add new records in each menu."
+     },
+     {
+      "key": "edit",
+      "title": "Edit",
+      "description": "Who can change records in each menu."
+     },
+     {
+      "key": "delete",
+      "title": "Delete",
+      "description": "Who can delete records in each menu."
+     }
+    ]
+   },
+   {
+    "key": "approvals",
+    "label": "Approval Permissions",
+    "pages": [
+     {
+      "key": "admission",
+      "title": "Admission",
+      "description": "Who approves new admissions."
+     },
+     {
+      "key": "fees",
+      "title": "Fees",
+      "description": "Who approves concessions, waivers and write-offs."
+     },
+     {
+      "key": "payroll",
+      "title": "Payroll",
+      "description": "Who approves salary runs and changes."
+     },
+     {
+      "key": "results",
+      "title": "Results",
+      "description": "Who approves exam results before parents see them."
+     },
+     {
+      "key": "leave",
+      "title": "Leave",
+      "description": "Who approves student leave from parents and staff leave."
+     },
+     {
+      "key": "attcorr",
+      "title": "Attendance Corrections",
+      "description": "Who approves teachers' attendance edit requests."
+     },
+     {
+      "key": "lesson",
+      "title": "Lesson Plans",
+      "description": "Who approves teachers' lesson plans."
+     },
+     {
+      "key": "mobile",
+      "title": "Parent Mobile Changes",
+      "description": "Who verifies and approves a parent's new mobile number."
+     },
+     {
+      "key": "mess",
+      "title": "Mess Opt-in",
+      "description": "Who approves parents' requests to start the mess."
+     },
+     {
+      "key": "health",
+      "title": "Health Updates",
+      "description": "Who accepts medical notes and vaccination cards sent by parents."
+     },
+     {
+      "key": "staffdocs",
+      "title": "Staff Documents",
+      "description": "Who verifies qualifications and documents staff add in My Profile."
+     }
+    ]
+   },
+   {
+    "key": "menu",
+    "label": "Menu Permissions",
+    "pages": [
+     {
+      "key": "modules",
+      "title": "Module Access",
+      "description": "Which school roles can open each module."
+     },
+     {
+      "key": "menus",
+      "title": "Menu Access",
+      "description": "Pick a platform role and choose what it can do in each menu."
+     },
+     {
+      "key": "pages",
+      "title": "Page Access",
+      "description": "Choose which pages inside a menu a role or school role can open."
+     }
+    ]
+   },
+   {
+    "key": "data",
+    "label": "Data Permissions",
+    "pages": [
+     {
+      "key": "data",
+      "title": "Data Permissions",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "assignment",
+    "label": "Role Assignment",
+    "pages": [
+     {
+      "key": "assign",
+      "title": "Assign Users",
+      "description": "Give someone a role."
+     },
+     {
+      "key": "reassign",
+      "title": "Reassign Users",
+      "description": "Move people from one role to another."
+     }
+    ]
+   },
+   {
+    "key": "audit",
+    "label": "Permission Audit",
+    "pages": [
+     {
+      "key": "changes",
+      "title": "Changes",
+      "description": "Every change to roles and permissions."
+     },
+     {
+      "key": "history",
+      "title": "History",
+      "description": "Versions of each platform role over time."
+     }
+    ]
+   }
+  ]
+ },
+ "payments": {
+  "label": "Payment Management",
+  "area": "payments",
+  "sections": [
+   {
+    "key": "transactions",
+    "label": "Transactions",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Transactions",
+      "description": "Every payment from schools."
+     },
+     {
+      "key": "successful",
+      "title": "Successful",
+      "description": "Payments received."
+     },
+     {
+      "key": "failed",
+      "title": "Failed",
+      "description": "Payments that didn't go through."
+     },
+     {
+      "key": "pending",
+      "title": "Pending",
+      "description": "Payments started but not yet confirmed."
+     }
+    ]
+   },
+   {
+    "key": "school",
+    "label": "School Payments",
+    "pages": [
+     {
+      "key": "subscription",
+      "title": "Subscription Payments",
+      "description": "First-time subscriptions and instalments."
+     },
+     {
+      "key": "renewal",
+      "title": "Renewal Payments",
+      "description": "Payments for renewals."
+     }
+    ]
+   },
+   {
+    "key": "invoices",
+    "label": "Invoices",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Invoices",
+      "description": "Every invoice raised to schools."
+     },
+     {
+      "key": "generated",
+      "title": "Generated",
+      "description": "Raised but not yet due."
+     },
+     {
+      "key": "paid",
+      "title": "Paid",
+      "description": "Invoices fully paid."
+     },
+     {
+      "key": "unpaid",
+      "title": "Unpaid",
+      "description": "Invoices due or overdue."
+     }
+    ]
+   },
+   {
+    "key": "refunds",
+    "label": "Refunds",
+    "pages": [
+     {
+      "key": "requests",
+      "title": "Refund Requests",
+      "description": "Refunds waiting for a decision."
+     },
+     {
+      "key": "approved",
+      "title": "Approved",
+      "description": "Refunds approved and paid back."
+     },
+     {
+      "key": "rejected",
+      "title": "Rejected",
+      "description": "Refunds that were turned down."
+     }
+    ]
+   },
+   {
+    "key": "gateway",
+    "label": "Payment Gateway",
+    "pages": [
+     {
+      "key": "config",
+      "title": "Gateway Configuration",
+      "description": "Which gateways collect payments and how."
+     },
+     {
+      "key": "api",
+      "title": "API Settings",
+      "description": "Keys, webhooks and mode for the payment gateways."
+     }
+    ]
+   },
+   {
+    "key": "tax",
+    "label": "Tax Management",
+    "pages": [
+     {
+      "key": "gst",
+      "title": "GST Settings",
+      "description": "How GST is charged on invoices."
+     },
+     {
+      "key": "reports",
+      "title": "Tax Reports",
+      "description": "GST collected each month, ready for filing."
+     }
+    ]
+   },
+   {
+    "key": "revenue",
+    "label": "Revenue Reports",
+    "pages": [
+     {
+      "key": "daily",
+      "title": "Daily",
+      "description": "Money collected each day."
+     },
+     {
+      "key": "monthly",
+      "title": "Monthly",
+      "description": "Money collected each month."
+     },
+     {
+      "key": "annual",
+      "title": "Annual",
+      "description": "Revenue by financial year (April – March)."
+     }
+    ]
+   }
+  ]
+ },
+ "support": {
+  "label": "Support Management",
+  "area": "support",
+  "sections": [
+   {
+    "key": "tickets",
+    "label": "Tickets",
+    "pages": [
+     {
+      "key": "all",
+      "title": "All Tickets",
+      "description": "Every ticket from schools. Open one to reply."
+     },
+     {
+      "key": "open",
+      "title": "Open",
+      "description": "New tickets nobody has replied to yet."
+     },
+     {
+      "key": "pending",
+      "title": "Pending",
+      "description": "Tickets being worked on or waiting on the school."
+     },
+     {
+      "key": "resolved",
+      "title": "Resolved",
+      "description": "Tickets that are fixed or closed."
+     }
+    ]
+   },
+   {
+    "key": "categories",
+    "label": "Ticket Categories",
+    "pages": [
+     {
+      "key": "technical",
+      "title": "Technical",
+      "description": "App, transport, exams and messaging problems."
+     },
+     {
+      "key": "billing",
+      "title": "Billing",
+      "description": "Invoices, payments and subscriptions."
+     },
+     {
+      "key": "account",
+      "title": "Account",
+      "description": "Sign-in, admins, onboarding and data imports."
+     },
+     {
+      "key": "general",
+      "title": "General",
+      "description": "Questions and everything else."
+     }
+    ]
+   },
+   {
+    "key": "assignment",
+    "label": "Assignment",
+    "pages": [
+     {
+      "key": "assign",
+      "title": "Assign Agent",
+      "description": "Give unassigned tickets to an agent."
+     },
+     {
+      "key": "reassign",
+      "title": "Reassign Ticket",
+      "description": "Move tickets between agents."
+     }
+    ]
+   },
+   {
+    "key": "kb",
+    "label": "Knowledge Base",
+    "pages": [
+     {
+      "key": "articles",
+      "title": "Articles",
+      "description": "Help articles schools see in the help centre."
+     },
+     {
+      "key": "faqs",
+      "title": "FAQs",
+      "description": "Short answers to common questions."
+     },
+     {
+      "key": "tutorials",
+      "title": "Tutorials",
+      "description": "Step-by-step videos."
+     }
+    ]
+   },
+   {
+    "key": "feedback",
+    "label": "Feedback",
+    "pages": [
+     {
+      "key": "school",
+      "title": "School Feedback",
+      "description": "Ratings and comments from school admins."
+     },
+     {
+      "key": "requests",
+      "title": "Feature Requests",
+      "description": "Ideas from schools, with votes."
+     }
+    ]
+   },
+   {
+    "key": "escalations",
+    "label": "Escalations",
+    "pages": [
+     {
+      "key": "priority",
+      "title": "Priority",
+      "description": "Response and resolution targets for each priority."
+     },
+     {
+      "key": "history",
+      "title": "Escalation History",
+      "description": "Tickets that were escalated, and why."
+     }
+    ]
+   }
+  ]
+ },
+ "reports": {
+  "label": "Reports & Analytics",
+  "area": "reports",
+  "sections": [
+   {
+    "key": "schools",
+    "label": "School Reports",
+    "pages": [
+     {
+      "key": "growth",
+      "title": "School Growth",
+      "description": "Schools on the platform over time."
+     },
+     {
+      "key": "activity",
+      "title": "School Activity",
+      "description": "How actively each school uses the platform."
+     }
+    ]
+   },
+   {
+    "key": "users",
+    "label": "User Reports",
+    "pages": [
+     {
+      "key": "growth",
+      "title": "User Growth",
+      "description": "Total accounts over time, in thousands."
+     },
+     {
+      "key": "engagement",
+      "title": "User Engagement",
+      "description": "How often people use the apps."
+     }
+    ]
+   },
+   {
+    "key": "financial",
+    "label": "Financial Reports",
+    "pages": [
+     {
+      "key": "revenue",
+      "title": "Revenue",
+      "description": "Revenue by month and by plan."
+     },
+     {
+      "key": "collection",
+      "title": "Collection",
+      "description": "How much of what's invoiced gets collected."
+     },
+     {
+      "key": "outstanding",
+      "title": "Outstanding",
+      "description": "Money billed but not yet received."
+     }
+    ]
+   },
+   {
+    "key": "subscriptions",
+    "label": "Subscription Reports",
+    "pages": [
+     {
+      "key": "distribution",
+      "title": "Plan Distribution",
+      "description": "How schools spread across plans."
+     },
+     {
+      "key": "renewals",
+      "title": "Renewals",
+      "description": "Renewal results over the last year."
+     },
+     {
+      "key": "churn",
+      "title": "Churn",
+      "description": "Schools that left, and why."
+     }
+    ]
+   },
+   {
+    "key": "modules",
+    "label": "Module Reports",
+    "pages": [
+     {
+      "key": "usage",
+      "title": "Usage",
+      "description": "Share of active schools using each module."
+     },
+     {
+      "key": "adoption",
+      "title": "Adoption",
+      "description": "How quickly schools turn on modules after joining."
+     },
+     {
+      "key": "errors",
+      "title": "Errors",
+      "description": "Errors by module in the last 7 days."
+     }
+    ]
+   },
+   {
+    "key": "security",
+    "label": "Security Reports",
+    "pages": [
+     {
+      "key": "login",
+      "title": "Login",
+      "description": "Successful and failed sign-ins."
+     },
+     {
+      "key": "access",
+      "title": "Access",
+      "description": "Attempts to open pages without permission."
+     },
+     {
+      "key": "audit",
+      "title": "Audit",
+      "description": "Who changed what, summarised."
+     }
+    ]
+   },
+   {
+    "key": "system",
+    "label": "System Reports",
+    "pages": [
+     {
+      "key": "performance",
+      "title": "Performance",
+      "description": "Speed and uptime of the platform."
+     },
+     {
+      "key": "storage",
+      "title": "Storage",
+      "description": "How much storage schools use."
+     },
+     {
+      "key": "errors",
+      "title": "Errors",
+      "description": "Server and app errors."
+     }
+    ]
+   }
+  ]
+ },
+ "communication": {
+  "label": "Communication",
+  "area": "communication",
+  "sections": [
+   {
+    "key": "announcements",
+    "label": "Announcements",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create",
+      "description": "Write a message for school admins."
+     },
+     {
+      "key": "schedule",
+      "title": "Schedule",
+      "description": "Announcements set to go out later."
+     },
+     {
+      "key": "publish",
+      "title": "Publish",
+      "description": "Drafts ready to send now."
+     },
+     {
+      "key": "history",
+      "title": "History",
+      "description": "Announcements already sent."
+     }
+    ]
+   },
+   {
+    "key": "email",
+    "label": "Email",
+    "pages": [
+     {
+      "key": "email",
+      "title": "Email",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "sms",
+    "label": "SMS",
+    "pages": [
+     {
+      "key": "sms",
+      "title": "SMS",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "whatsapp",
+    "label": "WhatsApp",
+    "pages": [
+     {
+      "key": "whatsapp",
+      "title": "WhatsApp",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "notifications",
+    "label": "Notifications",
+    "pages": [
+     {
+      "key": "push",
+      "title": "Push Notifications",
+      "description": "Notifications to the phones of school admins."
+     },
+     {
+      "key": "inapp",
+      "title": "In-App Alerts",
+      "description": "Banners and alerts inside the school portal."
+     }
+    ]
+   },
+   {
+    "key": "history",
+    "label": "Communication History",
+    "pages": [
+     {
+      "key": "history",
+      "title": "Communication History",
+      "description": ""
+     }
+    ]
+   }
+  ]
+ },
+ "cms": {
+  "label": "Website / CMS",
+  "area": "cms",
+  "sections": [
+   {
+    "key": "pages",
+    "label": "Website Pages",
+    "pages": [
+     {
+      "key": "pages",
+      "title": "Website Pages",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "content",
+    "label": "Content Management",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add Page",
+      "description": "Create a new page on the website."
+     },
+     {
+      "key": "edit",
+      "title": "Edit Page",
+      "description": "All pages on the website."
+     },
+     {
+      "key": "publish",
+      "title": "Publish",
+      "description": "Drafts waiting to go live."
+     }
+    ]
+   },
+   {
+    "key": "banners",
+    "label": "Banner Management",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add Banner",
+      "description": "Create a banner for the website or the school portal."
+     },
+     {
+      "key": "schedule",
+      "title": "Schedule",
+      "description": "Live and upcoming banners."
+     },
+     {
+      "key": "archive",
+      "title": "Archive",
+      "description": "Banners that have ended."
+     }
+    ]
+   },
+   {
+    "key": "blog",
+    "label": "Blog",
+    "pages": [
+     {
+      "key": "categories",
+      "title": "Categories",
+      "description": "Topics posts are filed under."
+     },
+     {
+      "key": "posts",
+      "title": "Posts",
+      "description": "Blog posts."
+     },
+     {
+      "key": "authors",
+      "title": "Authors",
+      "description": "People who write for the blog."
+     }
+    ]
+   },
+   {
+    "key": "testimonials",
+    "label": "Testimonials",
+    "pages": [
+     {
+      "key": "add",
+      "title": "Add",
+      "description": "Add a quote from a school."
+     },
+     {
+      "key": "edit",
+      "title": "Edit",
+      "description": "All testimonials."
+     },
+     {
+      "key": "approve",
+      "title": "Approve",
+      "description": "Testimonials waiting to go on the website."
+     }
+    ]
+   },
+   {
+    "key": "faq",
+    "label": "FAQ",
+    "pages": [
+     {
+      "key": "questions",
+      "title": "Questions",
+      "description": "Questions on the website's FAQ page."
+     },
+     {
+      "key": "answers",
+      "title": "Answers",
+      "description": "The answer to each question."
+     },
+     {
+      "key": "categories",
+      "title": "Categories",
+      "description": "Groups questions on the FAQ page."
+     }
+    ]
+   },
+   {
+    "key": "seo",
+    "label": "SEO",
+    "pages": [
+     {
+      "key": "title",
+      "title": "Meta Title",
+      "description": "The title search engines show for each page. Aim for 50 – 60 characters."
+     },
+     {
+      "key": "description",
+      "title": "Description",
+      "description": "The summary under the title in search results. Aim for 120 – 160 characters."
+     },
+     {
+      "key": "sitemap",
+      "title": "Sitemap",
+      "description": "The list of pages search engines should crawl."
+     }
+    ]
+   }
+  ]
+ },
+ "integrations": {
+  "label": "Integration Management",
+  "area": "integrations",
+  "sections": [
+   {
+    "key": "payment",
+    "label": "Payment Integration",
+    "pages": [
+     {
+      "key": "razorpay",
+      "title": "Razorpay",
+      "description": "The main gateway for subscription and fee payments."
+     },
+     {
+      "key": "other",
+      "title": "Other Gateways",
+      "description": "Backup and alternative gateways."
+     }
+    ]
+   },
+   {
+    "key": "sms",
+    "label": "SMS Integration",
+    "pages": [
+     {
+      "key": "sms",
+      "title": "SMS Integration",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "whatsapp",
+    "label": "WhatsApp Integration",
+    "pages": [
+     {
+      "key": "whatsapp",
+      "title": "WhatsApp Integration",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "email",
+    "label": "Email Integration",
+    "pages": [
+     {
+      "key": "smtp",
+      "title": "SMTP",
+      "description": "Send email through your own mail server."
+     },
+     {
+      "key": "provider",
+      "title": "Provider Settings",
+      "description": "Email service, sending domain and limits."
+     }
+    ]
+   },
+   {
+    "key": "maps",
+    "label": "Maps & GPS",
+    "pages": [
+     {
+      "key": "api",
+      "title": "Maps API",
+      "description": "Map service for routes, stops and live bus tracking."
+     },
+     {
+      "key": "tracking",
+      "title": "Vehicle Tracking",
+      "description": "GPS devices on school buses."
+     }
+    ]
+   },
+   {
+    "key": "biometric",
+    "label": "Biometric",
+    "pages": [
+     {
+      "key": "biometric",
+      "title": "Biometric",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "api",
+    "label": "API Management",
+    "pages": [
+     {
+      "key": "keys",
+      "title": "API Keys",
+      "description": "Keys your apps and partners use."
+     },
+     {
+      "key": "webhooks",
+      "title": "Webhooks",
+      "description": "Events the platform sends to other systems."
+     },
+     {
+      "key": "logs",
+      "title": "Logs",
+      "description": "Recent API calls and webhook deliveries."
+     }
+    ]
+   }
+  ]
+ },
+ "security": {
+  "label": "Security & Audit",
+  "area": "security",
+  "sections": [
+   {
+    "key": "login",
+    "label": "Login Security",
+    "pages": [
+     {
+      "key": "history",
+      "title": "Login History",
+      "description": "Every sign-in across the platform."
+     },
+     {
+      "key": "failed",
+      "title": "Failed Logins",
+      "description": "Sign-ins that failed or were blocked."
+     }
+    ]
+   },
+   {
+    "key": "audit",
+    "label": "Audit Logs",
+    "pages": [
+     {
+      "key": "activity",
+      "title": "User Activity",
+      "description": "What people did on the platform."
+     },
+     {
+      "key": "changes",
+      "title": "Data Changes",
+      "description": "Old and new values for every change to important records."
+     }
+    ]
+   },
+   {
+    "key": "access",
+    "label": "Access Control",
+    "pages": [
+     {
+      "key": "sessions",
+      "title": "Session Management",
+      "description": "Signed-in sessions. End any you don't recognise."
+     },
+     {
+      "key": "devices",
+      "title": "Device Management",
+      "description": "Devices your team signs in from."
+     }
+    ]
+   },
+   {
+    "key": "backups",
+    "label": "Backup Management",
+    "pages": [
+     {
+      "key": "schedule",
+      "title": "Backup Schedule",
+      "description": "When backups run and how long they're kept."
+     },
+     {
+      "key": "history",
+      "title": "Backup History",
+      "description": "Backups that ran recently."
+     }
+    ]
+   },
+   {
+    "key": "retention",
+    "label": "Data Retention",
+    "pages": [
+     {
+      "key": "policies",
+      "title": "Retention Policies",
+      "description": "How long each kind of data is kept."
+     },
+     {
+      "key": "archive",
+      "title": "Archive",
+      "description": "Data moved out of the live system."
+     }
+    ]
+   },
+   {
+    "key": "settings",
+    "label": "Security Settings",
+    "pages": [
+     {
+      "key": "password",
+      "title": "Password Policy",
+      "description": "Rules for passwords across the platform."
+     },
+     {
+      "key": "mfa",
+      "title": "MFA",
+      "description": "Two-factor sign-in."
+     },
+     {
+      "key": "timeout",
+      "title": "Session Timeout",
+      "description": "When idle sessions sign out."
+     }
+    ]
+   },
+   {
+    "key": "incidents",
+    "label": "Incident Management",
+    "pages": [
+     {
+      "key": "alerts",
+      "title": "Security Alerts",
+      "description": "Security alerts that need attention."
+     },
+     {
+      "key": "history",
+      "title": "Incident History",
+      "description": "Past security incidents and what was done."
+     }
+    ]
+   }
+  ]
+ },
+ "system-settings": {
+  "label": "System Settings",
+  "area": "settings",
+  "sections": [
+   {
+    "key": "general",
+    "label": "General Settings",
+    "pages": [
+     {
+      "key": "name",
+      "title": "Platform Name",
+      "description": "What the platform is called everywhere."
+     },
+     {
+      "key": "logo",
+      "title": "Logo",
+      "description": "Logos shown in portals, apps, emails and invoices."
+     },
+     {
+      "key": "contact",
+      "title": "Contact",
+      "description": "How schools reach you."
+     }
+    ]
+   },
+   {
+    "key": "regional",
+    "label": "Regional Settings",
+    "pages": [
+     {
+      "key": "country",
+      "title": "Country",
+      "description": "Countries where schools can sign up."
+     },
+     {
+      "key": "state",
+      "title": "State",
+      "description": "States and union territories offered at sign-up."
+     },
+     {
+      "key": "timezone",
+      "title": "Timezone",
+      "description": "Time zone for schedules, reports and logs."
+     }
+    ]
+   },
+   {
+    "key": "language",
+    "label": "Language",
+    "pages": [
+     {
+      "key": "list",
+      "title": "Language List",
+      "description": "Languages available in the apps and portals."
+     },
+     {
+      "key": "translation",
+      "title": "Translation",
+      "description": "Translate app text, one phrase at a time."
+     }
+    ]
+   },
+   {
+    "key": "datetime",
+    "label": "Date & Time",
+    "pages": [
+     {
+      "key": "date",
+      "title": "Date Format",
+      "description": "How dates appear across the platform."
+     },
+     {
+      "key": "time",
+      "title": "Time Format",
+      "description": "How times appear across the platform."
+     }
+    ]
+   },
+   {
+    "key": "files",
+    "label": "File Management",
+    "pages": [
+     {
+      "key": "uploads",
+      "title": "Upload Limits",
+      "description": "What people can upload and how big it can be."
+     },
+     {
+      "key": "storage",
+      "title": "Storage",
+      "description": "Where files are stored and how much is used."
+     }
+    ]
+   },
+   {
+    "key": "email",
+    "label": "Email Configuration",
+    "pages": [
+     {
+      "key": "email",
+      "title": "Email Configuration",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "key": "config",
+    "label": "System Configuration",
+    "pages": [
+     {
+      "key": "maintenance",
+      "title": "Maintenance Mode",
+      "description": "Take the school portals offline for planned work."
+     },
+     {
+      "key": "app",
+      "title": "Application Settings",
+      "description": "Platform-wide behaviour."
+     }
+    ]
+   },
+   {
+    "key": "version",
+    "label": "Version Management",
+    "pages": [
+     {
+      "key": "current",
+      "title": "Current Version",
+      "description": "What's running in production."
+     },
+     {
+      "key": "updates",
+      "title": "Updates",
+      "description": "Updates ready to install."
+     }
+    ]
+   }
+  ]
+ }
+}

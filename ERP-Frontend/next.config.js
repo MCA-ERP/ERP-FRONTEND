@@ -55,6 +55,17 @@ const nextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 
+  // Every Super Admin submenu has a short address, like /super-admin/schools/registration. They all open the one shared
+  // section page (src/app/super-admin/s), so the address is rewritten to it behind the scenes. Built from the menu file.
+  async rewrites() {
+    const menu = require("./src/app/super-admin/s/menu.json");
+    return {
+      beforeFiles: Object.entries(menu).flatMap(([module, m]) =>
+        m.sections.map((s) => ({ source: `/super-admin/${module}/${s.key}`, destination: `/super-admin/s/${module}/${s.key}` })),
+      ),
+    };
+  },
+
   // One project serves two addresses: the public front page on the main domain (myclassassist.in) and the ERP on the
   // app address (NEXT_PUBLIC_ADMIN_DASHBOARD_URL, like https://erp.myclassassist.in). Sign-in and every portal belong on the
   // app address, so they are sent there from the main domain, and "/" on the app address opens the sign-in page.
@@ -68,15 +79,23 @@ const nextConfig = {
     } catch {
       appHost = "";
     }
-    if (!appHost || !rootDomain || appHost === rootDomain) return [];
+    // The Super Admin portal used to live under /admin; old links and bookmarks still work.
+    const legacy = [
+      { source: "/admin", destination: "/super-admin", permanent: false },
+      { source: "/admin/:path*", destination: "/super-admin/:path*", permanent: false },
+      // Earlier links that had an extra /s/ segment.
+      { source: "/super-admin/s/:module/:section", destination: "/super-admin/:module/:section", permanent: false },
+    ];
+    if (!appHost || !rootDomain || appHost === rootDomain) return legacy;
 
     const escape = (host) => host.replace(/\./g, "\\.");
     const onMainDomain = [{ type: "host", value: `(www\\.)?${escape(rootDomain)}` }];
     const onAppAddress = [{ type: "host", value: escape(appHost) }];
 
     return [
+      ...legacy,
       { source: "/", has: onAppAddress, destination: "/login", permanent: false },
-      ...["/login", "/change-password", "/reset-password", "/admin/:path*", "/school/:path*"].map((source) => ({
+      ...["/login", "/change-password", "/reset-password", "/super-admin/:path*", "/school/:path*"].map((source) => ({
         source,
         has: onMainDomain,
         destination: `${appUrl}${source}`,

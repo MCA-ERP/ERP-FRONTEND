@@ -180,7 +180,7 @@ export function useLoginLogic() {
       // Production Subdomain Dispatch
       if (!isLocalhost && process.env.NEXT_PUBLIC_APP_DOMAIN) {
         if (profile.role === "SuperAdmin" && adminDashboardUrl && !window.location.href.startsWith(adminDashboardUrl)) {
-          window.location.href = `${adminDashboardUrl}/admin`;
+          window.location.href = `${adminDashboardUrl}/super-admin`;
           return;
         }
         if (profile.role !== "SuperAdmin" && schoolDashboardUrl && !window.location.href.startsWith(schoolDashboardUrl)) {

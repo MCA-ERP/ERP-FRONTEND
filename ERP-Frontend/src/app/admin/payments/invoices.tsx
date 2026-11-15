@@ -166,6 +166,7 @@ function InvoicePanel({ id, onChange }: { id: string; onChange: () => void }) {
   const [pay, setPay] = useState({ amount: "", method: "Bank transfer", reference: "", paid_on: "" });
   const [refund, setRefund] = useState<{ id: string; max: number } | null>(null);
   const [refundF, setRefundF] = useState({ amount: "", reason: "" });
+  const [asked, setAsked] = useState(false);
 
   if (!detail.data) return <p className="py-8 text-center text-sm text-slate-400">{detail.error || "Loading…"}</p>;
   const { invoice } = detail.data;
@@ -179,7 +180,6 @@ function InvoicePanel({ id, onChange }: { id: string; onChange: () => void }) {
     if (ok) setPay({ amount: "", method: "Bank transfer", reference: "", paid_on: "" });
   };
 
-  const [asked, setAsked] = useState(false);
   const doRefund = async (e: FormEvent, approval = false) => {
     e.preventDefault();
     if (!refund) return;

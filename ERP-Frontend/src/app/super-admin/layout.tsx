@@ -29,6 +29,8 @@ const kids = (module: string, extra: Record<string, Partial<Child>> = {}, tail: 
   ...tail,
 ];
 
+const ALERTS_HREF = sectionHref("dashboard", "alerts");
+
 const NAV: Item[] = [
   { group: "Overview", href: "/super-admin", label: "Dashboard", icon: LayoutDashboard, area: "dashboard", children: kids("dashboard", { overview: { href: "/super-admin" }, revenue: { area: "payments" } }) },
   { group: "Schools & plans", href: sectionHref("schools", "registration"), label: "School Management", icon: Building2, area: "schools", badge: "schools", children: kids("schools") },
@@ -69,7 +71,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [error, setError] = useState("");
   const [navOpen, setNavOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [badges, setBadges] = useState<{ schools: number; support: number }>({ schools: 0, support: 0 });
+  const [badges, setBadges] = useState<{ schools: number; support: number; alerts: number }>({ schools: 0, support: 0, alerts: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const { signOut, busy: signingOut } = useSignOut();
   const [supportEmail, setSupportEmail] = useState("");
@@ -113,11 +115,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     if (!user) return;
     let live = true;
     const load = async () => {
-      const [s, t] = await Promise.all([
+      const [s, t, al] = await Promise.all([
         can("schools") ? adminFetch<{ counts: { pending: number } }>("/schools?pageSize=1").catch(() => null) : null,
         can("support") ? adminFetch<{ counts: { open: number } }>("/support/tickets?pageSize=1").catch(() => null) : null,
+        can("dashboard") ? adminFetch<{ counts: { open: number } }>("/dashboard/alerts").catch(() => null) : null,
       ]);
-      if (live) setBadges({ schools: s?.counts.pending ?? 0, support: t?.counts.open ?? 0 });
+      if (live) setBadges({ schools: s?.counts.pending ?? 0, support: t?.counts.open ?? 0, alerts: al?.counts.open ?? 0 });
     };
     void load();
     const timer = setInterval(load, 60_000);
@@ -166,6 +169,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     );
   }
 
+  // Clicking the open module again hides its submenu; clicking once more shows it. Moving to another module starts fresh.
+  const [shut, setShut] = useState<Record<string, boolean>>({});
+  const openGroup = useMemo(() => {
+    const all = items.flatMap((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])]);
+    const cur = bestOf(pathname, all);
+    return items.find((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])].includes(cur ?? ""))?.href ?? null;
+  }, [items, pathname]);
+  useEffect(() => { setShut({}); }, [openGroup]);
+
   if (!user) return <div className="flex min-h-screen items-center justify-center text-sm text-slate-400">Checking access…</div>;
 
   const allHrefs = items.flatMap((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])]);
@@ -193,6 +205,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           const Icon = item.icon;
           const hrefs = [item.href, ...(kids?.map((k) => k.href) ?? [])];
           const inGroup = hrefs.includes(current ?? "");
+          const showKids = inGroup && !shut[item.href];
           const onParent = !kids?.length && current === item.href;
           const count = item.badge ? badges[item.badge] : 0;
           return (
@@ -201,22 +214,27 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link
                 href={item.href}
                 aria-current={onParent ? "page" : undefined}
-                aria-expanded={kids?.length ? inGroup : undefined}
+                aria-expanded={kids?.length ? showKids : undefined}
+                title={kids?.length && inGroup ? `${showKids ? "Hide" : "Show"} ${item.label} menu` : undefined}
+                onClick={(e) => { if (kids?.length && inGroup) { e.preventDefault(); setShut((s) => ({ ...s, [item.href]: !s[item.href] })); } }}
                 className={`flex items-center gap-[11px] rounded-full px-2.5 py-2 text-[13.5px] transition ${onParent ? "bg-white font-semibold shadow-[0_1px_2px_rgba(2,111,155,0.12)]" : "font-medium hover:bg-[#0294ce]/10"} ${inGroup ? "font-bold" : ""}`}
               >
                 <Icon className={`size-[18px] shrink-0 ${onParent ? "text-[#026f9b]" : ""}`} strokeWidth={2} aria-hidden="true" />
                 <span className="min-w-0 flex-1 leading-snug">{item.label}</span>
                 {count > 0 && <span className="rounded-full bg-white px-[7px] text-[11px] font-bold leading-[18px] text-[#ac2c28]" aria-label={`${count} waiting`}>{count}</span>}
-                {kids?.length ? <ChevronDown className={`size-3.5 shrink-0 opacity-70 transition-transform ${inGroup ? "rotate-180" : ""}`} strokeWidth={2} aria-hidden="true" /> : null}
+                {kids?.length ? <ChevronDown className={`size-3.5 shrink-0 opacity-70 transition-transform ${showKids ? "rotate-180" : ""}`} strokeWidth={2} aria-hidden="true" /> : null}
               </Link>
-              {kids?.length && inGroup ? (
+              {kids?.length && showKids ? (
                 <div className="my-0.5 ml-[19px] flex flex-col gap-px border-l-2 border-[#026f9b]/25 pl-2.5">
                   {kids.map((k) => {
                     const on = current === k.href;
                     return (
                       <Link key={k.href} href={k.href} aria-current={on ? "page" : undefined}
                         className={`rounded-full px-2.5 py-1.5 text-[13px] transition ${on ? "bg-white font-semibold shadow-[0_1px_2px_rgba(2,111,155,0.12)]" : "font-medium hover:bg-[#0294ce]/10"}`}>
-                        {k.label}
+                        <span className="flex items-center gap-2">
+                          <span className="min-w-0 flex-1">{k.label}</span>
+                          {k.href === ALERTS_HREF && badges.alerts > 0 && <span className="rounded-full bg-white px-[7px] text-[11px] font-bold leading-[18px] text-[#ac2c28]" aria-label={`${badges.alerts} open`}>{badges.alerts}</span>}
+                        </span>
                       </Link>
                     );
                   })}

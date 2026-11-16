@@ -22,7 +22,7 @@ export default function PaymentsPage({ initialTab, embedded }: { initialTab?: Ta
 
   return (
     <>
-      {!embedded && <PageHeader title="Payments" subtitle="Invoices to schools, what has been paid, refunds, tax and revenue." />}
+      <PageHeader title="Payments" subtitle="Invoices to schools, what has been paid, refunds, tax and revenue." />
       <ErrorBanner message={analytics.error} />
       <StatGrid
         items={[

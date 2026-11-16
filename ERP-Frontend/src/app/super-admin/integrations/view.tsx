@@ -21,7 +21,7 @@ export default function IntegrationsPage({ initialTab, embedded }: { initialTab?
 
   return (
     <>
-      {!embedded && <PageHeader title="Integrations" subtitle="Services the platform connects to, and keys for your own apps and partners." />}
+      <PageHeader title="Integrations" subtitle="Services the platform connects to, and keys for your own apps and partners." />
       <ErrorBanner message={services.error} />
       <StatGrid
         items={[

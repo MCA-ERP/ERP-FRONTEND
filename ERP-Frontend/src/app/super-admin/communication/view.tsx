@@ -52,7 +52,7 @@ export default function CommunicationPage({ initialTab, embedded }: { initialTab
   const [tab, setTab] = useState<Tab>(initialTab ?? "announcements");
   return (
     <>
-      {!embedded && <PageHeader title="Communication" subtitle="Announcements, email, SMS and WhatsApp to schools, with templates, campaigns and delivery logs for each channel." />}
+      <PageHeader title="Communication" subtitle="Announcements, email, SMS and WhatsApp to schools, with templates, campaigns and delivery logs for each channel." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={[["announcements", "Announcements"], ["email", "Email"], ["sms", "SMS"], ["whatsapp", "WhatsApp"], ["notifications", "Notifications"], ["history", "History"]]} />)}
       {tab === "announcements" && <AnnouncementsTab />}
       {tab === "email" && <ChannelTab channel="email" />}

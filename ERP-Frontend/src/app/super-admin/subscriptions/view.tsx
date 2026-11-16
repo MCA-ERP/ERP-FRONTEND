@@ -26,7 +26,7 @@ export default function SubscriptionsPage({ initialTab, embedded }: { initialTab
   }, []);
   return (
     <>
-      {!embedded && <PageHeader title="Subscriptions" subtitle="Plans, who is on them, renewals, trials, discounts and billing rules." />}
+      <PageHeader title="Subscriptions" subtitle="Plans, who is on them, renewals, trials, discounts and billing rules." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={TABS} />)}
       {tab === "plans" && <Plans />}
       {tab === "list" && <SubscriptionList />}

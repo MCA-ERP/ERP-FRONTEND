@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { formatDateTime } from "@/lib/locale-format";
 
@@ -48,7 +48,12 @@ export function useLoad<T>(fn: () => Promise<T>, deps: unknown[]) {
   return { data, error, loading, reload: () => setTick((t) => t + 1) };
 }
 
+/** Set by the submenu pages, which show their own title above the screen, so a screen does not repeat it. */
+export const HeaderHidden = createContext(false);
+
 export function PageHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
+  // On a submenu page the title is already shown above, so only the page's own action button (like + Add) is kept.
+  if (useContext(HeaderHidden)) return action ? <div className="mb-4 flex justify-end">{action}</div> : null;
   return (
     <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
       <div>

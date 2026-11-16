@@ -20,7 +20,7 @@ export default function RolesPage({ initialTab, embedded }: { initialTab?: Tab; 
   const [tab, setTab] = useState<Tab>(initialTab ?? "catalogue");
   return (
     <>
-      {!embedded && <PageHeader title="Roles & permissions" subtitle="Who can do what: default and custom roles, access to menus and modules, approvals and a full history." />}
+      <PageHeader title="Roles & permissions" subtitle="Who can do what: default and custom roles, access to menus and modules, approvals and a full history." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={TABS} />)}
       {tab === "catalogue" && <Catalogue onOpenPermissions={() => setTab("detail")} />}
       {tab === "matrix" && <PermissionMatrix />}

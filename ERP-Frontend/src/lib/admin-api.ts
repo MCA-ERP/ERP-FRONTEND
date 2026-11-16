@@ -29,6 +29,8 @@ export interface SchoolRow {
   trial_ends_on: string | null;
   students: number;
   arr_paise: number;
+  /** Number of campuses, on the school list. */
+  campuses?: number;
 }
 
 export interface Plan {
@@ -41,7 +43,7 @@ export interface Plan {
 }
 
 export interface SchoolList extends Paged<SchoolRow> {
-  counts: { all: number; pending: number; active: number; inactive: number; suspended?: number };
+  counts: { all: number; pending: number; active: number; inactive: number; suspended?: number; campuses?: number };
 }
 
 export interface SchoolDetail {

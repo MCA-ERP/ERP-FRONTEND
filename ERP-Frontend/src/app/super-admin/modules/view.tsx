@@ -16,7 +16,7 @@ export default function ModulesPage({ initialTab, embedded }: { initialTab?: Tab
   const [tab, setTab] = useState<Tab>(initialTab ?? "catalogue");
   return (
     <>
-      {!embedded && <PageHeader title="Modules" subtitle="Everything the platform offers, what each plan includes, and how schools get it." />}
+      <PageHeader title="Modules" subtitle="Everything the platform offers, what each plan includes, and how schools get it." />
       {!embedded && (<TabBar
         value={tab}
         onChange={setTab}

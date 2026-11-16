@@ -30,6 +30,14 @@ import { SubscriptionList, type ListTab } from "@/app/super-admin/subscriptions/
 import { PlanManagement, type PlanTab } from "@/app/super-admin/subscriptions/pages/plans";
 import { RenewalManagement, type RenewalTab } from "@/app/super-admin/subscriptions/pages/renewal";
 import { SchoolSubscriptionPage, type SchoolSubTab } from "@/app/super-admin/subscriptions/pages/school";
+import { PlanChanges, type ChangeTab } from "@/app/super-admin/subscriptions/pages/changes";
+import { BillingSettings, type BillingTab } from "@/app/super-admin/subscriptions/pages/billing";
+import { TrialManagement, type TrialTab } from "@/app/super-admin/subscriptions/pages/trial";
+import { Coupons, Offers, Special } from "@/app/super-admin/subscriptions/discounts";
+import { ModuleBody, ModuleCatalogueNew, type CatalogueTab } from "@/app/super-admin/modules/pages";
+import { ModuleConfiguration, type ConfigTab as ModConfigTab } from "@/app/super-admin/modules/config-pages";
+import { ModuleAllocation, ModulePricing, ModuleVersions, type AllocTab, type PricingTab } from "@/app/super-admin/modules/alloc-pages";
+import { Updates as ModuleReleases } from "@/app/super-admin/modules/pricing-updates";
 import SubscriptionsView from "@/app/super-admin/subscriptions/view";
 import SupportView from "@/app/super-admin/support/view";
 import { USERS_SECTIONS } from "@/app/super-admin/users/sections";
@@ -48,6 +56,8 @@ export const PAGED = new Set([
   "dashboard/overview", "dashboard/schools", "dashboard/users", "dashboard/subs", "dashboard/revenue", "dashboard/activity", "dashboard/alerts",
   "schools/registration", "schools/directory", "schools/status", "schools/profile", "schools/configuration", "schools/campus", "schools/admin",
   "schools/documents", "schools/history", "subscriptions/plans", "subscriptions/features", "subscriptions/list", "subscriptions/school", "subscriptions/renewal",
+  "subscriptions/change", "subscriptions/trial", "subscriptions/discounts", "subscriptions/billing", "modules/catalogue", "modules/academic", "modules/administrative", "modules/communication", "modules/advanced",
+  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates",
   "users/platform", "users/school", "users/staff", "users/directory", "users/accounts", "users/login",
 ]);
 
@@ -81,21 +91,21 @@ const table: Record<string, Render> = {
   "subscriptions/list": (p) => <SubscriptionList tab={p as ListTab} key={p} />,
   "subscriptions/school": (p) => <SchoolSubscriptionPage tab={p as SchoolSubTab} key={p} />,
   "subscriptions/renewal": (p) => <RenewalManagement tab={p as RenewalTab} key={p} />,
-  "subscriptions/change": () => <SubscriptionsView embedded initialTab="changes" />,
-  "subscriptions/trial": () => <SubscriptionsView embedded initialTab="trials" />,
-  "subscriptions/discounts": () => <SubscriptionsView embedded initialTab="discounts" />,
-  "subscriptions/billing": () => <SubscriptionsView embedded initialTab="billing" />,
+  "subscriptions/change": (p) => <PlanChanges tab={p as ChangeTab} key={p} />,
+  "subscriptions/trial": (p) => <TrialManagement tab={p as TrialTab} key={p} />,
+  "subscriptions/discounts": (p) => (p === "offers" ? <Offers key={p} /> : p === "special" ? <Special key={p} /> : <Coupons key={p} />),
+  "subscriptions/billing": (p) => <BillingSettings tab={p as BillingTab} key={p} />,
 
   // ── Module Management ──
-  "modules/catalogue": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/academic": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/administrative": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/communication": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/advanced": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/configuration": () => <ModulesView embedded initialTab="config" />,
-  "modules/allocation": () => <ModulesView embedded initialTab="school" />,
-  "modules/pricing": () => <ModulesView embedded initialTab="pricing" />,
-  "modules/updates": () => <ModulesView embedded initialTab="updates" />,
+  "modules/catalogue": (p) => <ModuleCatalogueNew tab={p as CatalogueTab} key={p} />,
+  "modules/academic": (p) => <ModuleBody code={p} key={p} />,
+  "modules/administrative": (p) => <ModuleBody code={p} key={p} />,
+  "modules/communication": (p) => <ModuleBody code={p} key={p} />,
+  "modules/advanced": (p) => <ModuleBody code={p} key={p} />,
+  "modules/configuration": (p) => <ModuleConfiguration tab={p as ModConfigTab} key={p} />,
+  "modules/allocation": (p) => <ModuleAllocation tab={p as AllocTab} key={p} />,
+  "modules/pricing": (p) => <ModulePricing tab={p as PricingTab} key={p} />,
+  "modules/updates": (p) => (p === "version" ? <ModuleVersions key={p} /> : <ModuleReleases only={p === "notes" ? "notes" : "status"} key={p} />),
 
   // ── Role & Permissions ──
   "roles/catalogue": () => <RolesView embedded initialTab="catalogue" />,

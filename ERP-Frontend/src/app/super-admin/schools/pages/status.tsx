@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { adminFetch, json, type SchoolList, type SchoolRow } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, PlanTag, SimpleTable, StatusPill, fmtDay, num, useAction } from "@/components/admin/dash";
 import { ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useLoad } from "@/components/admin/ui";
@@ -42,7 +42,7 @@ export function SchoolStatus({ tab }: { tab: StatusTab }) {
     <div className="space-y-5">
       <ErrorBanner message={error || act.error} />
       <Panel title={def.title} sub={`${items.length} school${items.length === 1 ? "" : "s"}`}
-        right={<button type="button" className={small} onClick={() => downloadCsv(`schools-${tab}`, ["Code", "School", "Plan", "Students", "Status"], items.map((s) => [s.code, s.name, s.plan_name, s.students, s.status]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv(`schools-${tab}`, ["Code", "School", "Plan", "Students", "Status"], items.map((s) => [s.code, s.name, s.plan_name, s.students, s.status]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv(`schools-${tab}`, ["Code", "School", "Plan", "Students", "Status"], items.map((s) => [s.code, s.name, s.plan_name, s.students, s.status])))(); }}>Print</button></span>}>
         <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder={`Search ${def.title.toLowerCase()}`} aria-label="Search schools" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
         <SimpleTable
           head={[{ h: "School" }, { h: "Plan" }, { h: "Students", right: true }, { h: "Status" }, { h: def.last }, { h: "" }]}

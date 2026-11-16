@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { adminFetch, type Paged, type SchoolRow } from "@/lib/admin-api";
+import { Toggle } from "@/components/admin/toggle";
 import { PlanTag, StatusPill } from "@/components/admin/dash";
 import { ErrorBanner, btnGhost, btnPrimary, inputCls, useLoad } from "@/components/admin/ui";
 
@@ -73,10 +74,7 @@ export function ToggleRow({ label, hint, checked, onChange, disabled }: { label:
   return (
     <div className="-mx-5 flex items-center gap-4 border-t border-slate-100 px-5 py-3.5">
       <div className="min-w-0 flex-1"><p className="text-[13.5px] font-medium text-slate-900">{label}</p>{hint && <p className="text-xs text-slate-500">{hint}</p>}</div>
-      <button type="button" role="switch" aria-checked={checked} aria-label={label} disabled={disabled} onClick={() => onChange(!checked)}
-        className={`relative h-5 w-9 flex-none rounded-full transition ${checked ? "bg-[#41afda]" : "bg-slate-300"} ${disabled ? "opacity-50" : ""}`}>
-        <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${checked ? "left-[18px]" : "left-0.5"}`} />
-      </button>
+      <Toggle checked={checked} onChange={onChange} label={label} disabled={disabled} />
     </div>
   );
 }

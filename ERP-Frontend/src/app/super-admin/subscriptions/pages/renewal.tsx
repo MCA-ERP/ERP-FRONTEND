@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { adminFetch, qs, type Paged } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, PlanTag, SimpleTable, StatusPill, daysTo, fmtDay, inr, num } from "@/components/admin/dash";
 import { Chip, DaysChip, ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, useLoad } from "@/components/admin/ui";
@@ -30,7 +30,7 @@ export function RenewalManagement({ tab }: { tab: RenewalTab }) {
       <div className="space-y-5">
         <ErrorBanner message={hist.error} />
         <Panel title="Renewal history" sub="Renewals, plan changes, lapses and cancellations"
-          right={<button type="button" className={small} onClick={() => downloadCsv("renewal-history", ["Date", "School", "Event", "Details"], items.map((e) => [e.created_at.slice(0, 10), e.institutions?.name ?? "", LABEL[e.type] ?? e.type, e.summary]))}>Export</button>}>
+          right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("renewal-history", ["Date", "School", "Event", "Details"], items.map((e) => [e.created_at.slice(0, 10), e.institutions?.name ?? "", LABEL[e.type] ?? e.type, e.summary]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("renewal-history", ["Date", "School", "Event", "Details"], items.map((e) => [e.created_at.slice(0, 10), e.institutions?.name ?? "", LABEL[e.type] ?? e.type, e.summary])))(); }}>Print</button></span>}>
           <SimpleTable head={[{ h: "Date" }, { h: "School" }, { h: "Event" }, { h: "Details" }]} empty={hist.loading ? "Loading…" : "Nothing yet."}
             rows={items.map((e) => [fmtDay(e.created_at.slice(0, 10)), <b key="s" className="font-semibold text-slate-900">{e.institutions?.name ?? "—"}</b>, <Chip key="c" tone={TONE[e.type] ?? "mute"}>{LABEL[e.type] ?? e.type}</Chip>, e.summary])} />
           {hist.data && hist.data.total > hist.data.pageSize && (
@@ -50,7 +50,7 @@ export function RenewalManagement({ tab }: { tab: RenewalTab }) {
     <div className="space-y-5">
       <ErrorBanner message={up.error} />
       <Panel title="Upcoming renewals" sub="Renewing in the next 90 days. When the invoice is paid, the subscription renews by itself."
-        right={<button type="button" className={small} onClick={() => downloadCsv("upcoming-renewals", ["School", "Plan", "Students", "Annual value", "Renews"], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, r.renews_on ?? ""]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("upcoming-renewals", ["School", "Plan", "Students", "Annual value", "Renews"], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, r.renews_on ?? ""]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("upcoming-renewals", ["School", "Plan", "Students", "Annual value", "Renews"], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, r.renews_on ?? ""])))(); }}>Print</button></span>}>
         <SimpleTable
           head={[{ h: "School" }, { h: "Plan" }, { h: "Students", right: true }, { h: "Annual value", right: true }, { h: "Renews" }, { h: "In" }, { h: "Status" }, { h: "" }]}
           empty={up.loading ? "Loading…" : "Nothing renews soon."}

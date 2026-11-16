@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, num, useAction } from "@/components/admin/dash";
 import { Chip, ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useLoad } from "@/components/admin/ui";
@@ -148,7 +148,7 @@ function PlanList({ plans, loading, error }: { plans: PlanFull[]; loading: boole
           );
         })}
       </div>
-      <Panel title="Plans" sub={`${plans.length} plan${plans.length === 1 ? "" : "s"}`} right={<button type="button" className={small} onClick={() => downloadCsv("plans", ["Plan", "Price per student", "Students", "Modules", "Schools"], plans.map((p) => [p.name, p.price_per_student_paise / 100, p.student_limit ?? "Unlimited", p.module_count, p.schools]))}>Export</button>}>
+      <Panel title="Plans" sub={`${plans.length} plan${plans.length === 1 ? "" : "s"}`} right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("plans", ["Plan", "Price per student", "Students", "Modules", "Schools"], plans.map((p) => [p.name, p.price_per_student_paise / 100, p.student_limit ?? "Unlimited", p.module_count, p.schools]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("plans", ["Plan", "Price per student", "Students", "Modules", "Schools"], plans.map((p) => [p.name, p.price_per_student_paise / 100, p.student_limit ?? "Unlimited", p.module_count, p.schools])))(); }}>Print</button></span>}>
         <SimpleTable
           head={[{ h: "Plan" }, { h: "Price / student / yr" }, { h: "Students", right: true }, { h: "Modules", right: true }, { h: "Schools", right: true }, { h: "Status" }, { h: "" }]}
           empty={loading ? "Loading…" : "No plans."}

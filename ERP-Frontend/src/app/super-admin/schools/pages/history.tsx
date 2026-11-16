@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { adminFetch, type Paged } from "@/lib/admin-api";
 import { formatDateTime } from "@/lib/locale-format";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, fmtDay } from "@/components/admin/dash";
 import { Chip } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useLoad } from "@/components/admin/ui";
@@ -47,7 +47,7 @@ function History({ id, tab, name }: { id: string; tab: HistoryTab; name: string 
     return (
       <div className="space-y-5">
         <ErrorBanner message={ev.error} />
-        <Panel title="Activity history" sub={name} right={<button type="button" className={small} onClick={() => downloadCsv("school-activity", ["Date", "Event", "Details", "By"], rows.map((e) => [e.created_at, words(e.type), e.summary, e.actor_name ?? "System"]))}>Export</button>}>
+        <Panel title="Activity history" sub={name} right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("school-activity", ["Date", "Event", "Details", "By"], rows.map((e) => [e.created_at, words(e.type), e.summary, e.actor_name ?? "System"]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("school-activity", ["Date", "Event", "Details", "By"], rows.map((e) => [e.created_at, words(e.type), e.summary, e.actor_name ?? "System"])))(); }}>Print</button></span>}>
           <div className="border-b border-slate-100 p-4">{searchBox}</div>
           <SimpleTable head={[{ h: "Date" }, { h: "Event" }, { h: "Details" }, { h: "By" }]} empty={ev.loading ? "Loading…" : "Nothing recorded yet."}
             rows={rows.map((e) => [fmtDay(e.created_at.slice(0, 10)), <b key="t" className="font-semibold text-slate-900">{words(e.type)}</b>, e.summary, e.actor_name || "System"])} />
@@ -75,7 +75,7 @@ function History({ id, tab, name }: { id: string; tab: HistoryTab; name: string 
     return (
       <div className="space-y-5">
         <ErrorBanner message={sub.error} />
-        <Panel title="Subscription history" sub={name} right={<button type="button" className={small} onClick={() => downloadCsv("school-subscription-history", ["Date", "Event", "Plan", "Amount", "Invoice", "Result"], all.map((r) => [r.at.slice(0, 10), r.event, r.plan, r.amount === null ? "" : r.amount / 100, r.invoice, r.result[0]]))}>Export</button>}>
+        <Panel title="Subscription history" sub={name} right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("school-subscription-history", ["Date", "Event", "Plan", "Amount", "Invoice", "Result"], all.map((r) => [r.at.slice(0, 10), r.event, r.plan, r.amount === null ? "" : r.amount / 100, r.invoice, r.result[0]]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("school-subscription-history", ["Date", "Event", "Plan", "Amount", "Invoice", "Result"], all.map((r) => [r.at.slice(0, 10), r.event, r.plan, r.amount === null ? "" : r.amount / 100, r.invoice, r.result[0]])))(); }}>Print</button></span>}>
           <div className="border-b border-slate-100 p-4">{searchBox}</div>
           <SimpleTable head={[{ h: "Date" }, { h: "Event" }, { h: "Plan" }, { h: "Amount (incl. GST)", right: true }, { h: "Invoice" }, { h: "Result" }]} empty={sub.loading ? "Loading…" : "No subscription activity yet."}
             rows={all.map((r) => [fmtDay(r.at.slice(0, 10)), r.event, r.plan, r.amount === null ? "—" : rupees(r.amount), r.invoice, <Chip key="c" tone={r.result[1]}>{r.result[0]}</Chip>])} />
@@ -90,7 +90,7 @@ function History({ id, tab, name }: { id: string; tab: HistoryTab; name: string 
   return (
     <div className="space-y-5">
       <ErrorBanner message={ev.error} />
-      <Panel title="Audit trail" sub="Every changed value: who, when, and from what to what" right={<button type="button" className={small} onClick={() => downloadCsv("school-audit-trail", ["Time", "Changed by", "Field", "Old value", "New value"], changes.map((r) => [r.at, r.who, r.field, r.old, r.now]))}>Export</button>}>
+      <Panel title="Audit trail" sub="Every changed value: who, when, and from what to what" right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("school-audit-trail", ["Time", "Changed by", "Field", "Old value", "New value"], changes.map((r) => [r.at, r.who, r.field, r.old, r.now]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("school-audit-trail", ["Time", "Changed by", "Field", "Old value", "New value"], changes.map((r) => [r.at, r.who, r.field, r.old, r.now])))(); }}>Print</button></span>}>
         <div className="border-b border-slate-100 p-4">{searchBox}</div>
         <SimpleTable head={[{ h: "Time" }, { h: "Changed by" }, { h: "Field" }, { h: "Old value" }, { h: "New value" }]} empty={ev.loading ? "Loading…" : "No changes recorded yet."}
           rows={changes.map((r) => [formatDateTime(r.at), r.who, <b key="f" className="font-semibold text-slate-900">{r.field}</b>, <span key="o" className="text-slate-500">{r.old}</span>, r.now])} />

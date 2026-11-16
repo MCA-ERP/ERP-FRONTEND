@@ -19,14 +19,14 @@ export const USERS_SECTIONS: UsersSection[] = [
     key: "platform", label: "Platform Users", pages: [
       {
         key: "super", title: "Super Admin", description: "People with full control of the platform.",
-        render: () => (<><Note tone="warn">Keep at least two Super Admins so the platform is never locked out. Every Super Admin must use two-factor sign-in.</Note><Directory fixedGroup="super_admin" /></>),
+        render: () => (<><Note tone="warn">Keep at least two Super Admins so the platform is never locked out. Every Super Admin must use two-factor sign-in.</Note><Directory fixedGroup="super_admin" layout="super" /></>),
       },
-      { key: "support", title: "Support Staff", description: "Your platform team: managers, finance, support and content.", render: () => <Directory fixedGroup="support_staff" /> },
+      { key: "support", title: "Support Staff", description: "Your platform team: managers, finance, support and content.", render: () => <Directory fixedGroup="support_staff" layout="support" /> },
     ],
   },
   {
     key: "school", label: "School Users", pages: [
-      { key: "admins", title: "School Admin", description: "Administrators of each school.", render: () => <Directory fixedGroup="school_admin" /> },
+      { key: "admins", title: "School Admin", description: "Administrators of each school.", render: () => <Directory fixedGroup="school_admin" layout="admins" /> },
       { key: "principals", title: "Principal", description: "Principals of each school.", render: () => <Directory fixedGroup="principal" /> },
     ],
   },

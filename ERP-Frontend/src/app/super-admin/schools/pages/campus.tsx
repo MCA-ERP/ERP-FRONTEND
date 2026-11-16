@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json, qs, type Paged, type Plan } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, num, useAction } from "@/components/admin/dash";
 import { Chip, Tiles, ViewButton } from "@/components/admin/dash-ui";
 import { Modal, ErrorBanner, btnGhost, btnPrimary, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
@@ -109,7 +109,7 @@ function CampusList() {
         { label: "Inactive campuses", value: s ? num(s.inactive) : "…", sub: "Turned off, or school suspended or expired" },
       ]} />
       <Panel title="Campuses" sub={`${data?.total ?? 0} campus${data?.total === 1 ? "" : "es"}`}
-        right={<button type="button" className={small} onClick={() => downloadCsv("campuses", ["Campus ID", "Campus", "School", "City", "Head", "Classes", "Students", "Status"], items.map((c) => [c.code, c.name, c.institutions?.name, c.city, c.principal_name, c.classes_offered, c.students, c.is_active ? "Active" : "Off"]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("campuses", ["Campus ID", "Campus", "School", "City", "Head", "Classes", "Students", "Status"], items.map((c) => [c.code, c.name, c.institutions?.name, c.city, c.principal_name, c.classes_offered, c.students, c.is_active ? "Active" : "Off"]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("campuses", ["Campus ID", "Campus", "School", "City", "Head", "Classes", "Students", "Status"], items.map((c) => [c.code, c.name, c.institutions?.name, c.city, c.principal_name, c.classes_offered, c.students, c.is_active ? "Active" : "Off"])))(); }}>Print</button></span>}>
         <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder="Search campuses" aria-label="Search campuses" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
         <SimpleTable
           head={[{ h: "Campus ID" }, { h: "Campus" }, { h: "City" }, { h: "Head" }, { h: "Classes" }, { h: "Students", right: true }, { h: "Status" }, { h: "" }]}

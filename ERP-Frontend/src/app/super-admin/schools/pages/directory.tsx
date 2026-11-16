@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { adminFetch, qs, type Plan, type SchoolList, type SchoolRow } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, PlanTag, SimpleTable, StatusPill, fmtDay, num } from "@/components/admin/dash";
 import { Tag, Tiles, ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
@@ -42,7 +42,7 @@ export function SchoolDirectory({ tab }: { tab: DirectoryTab }) {
           { label: "Campuses", value: counts?.campuses !== undefined ? num(counts.campuses) : "…", sub: "Across all schools" },
         ]} />
       )}
-      <Panel title={TITLE[tab]} sub={`${data?.total ?? 0} school${data?.total === 1 ? "" : "s"}`} right={<button type="button" className={small} onClick={exportCsv}>Export</button>}>
+      <Panel title={TITLE[tab]} sub={`${data?.total ?? 0} school${data?.total === 1 ? "" : "s"}`} right={<span className="flex gap-2"><button type="button" className={small} onClick={exportCsv}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (exportCsv)(); }}>Print</button></span>}>
         <div className="flex flex-wrap gap-2.5 border-b border-slate-100 p-4">
           <input className={`${inputCls} max-w-xs`} placeholder={`Search ${tab === "all" ? "all" : tab} schools`} aria-label="Search schools" value={search} onChange={(e) => setSearch(e.target.value)} />
           <select className={`${inputCls} max-w-[9rem]`} aria-label="Plan" value={plan} onChange={(e) => setPlan(e.target.value)}>

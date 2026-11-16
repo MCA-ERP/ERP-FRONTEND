@@ -34,7 +34,13 @@ export function DashboardOverviewRoute() {
 }
 
 /** The red button at the top right of some pages, and where it goes. */
-const CTA: Record<string, { label: string; module: string; section: string; page: string }> = {
+const CTA: Record<string, { label: string; module?: string; section?: string; page?: string; event?: string }> = {
+  "users/platform/super": { label: "+ Invite", event: "users/platform/super" },
+  "users/platform/support": { label: "+ Invite", event: "users/platform/support" },
+  "users/school/admins": { label: "+ Create admin", event: "users/school/admins" },
+  "modules/catalogue/all": { label: "+ Add module", event: "modules/catalogue/all" },
+  "modules/configuration/flags": { label: "+ New flag", event: "modules/configuration/flags" },
+  "modules/pricing/bundle": { label: "+ New bundle", event: "modules/pricing/bundle" },
   "schools/registration/application": { label: "+ Add school", module: "schools", section: "registration", page: "add" },
   "schools/directory/all": { label: "+ Add school", module: "schools", section: "registration", page: "add" },
   "subscriptions/plans/list": { label: "+ New plan", module: "subscriptions", section: "plans", page: "create" },
@@ -58,8 +64,10 @@ function SectionView({ module, moduleLabel, section }: { module: string; moduleL
   const cta = paged ? CTA[`${module}/${section.key}/${page.key}`] : undefined;
   const goCta = () => {
     if (!cta) return;
-    if (cta.module === module && cta.section === section.key) setTab(cta.page);
-    else router.push(`${sectionHref(cta.module, cta.section)}?tab=${cta.page}`);
+    if (cta.event) { window.dispatchEvent(new CustomEvent("mca-cta", { detail: cta.event })); return; }
+    if (!cta.module || !cta.section) return;
+    if (cta.module === module && cta.section === section.key) setTab(cta.page ?? tab);
+    else router.push(`${sectionHref(cta.module, cta.section)}?tab=${cta.page ?? ""}`);
   };
   const title = paged ? page.title : section.label;
   const subtitle = paged

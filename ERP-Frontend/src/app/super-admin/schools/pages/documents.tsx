@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { adminFetch, json } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, fmtDay, num, useAction } from "@/components/admin/dash";
 import { Chip, Tiles, ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useLoad } from "@/components/admin/ui";
@@ -44,7 +44,7 @@ export function SchoolDocuments({ tab }: { tab: DocTab }) {
         { label: "Expired", value: c ? num(c.expired) : "…", sub: "Renewal needed" },
       ]} />
       <Panel title={title} sub={`${items.length} document${items.length === 1 ? "" : "s"}`}
-        right={<button type="button" className={small} onClick={() => downloadCsv(`${tab}-documents`, ["School", "Document", "File", "Uploaded", "Valid until", "Status"], items.map((r) => [r.school.name, r.doc_type, r.file_name ?? "", r.uploaded_at?.slice(0, 10) ?? "", r.valid_until ?? "", LABEL[r.status]]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv(`${tab}-documents`, ["School", "Document", "File", "Uploaded", "Valid until", "Status"], items.map((r) => [r.school.name, r.doc_type, r.file_name ?? "", r.uploaded_at?.slice(0, 10) ?? "", r.valid_until ?? "", LABEL[r.status]]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv(`${tab}-documents`, ["School", "Document", "File", "Uploaded", "Valid until", "Status"], items.map((r) => [r.school.name, r.doc_type, r.file_name ?? "", r.uploaded_at?.slice(0, 10) ?? "", r.valid_until ?? "", LABEL[r.status]])))(); }}>Print</button></span>}>
         <div className="flex flex-wrap gap-2.5 border-b border-slate-100 p-4">
           <input className={`${inputCls} max-w-xs`} placeholder="Search school or document" aria-label="Search documents" value={search} onChange={(e) => setSearch(e.target.value)} />
           <select className={`${inputCls} max-w-[10rem]`} aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}>

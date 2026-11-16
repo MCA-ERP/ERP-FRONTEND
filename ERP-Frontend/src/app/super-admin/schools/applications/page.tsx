@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json, qs, type Paged, type Plan } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, fmtDay, num, useAction } from "@/components/admin/dash";
 import { Chip, Tag, Tiles } from "@/components/admin/dash-ui";
 import { ErrorBanner, Field, Modal, btnGhost, btnPrimary, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
@@ -68,7 +68,7 @@ export default function ApplicationsPage() {
         { label: "Rejected", value: c ? num(c.rejected_30d) : "…", sub: "Last 30 days" },
       ]} />
       <Panel title="Applications" sub={`${data?.total ?? 0} application${data?.total === 1 ? "" : "s"}`}
-        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => setAdding(true)}>+ Add application</button><button type="button" className={small} onClick={() => downloadCsv("applications", ["Application", "School", "City", "Board", "Students", "Contact", "Email", "Source", "Received", "Status"], items.map((a) => [a.code, a.school_name, a.city, a.board, a.student_estimate, a.contact_name, a.contact_email, SOURCE[a.source], a.created_at.slice(0, 10), LABEL[a.status]]))}>Export</button></span>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => setAdding(true)}>+ Add application</button><span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("applications", ["Application", "School", "City", "Board", "Students", "Contact", "Email", "Source", "Received", "Status"], items.map((a) => [a.code, a.school_name, a.city, a.board, a.student_estimate, a.contact_name, a.contact_email, SOURCE[a.source], a.created_at.slice(0, 10), LABEL[a.status]]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("applications", ["Application", "School", "City", "Board", "Students", "Contact", "Email", "Source", "Received", "Status"], items.map((a) => [a.code, a.school_name, a.city, a.board, a.student_estimate, a.contact_name, a.contact_email, SOURCE[a.source], a.created_at.slice(0, 10), LABEL[a.status]])))(); }}>Print</button></span></span>}>
         <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder="Search applications" aria-label="Search applications" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
         <SimpleTable
           head={[{ h: "Application" }, { h: "School" }, { h: "Board" }, { h: "Students", right: true }, { h: "Contact" }, { h: "Source" }, { h: "Received" }, { h: "Status" }, { h: "" }]}

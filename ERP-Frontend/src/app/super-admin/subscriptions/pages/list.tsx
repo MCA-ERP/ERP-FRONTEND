@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { adminFetch, qs, type Paged } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, PlanTag, SimpleTable, StatusPill, daysTo, fmtDay, inr, lakh, num } from "@/components/admin/dash";
 import { Tiles, ViewButton } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
@@ -43,7 +43,7 @@ export function SubscriptionList({ tab }: { tab: ListTab }) {
         ]} />
       )}
       <Panel title={TITLE[tab]} sub={`${data?.total ?? 0} school${data?.total === 1 ? "" : "s"}`}
-        right={<button type="button" className={small} onClick={() => downloadCsv(`subscriptions-${tab}`, ["School", "Plan", "Students", "Annual value", dateHead], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, dateOf(r) ?? ""]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv(`subscriptions-${tab}`, ["School", "Plan", "Students", "Annual value", dateHead], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, dateOf(r) ?? ""]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv(`subscriptions-${tab}`, ["School", "Plan", "Students", "Annual value", dateHead], items.map((r) => [r.name, r.plan_name ?? "", r.students, r.arr_paise / 100, dateOf(r) ?? ""])))(); }}>Print</button></span>}>
         <div className="flex flex-wrap gap-2.5 border-b border-slate-100 p-4">
           <input className={`${inputCls} max-w-xs`} placeholder="Search schools" aria-label="Search subscriptions" value={search} onChange={(e) => setSearch(e.target.value)} />
           <select className={`${inputCls} max-w-[10rem]`} aria-label="Plan" value={plan} onChange={(e) => setPlan(e.target.value)}>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json } from "@/lib/admin-api";
-import { downloadCsv } from "@/components/admin/csv";
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { Panel, SimpleTable, StatusPill, useAction } from "@/components/admin/dash";
 import { Chip, Tag } from "@/components/admin/dash-ui";
 import { ErrorBanner, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
@@ -102,7 +102,7 @@ function AssignAdmin() {
   return (
     <div className="space-y-5">
       <ErrorBanner message={schools.error || admins.error || act.error} />
-      <Panel title="Primary admins" sub={`${schools.data?.total ?? 0} schools`} right={<button type="button" className={small} onClick={() => downloadCsv("primary-admins", ["School", "Primary admin", "Other admins"], rows.map((s) => [s.name, bySchool(s.id).find((a) => a.is_primary)?.name ?? "", Math.max(0, bySchool(s.id).length - 1)]))}>Export</button>}>
+      <Panel title="Primary admins" sub={`${schools.data?.total ?? 0} schools`} right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("primary-admins", ["School", "Primary admin", "Other admins"], rows.map((s) => [s.name, bySchool(s.id).find((a) => a.is_primary)?.name ?? "", Math.max(0, bySchool(s.id).length - 1)]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("primary-admins", ["School", "Primary admin", "Other admins"], rows.map((s) => [s.name, bySchool(s.id).find((a) => a.is_primary)?.name ?? "", Math.max(0, bySchool(s.id).length - 1)])))(); }}>Print</button></span>}>
         <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder="Search primary admins" aria-label="Search primary admins" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
         <SimpleTable
           head={[{ h: "School" }, { h: "Primary admin" }, { h: "Other admins", right: true }, { h: "School status" }, { h: "" }]}
@@ -140,7 +140,7 @@ function AdminAccess() {
     <div className="space-y-5">
       <ErrorBanner message={error || act.error} />
       <Panel title="Admin access" sub={`${rows.length} admin${rows.length === 1 ? "" : "s"}`}
-        right={<button type="button" className={small} onClick={() => downloadCsv("admin-access", ["Admin", "School", "Type", ...AREAS.map(([, l]) => l), "Status"], rows.map((a) => [a.name, a.school?.name, a.is_primary ? "Primary admin" : a.designation ?? "Admin", ...AREAS.map(([k]) => (a.access[k] ? "Yes" : "No")), a.status]))}>Export</button>}>
+        right={<span className="flex gap-2"><button type="button" className={small} onClick={() => downloadCsv("admin-access", ["Admin", "School", "Type", ...AREAS.map(([, l]) => l), "Status"], rows.map((a) => [a.name, a.school?.name, a.is_primary ? "Primary admin" : a.designation ?? "Admin", ...AREAS.map(([k]) => (a.access[k] ? "Yes" : "No")), a.status]))}>Export</button><button type="button" className={small} onClick={() => { armPrint(); (() => downloadCsv("admin-access", ["Admin", "School", "Type", ...AREAS.map(([, l]) => l), "Status"], rows.map((a) => [a.name, a.school?.name, a.is_primary ? "Primary admin" : a.designation ?? "Admin", ...AREAS.map(([k]) => (a.access[k] ? "Yes" : "No")), a.status])))(); }}>Print</button></span>}>
         <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder="Search admin access" aria-label="Search admin access" value={search} onChange={(e) => setSearch(e.target.value)} /></div>
         <SimpleTable
           head={[{ h: "Admin" }, { h: "Type" }, ...AREAS.map(([, l]) => ({ h: l })), { h: "Status" }]}

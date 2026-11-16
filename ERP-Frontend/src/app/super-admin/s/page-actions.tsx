@@ -1,5 +1,6 @@
 "use client";
 
+import { armPrint, downloadCsv } from "@/components/admin/csv";
 import { useState } from "react";
 import type { RefObject } from "react";
 import { CalendarDays, Search } from "lucide-react";
@@ -23,27 +24,19 @@ export function PageActions({ target, name }: { target: RefObject<HTMLElement | 
 
   const exportCsv = () => {
     const tables = Array.from(target.current?.querySelectorAll("table") ?? []);
-    const cell = (t: string) => `"${t.replace(/\s+/g, " ").trim().replace(/"/g, '""')}"`;
-    const out: string[] = [];
+    const rowsOf = (t: Element) => Array.from(t.querySelectorAll("tr")).filter((r) => !(r as HTMLElement).hidden).map((row) => Array.from(row.querySelectorAll("th,td")).filter((c) => !c.querySelector("button, a[href]") || (c.textContent ?? "").trim().length > 12).map((c) => (c.textContent ?? "").replace(/s+/g, " ").trim())).filter((r) => r.length);
+    const header: string[] = [];
+    const rows: string[][] = [];
     tables.forEach((t, i) => {
-      if (i) out.push("");
+      const all = rowsOf(t);
+      if (!all.length) return;
       const title = t.closest("section")?.querySelector("h2")?.textContent?.trim();
-      if (title) out.push(cell(title));
-      t.querySelectorAll("tr").forEach((row) => {
-        if ((row as HTMLElement).hidden) return;
-        const cells = Array.from(row.querySelectorAll("th,td"))
-          .filter((c) => !c.querySelector("button, a[href]") || (c.textContent ?? "").trim().length > 12)
-          .map((c) => cell(c.textContent ?? ""));
-        if (cells.length) out.push(cells.join(","));
-      });
+      if (i && rows.length) rows.push([]);
+      if (title && tables.length > 1) rows.push([title]);
+      if (!header.length) { header.push(...all[0]); rows.push(...all.slice(1)); } else rows.push(...all);
     });
-    if (!out.length) { window.alert("There is no table on this page to export."); return; }
-    const blob = new Blob(["﻿" + out.join("\r\n")], { type: "text/csv;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${name}-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    if (!rows.length) { window.alert("There is no table on this page to download."); return; }
+    downloadCsv(name, header, rows);
   };
 
   return (
@@ -73,7 +66,7 @@ export function PageActions({ target, name }: { target: RefObject<HTMLElement | 
           <input value={q} onChange={(e) => search(e.target.value)} placeholder="Search this page" aria-label="Search this page" className="w-full bg-transparent text-[13px] outline-none" />
         </label>
         <button type="button" onClick={exportCsv} className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[13px] font-semibold hover:border-slate-400">Export</button>
-        <button type="button" onClick={() => window.print()} className="rounded-full bg-[#026f9b] px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-[#014a67]">Download report</button>
+        <button type="button" onClick={() => { armPrint(); exportCsv(); }} className="rounded-full bg-[#026f9b] px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-[#014a67]">Print</button>
       </div>
     </div>
   );

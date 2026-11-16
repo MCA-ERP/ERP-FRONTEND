@@ -48,7 +48,7 @@ export function DiscountsSection() {
 // ── coupons ──
 interface Coupon { id: string; code: string; description: string | null; kind: "percent" | "per_student"; value: number; plan_codes: string[]; valid_from: string | null; valid_until: string | null; max_redemptions: number | null; redeemed_count: number; is_active: boolean }
 
-function Coupons() {
+export function Coupons() {
   const { data, error, loading, reload } = useLoad(() => adminFetch<{ coupons: Coupon[] }>("/subscriptions/coupons"), []);
   const plans = useLoad(() => adminFetch<{ plans: Plan[] }>("/plans"), []);
   const act = useAction(reload);
@@ -114,7 +114,7 @@ function Coupons() {
 // ── offers ──
 interface Offer { id: string; name: string; percent_off: number; plan_codes: string[]; min_students: number | null; valid_from: string | null; valid_until: string | null; is_active: boolean }
 
-function Offers() {
+export function Offers() {
   const { data, error, loading, reload } = useLoad(() => adminFetch<{ offers: Offer[] }>("/subscriptions/offers"), []);
   const plans = useLoad(() => adminFetch<{ plans: Plan[] }>("/plans"), []);
   const act = useAction(reload);

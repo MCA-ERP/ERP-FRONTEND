@@ -28,7 +28,7 @@ export default function ReportsPage({ initialGroup, embedded }: { initialGroup?:
 
   return (
     <>
-      {!embedded && <PageHeader title="Reports & analytics" subtitle="How the platform is growing and performing, with a chart and a download for every report." />}
+      <PageHeader title="Reports & analytics" subtitle="How the platform is growing and performing, with a chart and a download for every report." />
       <ErrorBanner message={list.error} />
       {!embedded && (<TabBar
         value={group}

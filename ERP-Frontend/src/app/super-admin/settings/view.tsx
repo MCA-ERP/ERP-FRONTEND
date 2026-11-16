@@ -150,7 +150,7 @@ export default function SettingsPage({ initialTab, embedded }: { initialTab?: Ta
 
   return (
     <>
-      {!embedded && <PageHeader title="System settings" subtitle="Platform-wide configuration: identity, regions, formats, maintenance and versions." />}
+      <PageHeader title="System settings" subtitle="Platform-wide configuration: identity, regions, formats, maintenance and versions." />
       {!embedded && (<TabBar value={tab} onChange={(t) => { setTab(t); setSaved(false); setSaveError(""); }} tabs={(Object.keys(TABS) as Tab[]).map((k) => [k, TABS[k].label])} />)}
       <ErrorBanner message={error} />
       {tab === "versions" ? (

@@ -16,7 +16,7 @@ export default function WebsitePage({ initialTab, embedded }: { initialTab?: Tab
   const [tab, setTab] = useState<Tab>(initialTab ?? "pages");
   return (
     <>
-      {!embedded && <PageHeader title="Website" subtitle="Pages, banners, blog, testimonials, FAQ and search settings for the public site. Only published content is served." />}
+      <PageHeader title="Website" subtitle="Pages, banners, blog, testimonials, FAQ and search settings for the public site. Only published content is served." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={[["pages", "Pages"], ["banners", "Banners"], ["blog", "Blog"], ["testimonials", "Testimonials"], ["faq", "FAQ"], ["seo", "SEO"]]} />)}
       {tab === "pages" && <PagesTab />}
       {tab === "banners" && <BannersTab />}

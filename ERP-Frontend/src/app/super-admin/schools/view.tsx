@@ -7,7 +7,7 @@ import {
   adminFetch, json, qs,
   type Plan, type SchoolDetail, type SchoolList, type SchoolRow, type SchoolStatus,
 } from "@/lib/admin-api";
-import { PlanTag, StatusPill, TabBar, fmtDay, inr, num } from "@/components/admin/dash";
+import { PlanTag, StatGrid, StatusPill, TabBar, fmtDay, inr, num } from "@/components/admin/dash";
 import {
   Card, EmptyRow, ErrorBanner, Field, Modal, PageHeader, Pagination, Th,
   btnGhost, btnPrimary, fmtDate, inputCls, useDebounced, useLoad,
@@ -47,10 +47,11 @@ export default function SchoolsPage({ initialTab, embedded }: { initialTab?: Tab
     if (t === "pending" || t === "active" || t === "inactive" || t === "suspended") setTab(t);
   }, []);
 
+  const [board, setBoard] = useState("");
   const plans = useLoad(() => adminFetch<{ plans: Plan[] }>("/plans"), []);
   const { data, error, loading, reload } = useLoad(
-    () => adminFetch<SchoolList>(`/schools${qs({ group: tab === "all" ? undefined : tab, search: debounced, plan, page })}`),
-    [tab, debounced, plan, page]
+    () => adminFetch<SchoolList>(`/schools${qs({ group: tab === "all" ? undefined : tab, search: debounced, plan, board, page })}`),
+    [tab, debounced, plan, board, page]
   );
 
   const [dialog, setDialog] = useState<Dialog>(null);
@@ -148,6 +149,14 @@ export default function SchoolsPage({ initialTab, embedded }: { initialTab?: Tab
         action={<button type="button" className={btnPrimary} onClick={openCreate}>+ Add school</button>}
       />
       <ErrorBanner message={error || actionError} />
+      {embedded && tab === "all" && counts && (
+        <div className="mb-6"><StatGrid items={[
+          { label: "Total", value: counts.all, sub: "Registered" },
+          { label: "Active", value: counts.active, sub: "Paid, trial or overdue" },
+          { label: "Pending approval", value: counts.pending, sub: "Waiting for review" },
+          { label: "Inactive", value: counts.inactive + (counts.suspended ?? 0), sub: "Deactivated, expired or suspended" },
+        ]} /></div>
+      )}
 
       {!embedded && (<TabBar
         value={tab}
@@ -171,14 +180,18 @@ export default function SchoolsPage({ initialTab, embedded }: { initialTab?: Tab
             <option value="">All plans</option>
             {plans.data?.plans.map((p) => <option key={p.id} value={p.code}>{p.name}</option>)}
           </select>
+          <select className={`${inputCls} max-w-[10rem]`} aria-label="Board" value={board} onChange={(e) => { setBoard(e.target.value); setPage(1); }}>
+            <option value="">All boards</option>
+            {["CBSE", "ICSE", "State Board", "IB", "Cambridge", "Montessori", "Play school"].map((b) => <option key={b}>{b}</option>)}
+          </select>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="border-y border-slate-100 bg-slate-50">
-              <tr><Th>School</Th><Th>Board</Th><Th>Plan</Th><Th>Students</Th><Th>Status</Th><Th>Renews</Th><Th /></tr>
+              <tr><Th>School</Th><Th>Board</Th><Th>State</Th><Th>Plan</Th><Th>Students</Th><Th>Status</Th><Th>Renews</Th><Th /></tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {!data?.items.length && <EmptyRow cols={7} loading={loading} text="No schools found." />}
+              {!data?.items.length && <EmptyRow cols={8} loading={loading} text="No schools found." />}
               {data?.items.map((s) => (
                 <tr key={s.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
@@ -186,6 +199,7 @@ export default function SchoolsPage({ initialTab, embedded }: { initialTab?: Tab
                     <p className="text-xs text-slate-400">{s.code}{s.city ? ` · ${s.city}` : ""}{s.contact_name ? ` · ${s.contact_name}` : ""}</p>
                   </td>
                   <td className="px-4 py-3 text-slate-600">{s.board || "—"}</td>
+                  <td className="px-4 py-3 text-slate-600">{s.state || "—"}</td>
                   <td className="px-4 py-3"><PlanTag code={s.plan_code} name={s.plan_name} /></td>
                   <td className="px-4 py-3 tabular-nums text-slate-600">{num(s.students)}</td>
                   <td className="px-4 py-3"><StatusPill status={s.status} /></td>

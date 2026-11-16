@@ -1,12 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import PlatformOverviewPage from "@/app/super-admin/page";
-import AuditLogsPage from "@/app/super-admin/audit-logs/page";
-import RevenueStats from "@/app/super-admin/dashboard/revenue/page";
-import SchoolStats from "@/app/super-admin/dashboard/schools/page";
-import SubscriptionStats from "@/app/super-admin/dashboard/subscriptions/page";
-import UserStats from "@/app/super-admin/dashboard/users/page";
+import PlatformOverviewPage from "@/app/super-admin/dashboard/overview/view";
+import RevenueStats from "@/app/super-admin/dashboard/revenue/view";
+import SchoolStats from "@/app/super-admin/dashboard/schools/view";
+import SubscriptionStats from "@/app/super-admin/dashboard/subscriptions/view";
+import UserStats from "@/app/super-admin/dashboard/users/view";
 import CommunicationView from "@/app/super-admin/communication/view";
 import IntegrationsView from "@/app/super-admin/integrations/view";
 import ModulesView from "@/app/super-admin/modules/view";
@@ -15,17 +14,38 @@ import ReportsView from "@/app/super-admin/reports/view";
 import RolesView from "@/app/super-admin/roles/view";
 import SchoolApplications from "@/app/super-admin/schools/applications/page";
 import SchoolApproval from "@/app/super-admin/schools/approval/page";
-import SchoolCampuses from "@/app/super-admin/schools/campuses/page";
-import { AdminsSection, ConfigSection, DocumentsSection, HistorySection, ProfileSection } from "@/app/super-admin/schools/[id]/sections";
-import SchoolsView from "@/app/super-admin/schools/view";
+import { AddSchool } from "@/app/super-admin/schools/add-school";
+import { SchoolAdmin, type AdminTab } from "@/app/super-admin/schools/pages/admin";
+import { SchoolCampus, type CampusTab } from "@/app/super-admin/schools/pages/campus";
+import { SchoolConfiguration, type ConfigTab } from "@/app/super-admin/schools/pages/config";
+import { SchoolDirectory, type DirectoryTab } from "@/app/super-admin/schools/pages/directory";
+import { SchoolProfile, type ProfileTab } from "@/app/super-admin/schools/pages/profile";
+import { SchoolStatus, type StatusTab } from "@/app/super-admin/schools/pages/status";
 import SecurityView from "@/app/super-admin/security/view";
 import SettingsView from "@/app/super-admin/settings/view";
+import { SchoolDocuments, type DocTab } from "@/app/super-admin/schools/pages/documents";
+import { SchoolHistory, type HistoryTab } from "@/app/super-admin/schools/pages/history";
+import { PlanFeatures, type FeatureTab } from "@/app/super-admin/subscriptions/pages/features";
+import { SubscriptionList, type ListTab } from "@/app/super-admin/subscriptions/pages/list";
+import { PlanManagement, type PlanTab } from "@/app/super-admin/subscriptions/pages/plans";
+import { RenewalManagement, type RenewalTab } from "@/app/super-admin/subscriptions/pages/renewal";
+import { SchoolSubscriptionPage, type SchoolSubTab } from "@/app/super-admin/subscriptions/pages/school";
+import { PlanChanges, type ChangeTab } from "@/app/super-admin/subscriptions/pages/changes";
+import { BillingSettings, type BillingTab } from "@/app/super-admin/subscriptions/pages/billing";
+import { TrialManagement, type TrialTab } from "@/app/super-admin/subscriptions/pages/trial";
+import { Coupons, Offers, Special } from "@/app/super-admin/subscriptions/discounts";
+import { ModuleBody, ModuleCatalogueNew, type CatalogueTab } from "@/app/super-admin/modules/pages";
+import { ModuleConfiguration, type ConfigTab as ModConfigTab } from "@/app/super-admin/modules/config-pages";
+import { ModuleAllocation, ModulePricing, ModuleVersions, type AllocTab, type PricingTab } from "@/app/super-admin/modules/alloc-pages";
+import { Updates as ModuleReleases } from "@/app/super-admin/modules/pricing-updates";
 import SubscriptionsView from "@/app/super-admin/subscriptions/view";
 import SupportView from "@/app/super-admin/support/view";
 import { USERS_SECTIONS } from "@/app/super-admin/users/sections";
 import { Events } from "@/app/super-admin/users/activity";
 import WebsiteView from "@/app/super-admin/website/view";
+import { RecentLogins, RecentRegistrations, SystemActivity } from "./activity";
 import { AlertsPanel } from "./alerts";
+import { KpiSummary } from "./kpi";
 import { WithSchool } from "./school-picker";
 
 /**
@@ -34,57 +54,58 @@ import { WithSchool } from "./school-picker";
  */
 export const PAGED = new Set([
   "dashboard/overview", "dashboard/schools", "dashboard/users", "dashboard/subs", "dashboard/revenue", "dashboard/activity", "dashboard/alerts",
-  "schools/registration", "schools/directory", "schools/status",
+  "schools/registration", "schools/directory", "schools/status", "schools/profile", "schools/configuration", "schools/campus", "schools/admin",
+  "schools/documents", "schools/history", "subscriptions/plans", "subscriptions/features", "subscriptions/list", "subscriptions/school", "subscriptions/renewal",
+  "subscriptions/change", "subscriptions/trial", "subscriptions/discounts", "subscriptions/billing", "modules/catalogue", "modules/academic", "modules/administrative", "modules/communication", "modules/advanced",
+  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates",
   "users/platform", "users/school", "users/staff", "users/directory", "users/accounts", "users/login",
 ]);
 
-const DIRECTORY_TAB: Record<string, "all" | "active" | "inactive" | "suspended" | "pending"> = { all: "all", active: "active", inactive: "inactive", suspended: "suspended" };
-const STATUS_TAB: Record<string, "all" | "active" | "inactive" | "suspended" | "pending"> = { activate: "pending", deactivate: "active", suspend: "active", reactivate: "suspended" };
 const SETTINGS_TAB = { general: "general", regional: "regional", language: "regional", datetime: "datetime", files: "app", email: "notify", config: "maintenance", version: "versions" } as const;
 
 type Render = (page: string) => ReactNode;
 const table: Record<string, Render> = {
   // ── Dashboard ──
-  "dashboard/overview": () => <PlatformOverviewPage />,
-  "dashboard/schools": () => <SchoolStats />,
-  "dashboard/users": () => <UserStats />,
-  "dashboard/subs": () => <SubscriptionStats />,
-  "dashboard/revenue": () => <RevenueStats />,
-  "dashboard/activity": (p) => (p === "logins" ? <Events failed={false} key="l" /> : p === "registrations" ? <SchoolsView embedded initialTab="all" key="r" /> : <AuditLogsPage />),
+  "dashboard/overview": (p) => (p === "kpi" ? <KpiSummary key="k" /> : <PlatformOverviewPage key="o" />),
+  "dashboard/schools": (p) => <SchoolStats key={p} tab={p as "total" | "active" | "inactive"} />,
+  "dashboard/users": (p) => <UserStats key={p} tab={p as "total" | "admins" | "teachers" | "students" | "parents"} />,
+  "dashboard/subs": (p) => <SubscriptionStats key={p} tab={p as "active" | "expired" | "trial" | "renewal"} />,
+  "dashboard/revenue": (p) => <RevenueStats key={p} tab={p as "monthly" | "annual" | "outstanding"} />,
+  "dashboard/activity": (p) => (p === "logins" ? <RecentLogins key="l" /> : p === "registrations" ? <RecentRegistrations key="r" /> : <SystemActivity key="s" />),
   "dashboard/alerts": (p) => <AlertsPanel category={p} key={p} />,
 
   // ── School Management ──
-  "schools/registration": (p) => (p === "application" ? <SchoolApplications /> : p === "approval" ? <SchoolApproval /> : <SchoolsView embedded initialTab="pending" />),
-  "schools/directory": (p) => <SchoolsView embedded initialTab={DIRECTORY_TAB[p] ?? "all"} key={p} />,
-  "schools/profile": () => <WithSchool>{(id) => <ProfileSection id={id} onSaved={() => undefined} />}</WithSchool>,
-  "schools/configuration": () => <WithSchool>{(id) => <ConfigSection id={id} />}</WithSchool>,
-  "schools/campus": () => <SchoolCampuses />,
-  "schools/admin": () => <WithSchool>{(id) => <AdminsSection id={id} />}</WithSchool>,
-  "schools/status": (p) => <SchoolsView embedded initialTab={STATUS_TAB[p] ?? "all"} key={p} />,
-  "schools/documents": () => <WithSchool>{(id) => <DocumentsSection id={id} onChanged={() => undefined} />}</WithSchool>,
-  "schools/history": () => <WithSchool>{(id) => <HistorySection id={id} />}</WithSchool>,
+  "schools/registration": (p) => (p === "application" ? <SchoolApplications /> : p === "approval" ? <SchoolApproval /> : <AddSchool />),
+  "schools/directory": (p) => <SchoolDirectory tab={p as DirectoryTab} key={p} />,
+  "schools/profile": (p) => <SchoolProfile tab={p as ProfileTab} key={p} />,
+  "schools/configuration": (p) => <SchoolConfiguration tab={p as ConfigTab} key={p} />,
+  "schools/campus": (p) => <SchoolCampus tab={p as CampusTab} key={p} />,
+  "schools/admin": (p) => <SchoolAdmin tab={p as AdminTab} key={p} />,
+  "schools/status": (p) => <SchoolStatus tab={p as StatusTab} key={p} />,
+  "schools/documents": (p) => <SchoolDocuments tab={p as DocTab} key={p} />,
+  "schools/history": (p) => <SchoolHistory tab={p as HistoryTab} key={p} />,
 
   // ── Subscription Management ──
-  "subscriptions/plans": () => <SubscriptionsView embedded initialTab="plans" />,
-  "subscriptions/features": () => <SubscriptionsView embedded initialTab="plans" />,
-  "subscriptions/list": () => <SubscriptionsView embedded initialTab="list" />,
-  "subscriptions/school": () => <SubscriptionsView embedded initialTab="list" />,
-  "subscriptions/renewal": () => <SubscriptionsView embedded initialTab="renewals" />,
-  "subscriptions/change": () => <SubscriptionsView embedded initialTab="changes" />,
-  "subscriptions/trial": () => <SubscriptionsView embedded initialTab="trials" />,
-  "subscriptions/discounts": () => <SubscriptionsView embedded initialTab="discounts" />,
-  "subscriptions/billing": () => <SubscriptionsView embedded initialTab="billing" />,
+  "subscriptions/plans": (p) => <PlanManagement tab={p as PlanTab} key={p} />,
+  "subscriptions/features": (p) => <PlanFeatures tab={p as FeatureTab} key={p} />,
+  "subscriptions/list": (p) => <SubscriptionList tab={p as ListTab} key={p} />,
+  "subscriptions/school": (p) => <SchoolSubscriptionPage tab={p as SchoolSubTab} key={p} />,
+  "subscriptions/renewal": (p) => <RenewalManagement tab={p as RenewalTab} key={p} />,
+  "subscriptions/change": (p) => <PlanChanges tab={p as ChangeTab} key={p} />,
+  "subscriptions/trial": (p) => <TrialManagement tab={p as TrialTab} key={p} />,
+  "subscriptions/discounts": (p) => (p === "offers" ? <Offers key={p} /> : p === "special" ? <Special key={p} /> : <Coupons key={p} />),
+  "subscriptions/billing": (p) => <BillingSettings tab={p as BillingTab} key={p} />,
 
   // ── Module Management ──
-  "modules/catalogue": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/academic": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/administrative": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/communication": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/advanced": () => <ModulesView embedded initialTab="catalogue" />,
-  "modules/configuration": () => <ModulesView embedded initialTab="config" />,
-  "modules/allocation": () => <ModulesView embedded initialTab="school" />,
-  "modules/pricing": () => <ModulesView embedded initialTab="pricing" />,
-  "modules/updates": () => <ModulesView embedded initialTab="updates" />,
+  "modules/catalogue": (p) => <ModuleCatalogueNew tab={p as CatalogueTab} key={p} />,
+  "modules/academic": (p) => <ModuleBody code={p} key={p} />,
+  "modules/administrative": (p) => <ModuleBody code={p} key={p} />,
+  "modules/communication": (p) => <ModuleBody code={p} key={p} />,
+  "modules/advanced": (p) => <ModuleBody code={p} key={p} />,
+  "modules/configuration": (p) => <ModuleConfiguration tab={p as ModConfigTab} key={p} />,
+  "modules/allocation": (p) => <ModuleAllocation tab={p as AllocTab} key={p} />,
+  "modules/pricing": (p) => <ModulePricing tab={p as PricingTab} key={p} />,
+  "modules/updates": (p) => (p === "version" ? <ModuleVersions key={p} /> : <ModuleReleases only={p === "notes" ? "notes" : "status"} key={p} />),
 
   // ── Role & Permissions ──
   "roles/catalogue": () => <RolesView embedded initialTab="catalogue" />,

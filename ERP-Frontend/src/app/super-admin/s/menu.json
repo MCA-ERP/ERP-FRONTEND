@@ -572,9 +572,39 @@
     "label": "Academic Modules",
     "pages": [
      {
-      "key": "academic",
-      "title": "Academic Modules",
-      "description": ""
+      "key": "admissions",
+      "title": "Admission",
+      "description": "Online enquiries, applications, entrance tests and admission confirmation."
+     },
+     {
+      "key": "student_information",
+      "title": "Students",
+      "description": "Student profiles, documents, promotions, transfer certificates and ID cards."
+     },
+     {
+      "key": "academics",
+      "title": "Academics",
+      "description": "Classes, sections, subjects, timetable, lesson plans and homework."
+     },
+     {
+      "key": "exams",
+      "title": "Exams",
+      "description": "Exam schedules, marks entry, grading scales and report cards."
+     },
+     {
+      "key": "attendance",
+      "title": "Attendance",
+      "description": "Student and staff attendance, corrections, biometric, RFID and QR attendance, and alerts."
+     },
+     {
+      "key": "timetable",
+      "title": "Timetable",
+      "description": "Class and teacher timetables, substitutions and room allocation."
+     },
+     {
+      "key": "activities_events",
+      "title": "Activities & Events",
+      "description": "School events, sports, clubs, competitions and achievements."
      }
     ]
    },
@@ -583,9 +613,44 @@
     "label": "Administrative Modules",
     "pages": [
      {
-      "key": "administrative",
-      "title": "Administrative Modules",
-      "description": ""
+      "key": "hr_payroll",
+      "title": "HR",
+      "description": "Staff records, leave, staff attendance and appraisals."
+     },
+     {
+      "key": "payroll",
+      "title": "Payroll",
+      "description": "Salary structures, payslips, PF, ESI and TDS."
+     },
+     {
+      "key": "fees",
+      "title": "Finance",
+      "description": "Fee structures, collection, concessions, receipts and accounting."
+     },
+     {
+      "key": "transport",
+      "title": "Transport",
+      "description": "Routes, stops, vehicles, live GPS and transport fees."
+     },
+     {
+      "key": "library",
+      "title": "Library",
+      "description": "Catalogue, issue, return, renewals, reservations and fines."
+     },
+     {
+      "key": "visitors",
+      "title": "Front Office & Visitors",
+      "description": "Enquiries, visitors, gate passes, calls, post and complaints."
+     },
+     {
+      "key": "certificates",
+      "title": "Certificates",
+      "description": "Bonafide, study, conduct and transfer certificates with templates."
+     },
+     {
+      "key": "employee_self_service",
+      "title": "Employee Self-Service",
+      "description": "My Profile and My Payslips for every staff member."
      }
     ]
    },
@@ -594,9 +659,34 @@
     "label": "Communication Modules",
     "pages": [
      {
-      "key": "communication",
-      "title": "Communication Modules",
-      "description": ""
+      "key": "sms_whatsapp",
+      "title": "SMS",
+      "description": "DLT-registered SMS alerts to parents and staff."
+     },
+     {
+      "key": "email",
+      "title": "Email",
+      "description": "Transactional and bulk email from the school."
+     },
+     {
+      "key": "whatsapp",
+      "title": "WhatsApp",
+      "description": "Approved template messages on WhatsApp Business."
+     },
+     {
+      "key": "notifications",
+      "title": "Notifications",
+      "description": "Push and in-app notifications in the parent, teacher and student apps."
+     },
+     {
+      "key": "school_diary",
+      "title": "School Diary & Parent Messages",
+      "description": "Class diary, teacher remarks and two-way parent-teacher messages."
+     },
+     {
+      "key": "parent_app",
+      "title": "Parent Portal",
+      "description": "The parent app in English, Hindi and Telugu: progress, attendance, fees, homework, bus, health, library and mess."
      }
     ]
    },
@@ -605,9 +695,34 @@
     "label": "Advanced Modules",
     "pages": [
      {
-      "key": "advanced",
-      "title": "Advanced Modules",
-      "description": ""
+      "key": "online_classes",
+      "title": "LMS",
+      "description": "Online classes, recorded lessons, quizzes and assignments."
+     },
+     {
+      "key": "hostel",
+      "title": "Hostel",
+      "description": "Rooms, allotment, mess, hostel attendance and hostel fees."
+     },
+     {
+      "key": "inventory",
+      "title": "Inventory",
+      "description": "Stock, purchase orders, vendors and asset tracking."
+     },
+     {
+      "key": "custom_reports_api",
+      "title": "Analytics",
+      "description": "Cross-campus dashboards, custom reports and a data export API."
+     },
+     {
+      "key": "health_welfare",
+      "title": "Health & Welfare",
+      "description": "Health records, screening, vaccinations, medical visits and parent health updates."
+     },
+     {
+      "key": "cafeteria",
+      "title": "Day Scholar Mess",
+      "description": "Canteen menu, wallets and orders"
      }
     ]
    },

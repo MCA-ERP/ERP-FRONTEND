@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { ParentAccounts, StudentAccounts } from "./accounts";
-import { Events, Sessions } from "./activity";
+import { AccountManagement, LoginActivityPages, ParentLogins, StudentLogins } from "./pages";
 import { Directory } from "./directory";
 
 /**
@@ -27,59 +26,59 @@ export const USERS_SECTIONS: UsersSection[] = [
   {
     key: "school", label: "School Users", pages: [
       { key: "admins", title: "School Admin", description: "Administrators of each school.", render: () => <Directory fixedGroup="school_admin" layout="admins" /> },
-      { key: "principals", title: "Principal", description: "Principals of each school.", render: () => <Directory fixedGroup="principal" /> },
+      { key: "principals", title: "Principal", description: "Principals of each school.", render: () => <Directory fixedGroup="principal" layout="principals" /> },
     ],
   },
   {
     key: "staff", label: "Staff Users", pages: [
-      { key: "teachers", title: "Teachers", description: "Teacher accounts across all schools.", render: () => <Directory fixedGroup="teachers" /> },
-      { key: "accountants", title: "Accountants", description: "Staff who collect fees and manage accounts.", render: () => <Directory fixedGroup="accountants" /> },
-      { key: "other", title: "Other Staff", description: "Receptionists, librarians, transport and other staff.", render: () => <Directory fixedGroup="other_staff" /> },
+      { key: "teachers", title: "Teachers", description: "Teacher accounts across all schools.", render: () => <Directory fixedGroup="teachers" layout="teachers" /> },
+      { key: "accountants", title: "Accountants", description: "Staff who collect fees and manage accounts.", render: () => <Directory fixedGroup="accountants" layout="accountants" /> },
+      { key: "other", title: "Other Staff", description: "Receptionists, librarians, transport and other staff.", render: () => <Directory fixedGroup="other_staff" layout="otherstaff" /> },
     ],
   },
   {
     key: "students", label: "Student Accounts", pages: [
-      { key: "logins", title: "Student Login Accounts", description: "Sign-in accounts for students in the student app.", render: () => <StudentAccounts /> },
+      { key: "logins", title: "Student Login Accounts", description: "Sign-in accounts for students in the student app.", render: () => <StudentLogins /> },
     ],
   },
   {
     key: "parents", label: "Parent Accounts", pages: [
-      { key: "logins", title: "Parent Login Accounts", description: "Parents sign in with their mobile number and a one-time password.", render: () => <ParentAccounts /> },
+      { key: "logins", title: "Parent Login Accounts", description: "Parents sign in with their mobile number and a one-time password.", render: () => <ParentLogins /> },
     ],
   },
   {
     key: "directory", label: "User Directory", pages: [
-      { key: "all", title: "All Users", description: "Every account in one place.", render: () => <Directory /> },
-      { key: "active", title: "Active", description: "Accounts that can sign in.", render: () => <Directory fixedState="active" /> },
-      { key: "inactive", title: "Inactive", description: "Accounts that are turned off or never activated.", render: () => <Directory fixedState="inactive" /> },
-      { key: "locked", title: "Locked", description: "Accounts locked after too many wrong passwords or by an admin.", render: () => <Directory fixedState="locked" /> },
+      { key: "all", title: "All Users", description: "Every account in one place.", render: () => <Directory layout="directory" key="all" /> },
+      { key: "active", title: "Active", description: "Accounts that can sign in.", render: () => <Directory fixedState="active" layout="directory" key="active" /> },
+      { key: "inactive", title: "Inactive", description: "Accounts that are turned off or never activated.", render: () => <Directory fixedState="inactive" layout="directory" key="inactive" /> },
+      { key: "locked", title: "Locked", description: "Accounts locked after too many wrong passwords or by an admin.", render: () => <Directory fixedState="locked" layout="directory" key="locked" /> },
     ],
   },
   {
     key: "accounts", label: "Account Management", pages: [
       {
         key: "create", title: "Create", description: "Create an account for anyone on the platform.",
-        render: () => (<><Note tone="info">Choose <b>+ Create user</b>, then pick the person&apos;s role and school. They get a temporary password and must change it at first sign-in.</Note><Directory /></>),
+        render: () => <AccountManagement tab="create" key="create" />,
       },
       {
         key: "edit", title: "Edit", description: "Change someone's details, role or school.",
-        render: () => (<><Note tone="info">Find the person, then choose <b>Edit</b> on their row.</Note><Directory /></>),
+        render: () => <AccountManagement tab="edit" key="edit" />,
       },
       {
         key: "reset", title: "Reset Password", description: "Send a reset link or set a temporary password.",
-        render: () => (<><Note tone="info">Choose <b>Reset password</b> on a row. Any sessions the person had are ended.</Note><Directory /></>),
+        render: () => <AccountManagement tab="reset" key="reset" />,
       },
       {
         key: "disable", title: "Disable", description: "Turn accounts off. They can be turned back on any time.",
-        render: () => (<><Note tone="info">Choose <b>Disable</b> to turn an account off, or <b>Enable</b> to bring it back. Disabled people are signed out straight away.</Note><Directory /></>),
+        render: () => <AccountManagement tab="disable" key="disable" />,
       },
     ],
   },
   {
     key: "login", label: "Login Activity", pages: [
-      { key: "history", title: "Login History", description: "Recent sign-ins across the platform.", render: () => <Events failed={false} key="history" /> },
-      { key: "failed", title: "Failed Attempts", description: "Sign-ins that failed, and accounts that were locked as a result.", render: () => <Events failed key="failed" /> },
-      { key: "sessions", title: "Sessions", description: "Who is signed in right now. End any session you don't recognise.", render: () => <Sessions /> },
+      { key: "history", title: "Login History", description: "Recent sign-ins across the platform.", render: () => <LoginActivityPages tab="history" key="history" /> },
+      { key: "failed", title: "Failed Attempts", description: "Sign-ins that failed, and accounts that were locked as a result.", render: () => <LoginActivityPages tab="failed" key="failed" /> },
+      { key: "sessions", title: "Sessions", description: "Who is signed in right now. End any session you don't recognise.", render: () => <LoginActivityPages tab="sessions" key="sessions" /> },
     ],
   },
 ];

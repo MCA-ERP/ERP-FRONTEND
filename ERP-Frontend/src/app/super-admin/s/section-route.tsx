@@ -38,6 +38,27 @@ const CTA: Record<string, { label: string; module?: string; section?: string; pa
   "users/platform/super": { label: "+ Invite", event: "users/platform/super" },
   "users/platform/support": { label: "+ Invite", event: "users/platform/support" },
   "users/school/admins": { label: "+ Create admin", event: "users/school/admins" },
+  "roles/catalogue/default": { label: "+ Add role", module: "roles", section: "creation", page: "add" },
+  "roles/catalogue/custom": { label: "+ Add role", module: "roles", section: "creation", page: "add" },
+  "payments/invoices/all": { label: "+ Create invoice", event: "payments/invoices" },
+  "support/tickets/all": { label: "+ New ticket", event: "support/tickets" },
+  "support/kb/articles": { label: "+ New article", event: "support/kb" },
+  "support/kb/faqs": { label: "+ New FAQ", event: "support/kb" },
+  "support/kb/tutorials": { label: "+ Upload tutorial", event: "support/kb" },
+  "communication/email/templates": { label: "+ New template", event: "communication/email" },
+  "communication/sms/templates": { label: "+ New template", event: "communication/sms" },
+  "communication/whatsapp/templates": { label: "+ New template", event: "communication/whatsapp" },
+  "communication/email/campaigns": { label: "+ New campaign", module: "communication", section: "announcements", page: "create" },
+  "communication/sms/campaigns": { label: "+ New campaign", module: "communication", section: "announcements", page: "create" },
+  "communication/whatsapp/campaigns": { label: "+ New campaign", module: "communication", section: "announcements", page: "create" },
+  "communication/notifications/inapp": { label: "+ New alert", module: "communication", section: "announcements", page: "create" },
+  "cms/content/edit": { label: "+ New page", module: "cms", section: "content", page: "add" },
+  "cms/blog/categories": { label: "+ New category", event: "cms/blog" },
+  "cms/blog/posts": { label: "+ New post", event: "cms/blog" },
+  "cms/faq/questions": { label: "+ New question", event: "cms/faq" },
+  "integrations/api/keys": { label: "+ Generate key", event: "integrations/api" },
+  "integrations/api/webhooks": { label: "+ Add webhook", event: "integrations/webhooks" },
+  "payments/transactions/all": { label: "+ Create invoice", module: "payments", section: "invoices", page: "" },
   "modules/catalogue/all": { label: "+ Add module", event: "modules/catalogue/all" },
   "modules/configuration/flags": { label: "+ New flag", event: "modules/configuration/flags" },
   "modules/pricing/bundle": { label: "+ New bundle", event: "modules/pricing/bundle" },
@@ -81,7 +102,7 @@ function SectionView({ module, moduleLabel, section }: { module: string; moduleL
       <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#026f9b]">{moduleLabel} · {section.label}</p>
       <PageHeader title={title} subtitle={subtitle} action={addSchool ? <Link href="/super-admin/schools/registration" className="rounded-full bg-[#e53a35] px-6 py-2.5 text-[15px] font-bold text-white shadow-sm hover:bg-[#ac2c28]">+ Add school</Link> : cta ? <button type="button" onClick={goCta} className="rounded-full bg-[#e53a35] px-6 py-2.5 text-[15px] font-bold text-white shadow-sm hover:bg-[#ac2c28]">{cta.label}</button> : undefined} />
       {paged && section.pages.length > 1 && <TabBar value={tab} onChange={setTab} tabs={section.pages.map((p) => [p.key, p.title] as [string, string])} />}
-      {module === "dashboard" && <PageActions target={bodyRef} name={`${section.key}-${page.key}`} />}
+      {(module === "dashboard" || (module === "reports" && ["schools", "users", "financial", "subscriptions", "modules", "security", "system"].includes(section.key))) && <PageActions target={bodyRef} name={`${section.key}-${page.key}`} />}
       <div ref={bodyRef}><HeaderHidden.Provider value>{body ?? <p className="py-10 text-center text-sm text-slate-400">This page is not available yet.</p>}</HeaderHidden.Provider></div>
     </>
   );

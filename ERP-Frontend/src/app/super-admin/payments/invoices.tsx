@@ -77,7 +77,7 @@ export function Invoices({ onChange, group }: { onChange: () => void; group?: "g
   );
 }
 
-function NewInvoice({ onDone }: { onDone: (id: string) => void }) {
+export function NewInvoice({ onDone }: { onDone: (id: string) => void }) {
   const schools = useLoad(() => adminFetch<Paged<SchoolRow>>("/schools?pageSize=100"), []);
   const [f, setF] = useState({ institution_id: "", description: "", due_on: "", period_start: "", period_end: "" });
   const [lines, setLines] = useState([{ description: "", quantity: "1", price: "" }]);
@@ -159,7 +159,7 @@ function NewInvoice({ onDone }: { onDone: (id: string) => void }) {
   );
 }
 
-function InvoicePanel({ id, onChange }: { id: string; onChange: () => void }) {
+export function InvoicePanel({ id, onChange, onRecorded }: { id: string; onChange: () => void; onRecorded?: () => void }) {
   const detail = useLoad(() => adminFetch<InvoiceDetail>(`/payments/invoices/${id}`), [id]);
   const reload = () => { detail.reload(); onChange(); };
   const { error, busy, run } = useAction(reload);
@@ -177,7 +177,7 @@ function InvoicePanel({ id, onChange }: { id: string; onChange: () => void }) {
     const ok = await run(() => adminFetch(`/payments/invoices/${id}/payments`, json("POST", {
       amount_paise: toPaise(pay.amount), method: pay.method, reference: pay.reference || null, paid_on: pay.paid_on || undefined,
     })));
-    if (ok) setPay({ amount: "", method: "Bank transfer", reference: "", paid_on: "" });
+    if (ok) { setPay({ amount: "", method: "Bank transfer", reference: "", paid_on: "" }); onRecorded?.(); }
   };
 
   const doRefund = async (e: FormEvent, approval = false) => {

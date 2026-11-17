@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { onReport, reportHtml, reportTitle, saveCsv, saveExcel, type Report, type ReportMode } from "./csv";
 
 const btn = "rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-800 hover:border-slate-400";
@@ -30,7 +31,7 @@ export function ReportHost() {
   };
   const title = preview ? (mode === "print" ? "Print preview" : "PDF preview") : "Export";
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-900/50 p-4" onMouseDown={(e) => e.target === e.currentTarget && close()}>
       <div role="dialog" aria-modal="true" aria-label={title} className={`flex max-h-[92vh] w-full flex-col rounded-2xl bg-white shadow-xl ${preview ? "max-w-5xl" : "max-w-sm"}`}>
         <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3.5">
@@ -64,6 +65,7 @@ export function ReportHost() {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

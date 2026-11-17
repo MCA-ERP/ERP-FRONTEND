@@ -72,7 +72,7 @@ export function Tickets({ category, onChanged }: { category?: string; onChanged?
 
 interface Detail { ticket: SupportTicket; messages: TicketMessage[]; escalations: { id: string; reason: string; from_priority: string; to_priority: string; note: string | null; escalator_name: string | null; created_at: string }[] }
 
-function TicketPanel({ id }: { id: string }) {
+export function TicketPanel({ id }: { id: string }) {
   const detail = useLoad(() => adminFetch<Detail>(`/support/tickets/${id}`), [id]);
   const agents = useLoad(() => adminFetch<{ agents: { id: string; name: string }[] }>("/support/agents"), []);
   const act = useAction(detail.reload);

@@ -69,6 +69,10 @@ function Meta({ field }: { field: "title" | "description" }) {
 
 interface SitemapInfo { include_blog: boolean; urls: { title: string; path: string; lastmod: string | null; kind: "page" | "blog" }[]; site_url: string }
 
+export function SitemapPanel() {
+  return <Sitemap />;
+}
+
 function Sitemap() {
   const { data, error, loading, reload } = useLoad(() => adminFetch<SitemapInfo>("/cms/sitemap"), []);
   const { error: actionError, busy, run } = useAction(reload);

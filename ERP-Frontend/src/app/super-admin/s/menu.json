@@ -1115,9 +1115,24 @@
     "label": "Data Permissions",
     "pages": [
      {
-      "key": "data",
-      "title": "Data Permissions",
-      "description": ""
+      "key": "own",
+      "title": "Own Records",
+      "description": "Only records about themselves or their own children. For parents and students."
+     },
+     {
+      "key": "class",
+      "title": "Assigned Class",
+      "description": "Only the classes and subjects they are assigned to."
+     },
+     {
+      "key": "campus",
+      "title": "Campus",
+      "description": "Every record on their campus, not other campuses."
+     },
+     {
+      "key": "school",
+      "title": "School",
+      "description": "Every record in the school, across all campuses."
      }
     ]
    },
@@ -1608,9 +1623,19 @@
     "label": "Email",
     "pages": [
      {
-      "key": "email",
-      "title": "Email",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "Email message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Emails sent to many schools at once."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every email and whether it arrived."
      }
     ]
    },
@@ -1619,9 +1644,19 @@
     "label": "SMS",
     "pages": [
      {
-      "key": "sms",
-      "title": "SMS",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "SMS message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Bulk sms sent to many schools."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every sms sent and whether it arrived."
      }
     ]
    },
@@ -1630,9 +1665,19 @@
     "label": "WhatsApp",
     "pages": [
      {
-      "key": "whatsapp",
-      "title": "WhatsApp",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "WhatsApp message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Bulk whatsapp sent to many schools."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every whatsapp sent and whether it arrived."
      }
     ]
    },
@@ -1657,9 +1702,19 @@
     "label": "Communication History",
     "pages": [
      {
-      "key": "history",
-      "title": "Communication History",
-      "description": ""
+      "key": "sent",
+      "title": "Sent",
+      "description": "Messages delivered on every channel."
+     },
+     {
+      "key": "failed",
+      "title": "Failed",
+      "description": "Messages that couldn't be delivered."
+     },
+     {
+      "key": "pending",
+      "title": "Pending",
+      "description": "Messages queued or scheduled."
      }
     ]
    }
@@ -1674,9 +1729,24 @@
     "label": "Website Pages",
     "pages": [
      {
-      "key": "pages",
-      "title": "Website Pages",
-      "description": ""
+      "key": "home",
+      "title": "Home",
+      "description": "Sections on the home page."
+     },
+     {
+      "key": "about",
+      "title": "About",
+      "description": "Sections on the about page."
+     },
+     {
+      "key": "features",
+      "title": "Features",
+      "description": "Sections on the features page."
+     },
+     {
+      "key": "contact",
+      "title": "Contact",
+      "description": "Sections on the contact page."
      }
     ]
    },
@@ -1802,7 +1872,7 @@
      {
       "key": "sitemap",
       "title": "Sitemap",
-      "description": "The list of pages search engines should crawl."
+      "description": "Pages search engines should crawl."
      }
     ]
    }

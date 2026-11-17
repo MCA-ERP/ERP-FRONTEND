@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json, qs, type AdminUser, type Paged, type Role, type SchoolRow } from "@/lib/admin-api";
 import { Panel, SimpleTable, TabBar, useAction } from "@/components/admin/dash";
-import { Chip, Tag } from "@/components/admin/dash-ui";
+import { Chip, Tag, Tiles } from "@/components/admin/dash-ui";
 import { ExportPrint } from "@/components/admin/export-print";
 import { Badge, Card, EmptyRow, ErrorBanner, Field, Modal, Pagination, Th, btnGhost, btnPrimary, fmtDate, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
 import { small } from "./shared";
 
-type Row = AdminUser & { failed_login_count?: number; locked_until?: string | null; must_change_password?: boolean; last_login_at?: string | null };
+type Row = AdminUser & { classes?: string | null; failed_login_count?: number; locked_until?: string | null; must_change_password?: boolean; last_login_at?: string | null };
+export type Layout = "super" | "support" | "admins" | "principals" | "teachers" | "accountants" | "otherstaff" | "directory";
 interface Counts { groups: Record<string, number>; all: number; active: number; inactive: number; locked: number }
 
 const GROUPS: [string, string][] = [
@@ -32,7 +33,7 @@ const emptyForm: FormState = { email: "", password: "", first_name: "", last_nam
  * The people list. `fixedGroup` (a role group like "super_admin" or "teachers") and `fixedState` ("active", "inactive", "locked")
  * pin the list to one page of the User Management menu and hide the matching filter.
  */
-export function Directory({ fixedGroup, fixedState, layout }: { fixedGroup?: string; fixedState?: string; layout?: "super" | "support" | "admins" } = {}) {
+export function Directory({ fixedGroup, fixedState, layout }: { fixedGroup?: string; fixedState?: string; layout?: Layout } = {}) {
   const [group, setGroup] = useState(fixedGroup ?? "");
   const [state, setState] = useState(fixedState ?? "");
   const [school, setSchool] = useState("");
@@ -55,9 +56,10 @@ export function Directory({ fixedGroup, fixedState, layout }: { fixedGroup?: str
   const [invite, setInvite] = useState<{ name: string; email: string; role: string } | null>(null);
   const [inviteResult, setInviteResult] = useState("");
   const settings = useLoad(() => (layout === "support" ? adminFetch<{ settings: Record<string, unknown> }>("/settings") : Promise.resolve(null)), [layout]);
+  const lockedTeachers = useLoad(() => (layout === "teachers" ? adminFetch<Paged<Row>>("/user-directory?group=teachers&state=locked&pageSize=1") : Promise.resolve(null)), [layout]);
   const primaries = useLoad(() => (layout === "admins" ? adminFetch<{ items: { id: string; is_primary: boolean }[] }>("/school-admins?pageSize=500") : Promise.resolve(null)), [layout]);
   useEffect(() => {
-    if (!layout) return;
+    if (layout !== "admins" && layout !== "super" && layout !== "support") return;
     const key = layout === "admins" ? "users/school/admins" : layout === "super" ? "users/platform/super" : "users/platform/support";
     const h = (e: Event) => {
       if ((e as CustomEvent).detail !== key) return;
@@ -116,18 +118,44 @@ export function Directory({ fixedGroup, fixedState, layout }: { fixedGroup?: str
         const person = (u: Row, light: boolean) => <div><p className="font-semibold text-slate-900">{u.first_name} {u.last_name}</p><p className={light ? "text-xs text-slate-500" : "text-xs text-slate-400"}>{u.email}</p></div>;
         const resetBtn = (u: Row) => <button type="button" className={small} onClick={() => { setReset(u); setResetMode("temporary"); setResetPw(""); setResetResult(""); }}>Reset password</button>;
         const details = (u: Row) => <button type="button" className={small} onClick={() => openEdit(u)}>View details</button>;
-        const titles = { super: ["Super Admins", "super-admins", "Search super admins"], support: ["Platform team", "platform-team", "Search platform team"], admins: ["School admins", "school-admins", "Search school admins"] }[layout];
-        const head = layout === "super" ? [{ h: "Name" }, { h: "Status" }, { h: "Last sign-in" }, { h: "" }] : layout === "support" ? [{ h: "Name" }, { h: "Role" }, { h: "Two-factor" }, { h: "Status" }, { h: "Last sign-in" }, { h: "" }] : [{ h: "Name" }, { h: "School" }, { h: "Type" }, { h: "Status" }, { h: "Last sign-in" }, { h: "" }];
-        const rows = items.map((u) => layout === "super" ? [person(u, true), status(u), lastIn(u.last_login_at, true, "—"), <span key="a" className="flex gap-1.5">{resetBtn(u)}{details(u)}</span>]
-          : layout === "support" ? [person(u, true), <Tag key="r">{u.roles?.display_name || "—"}</Tag>, <Chip key="t" tone={twoFactor ? "good" : "mute"}>{twoFactor ? "On" : "Off"}</Chip>, status(u), lastIn(u.last_login_at, true, "—"), <span key="a" className="flex gap-1.5">{resetBtn(u)}{details(u)}</span>]
-          : [person(u, false), u.institutions?.name ?? "—", <Tag key="p">{primary.get(u.id) ? "Primary admin" : "Admin"}</Tag>, status(u), lastIn(u.last_login_at, false, "Never"),
-              <span key="a" className="flex gap-1.5">{isLocked(u) ? <button type="button" className="rounded-full bg-[#026f9b] px-3 py-1 text-xs font-semibold text-white hover:bg-[#014a67]" disabled={act.busy} onClick={() => stateAct(u, "unlock")}>Unlock</button> : resetBtn(u)}{details(u)}</span>]);
+        const unlock = (u: Row) => <button type="button" className="rounded-full bg-[#026f9b] px-3 py-1 text-xs font-semibold text-white hover:bg-[#014a67]" disabled={act.busy} onClick={() => stateAct(u, "unlock")}>Unlock</button>;
+        const typeOf = (u: Row) => { const n = u.roles?.name ?? ""; return n === "SuperAdmin" ? "Super Admin" : !u.institution_id ? "Support staff" : n === "InstitutionAdmin" ? "School admin" : n === "Principal" ? "Principal" : n === "Faculty" ? "Teacher" : u.roles?.display_name ?? "—"; };
+        const acts = (u: Row, extra?: boolean) => <span key="a" className="flex gap-1.5">{isLocked(u) ? unlock(u) : extra ? (u.status === "active" ? resetBtn(u) : <button type="button" className={small} disabled={act.busy} onClick={() => stateAct(u, "enable")}>Enable</button>) : resetBtn(u)}{details(u)}</span>;
+        const L = {
+          super: { t: ["Super Admins", "super-admins", "Search super admins"], head: ["Name", "Status", "Last sign-in"], row: (u: Row) => [person(u, true), status(u), lastIn(u.last_login_at, true, "—"), acts(u)], csv: (u: Row) => [u.status] },
+          support: { t: ["Platform team", "platform-team", "Search platform team"], head: ["Name", "Role", "Two-factor", "Status", "Last sign-in"], row: (u: Row) => [person(u, true), <Tag key="r">{u.roles?.display_name || "—"}</Tag>, <Chip key="t" tone={twoFactor ? "good" : "mute"}>{twoFactor ? "On" : "Off"}</Chip>, status(u), lastIn(u.last_login_at, true, "—"), acts(u)], csv: (u: Row) => [u.roles?.display_name, twoFactor ? "On" : "Off", u.status] },
+          admins: { t: ["School admins", "school-admins", "Search school admins"], head: ["Name", "School", "Type", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="p">{primary.get(u.id) ? "Primary admin" : "Admin"}</Tag>, status(u), lastIn(u.last_login_at, false, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, primary.get(u.id) ? "Primary admin" : "Admin", u.status] },
+          principals: { t: ["Principals", "principals", "Search principals"], head: ["Name", "School", "Principal since", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", u.created_at ? new Date(u.created_at).getFullYear() : "—", status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.created_at?.slice(0, 4), u.status] },
+          teachers: { t: ["Teachers", "teachers", "Search teachers"], head: ["Name", "School", "Subject", "Classes", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", "—", u.classes ?? "—", status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, "", u.classes, u.status] },
+          accountants: { t: ["Accountants", "accountants", "Search accountants"], head: ["Name", "School", "Role", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="r">{u.roles?.display_name ?? "—"}</Tag>, status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.roles?.display_name, u.status] },
+          otherstaff: { t: ["Other staff", "other-staff", "Search other staff"], head: ["Name", "School", "Role", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="r">{u.roles?.display_name ?? "—"}</Tag>, status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.roles?.display_name, u.status] },
+          directory: { t: [({ "": "All users", active: "Active users", inactive: "Inactive users", locked: "Locked users" } as Record<string, string>)[fixedState ?? ""] ?? "All users", "users", `Search ${fixedState ? fixedState + " " : "all "}users`], head: ["Name", "Type", "School", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), <Tag key="ty">{typeOf(u)}</Tag>, u.institutions?.name ?? "Platform team", status(u), lastIn(u.last_login_at, true, "—"), acts(u, true)], csv: (u: Row) => [typeOf(u), u.institutions?.name ?? "Platform team", u.status] },
+        }[layout];
+        const head = [...L.head.map((h) => ({ h })), { h: "" }];
+        const ft = layout === "directory" ? GROUPS.filter(([k]) => k) : null;
+        const tiles = layout === "teachers" ? [
+          { label: "Teachers", value: c ? (c.groups.teachers ?? 0).toLocaleString("en-IN") : "…", sub: "On the platform" },
+          { label: "Shown here", value: String(data?.total ?? "…"), sub: "Sample accounts" },
+          { label: "Locked", value: lockedTeachers.data ? String(lockedTeachers.data.total) : "…", sub: "Too many wrong passwords" },
+        ] : layout === "directory" && !fixedState ? [
+          { label: "Accounts", value: c ? c.all.toLocaleString("en-IN") : "…", sub: "Across the platform" },
+          { label: "Active", value: c ? c.active.toLocaleString("en-IN") : "…" },
+          { label: "Inactive", value: c ? c.inactive.toLocaleString("en-IN") : "…" },
+          { label: "Locked", value: c ? c.locked.toLocaleString("en-IN") : "…" },
+        ] : null;
         return (
-          <Panel title={titles[0]} sub={`${data?.total ?? 0} account${data?.total === 1 ? "" : "s"}`} right={<ExportPrint name={titles[1]} head={head.filter((x) => x.h).map((x) => x.h)} rows={items.map((u) => [`${u.first_name} ${u.last_name}`, ...(layout === "admins" ? [u.institutions?.name, primary.get(u.id) ? "Primary admin" : "Admin"] : layout === "support" ? [u.roles?.display_name, twoFactor ? "On" : "Off"] : []), u.status, lastIn(u.last_login_at, true, "")])} />}>
-            <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder={titles[2]} aria-label={titles[2]} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} /></div>
-            <SimpleTable head={head} rows={rows} empty={loading ? "Loading…" : "No users found."} />
-            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={setPage} />}
-          </Panel>
+          <div className="space-y-5">
+            {tiles && <Tiles items={tiles} />}
+            <Panel title={L.t[0]} sub={`${data?.total ?? 0} account${data?.total === 1 ? "" : "s"}`} right={<ExportPrint name={L.t[1]} head={L.head} rows={items.map((u) => [`${u.first_name} ${u.last_name}`, ...L.csv(u), lastIn(u.last_login_at, true, "")])} />}>
+              <div className="flex flex-wrap gap-2.5 border-b border-slate-100 p-4">
+                <input className={`${inputCls} max-w-xs`} placeholder={L.t[2]} aria-label={L.t[2]} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+                {ft && <select className={`${inputCls} max-w-[10rem]`} aria-label="Type" value={group} onChange={(e) => { setGroup(e.target.value); setPage(1); }}><option value="">All types</option>{ft.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>}
+                {["teachers", "accountants", "otherstaff", "directory"].includes(layout) && fixedState === undefined && <select className={`${inputCls} max-w-[10rem]`} aria-label="Status" value={state} onChange={(e) => { setState(e.target.value); setPage(1); }}><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="locked">Locked</option></select>}
+              </div>
+              <SimpleTable head={head} rows={items.map((u) => L.row(u))} empty={loading ? "Loading…" : "No users found."} />
+              {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={setPage} />}
+            </Panel>
+          </div>
         );
       })() : (
         <>

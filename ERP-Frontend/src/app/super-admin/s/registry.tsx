@@ -12,6 +12,22 @@ import ModulesView from "@/app/super-admin/modules/view";
 import PaymentsView from "@/app/super-admin/payments/view";
 import ReportsView from "@/app/super-admin/reports/view";
 import RolesView from "@/app/super-admin/roles/view";
+import { RoleCatalogue, type RoleTab } from "@/app/super-admin/roles/catalogue-pages";
+import { PermissionPages, RoleCreation, type CreationTab, type PermTab } from "@/app/super-admin/roles/role-pages";
+import { ApprovalChain, type ApprovalTab } from "@/app/super-admin/roles/approval-pages";
+import { DataPermissions, MenuPermissions, PermissionAudit, RoleAssignment, type AssignTab, type AuditTab, type DataTab, type MenuTab } from "@/app/super-admin/roles/more-pages";
+import { TransactionPages, type TxTab } from "@/app/super-admin/payments/tx-pages";
+import { GatewayPages, InvoicePages, RefundPages, RevenuePages, TaxPages, type GatewayTab, type InvoiceTab, type RefundTab, type RevenueTab, type TaxTab } from "@/app/super-admin/payments/pay-pages";
+import { ApiManagement, BiometricIntegration, EmailIntegration, MapsIntegration, PaymentIntegration, SmsIntegration, WhatsappIntegration, type ApiTab, type EmailTab, type PayTab } from "@/app/super-admin/integrations/int-pages";
+import { AuditLogs, LoginSecurity, type AuditTab as SecAuditTab, type LoginTab as SecLoginTab } from "@/app/super-admin/security/sec-pages";
+import { BannerPages, BlogPages, ContentPages, FaqPages, SeoPages, TestimonialPages, type BannerTab, type BlogTab, type ContentTab, type FaqTab, type SeoTab as CmsSeoTab, type TestiTab } from "@/app/super-admin/website/cms-pages";
+import { WebsitePageEditor, type PageTab } from "@/app/super-admin/website/page-editor";
+import { TicketPages, type TicketTab } from "@/app/super-admin/support/ticket-pages";
+import { AssignmentPages, CategoryPages, EscalationPages, FeedbackPages, KnowledgePages, type AssignTab as SupAssignTab, type CatTab, type EscTab, type FeedbackTab, type KbTab } from "@/app/super-admin/support/more-pages";
+import { ChannelPages, HistoryPages, NotificationPages, type ChanTab, type HistTab, type NotifTab } from "@/app/super-admin/communication/channel-pages";
+import { AnnouncementPages, type AnnTab } from "@/app/super-admin/communication/ann-pages";
+import { FinancialOutstanding, ModuleReports, SecurityReports, SubscriptionReports, SystemReports, type ModReportTab, type SecReportTab, type SubReportTab, type SysReportTab } from "@/app/super-admin/reports/pages2";
+import { FinancialCollection, FinancialRevenue, SchoolReports, UserReports, type SchoolReportTab, type UserReportTab } from "@/app/super-admin/reports/pages";
 import SchoolApplications from "@/app/super-admin/schools/applications/page";
 import SchoolApproval from "@/app/super-admin/schools/approval/page";
 import { AddSchool } from "@/app/super-admin/schools/add-school";
@@ -57,7 +73,7 @@ export const PAGED = new Set([
   "schools/registration", "schools/directory", "schools/status", "schools/profile", "schools/configuration", "schools/campus", "schools/admin",
   "schools/documents", "schools/history", "subscriptions/plans", "subscriptions/features", "subscriptions/list", "subscriptions/school", "subscriptions/renewal",
   "subscriptions/change", "subscriptions/trial", "subscriptions/discounts", "subscriptions/billing", "modules/catalogue", "modules/academic", "modules/administrative", "modules/communication", "modules/advanced",
-  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates",
+  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates", "roles/catalogue", "roles/creation", "roles/permissions", "roles/approvals", "roles/menu", "roles/data", "roles/assignment", "roles/audit", "payments/transactions", "payments/school", "payments/invoices", "payments/refunds", "payments/gateway", "payments/tax", "payments/revenue", "support/tickets", "support/categories", "support/assignment", "support/kb", "support/feedback", "support/escalations", "reports/schools", "reports/users", "reports/financial", "reports/subscriptions", "reports/modules", "reports/security", "reports/system", "communication/announcements", "communication/email", "communication/sms", "communication/whatsapp", "communication/notifications", "communication/history", "cms/pages", "cms/content", "cms/banners", "cms/blog", "cms/testimonials", "cms/faq", "cms/seo", "integrations/payment", "integrations/sms", "integrations/whatsapp", "integrations/email", "integrations/maps", "integrations/biometric", "integrations/api", "security/login", "security/audit",
   "users/platform", "users/school", "users/staff", "users/directory", "users/accounts", "users/login",
 ]);
 
@@ -108,64 +124,70 @@ const table: Record<string, Render> = {
   "modules/updates": (p) => (p === "version" ? <ModuleVersions key={p} /> : <ModuleReleases only={p === "notes" ? "notes" : "status"} key={p} />),
 
   // ── Role & Permissions ──
-  "roles/catalogue": () => <RolesView embedded initialTab="catalogue" />,
-  "roles/creation": () => <RolesView embedded initialTab="catalogue" />,
-  "roles/permissions": () => <RolesView embedded initialTab="matrix" />,
-  "roles/approvals": () => <RolesView embedded initialTab="approvals" />,
-  "roles/menu": () => <RolesView embedded initialTab="access" />,
-  "roles/data": () => <RolesView embedded initialTab="data" />,
-  "roles/assignment": () => <RolesView embedded initialTab="assignment" />,
-  "roles/audit": () => <RolesView embedded initialTab="audit" />,
+  "roles/catalogue": (p) => <RoleCatalogue tab={p as RoleTab} key={p} />,
+  "roles/creation": (p) => <RoleCreation tab={p as CreationTab} key={p} />,
+  "roles/permissions": (p) => <PermissionPages tab={p as PermTab} key={p} />,
+  "roles/approvals": (p) => <ApprovalChain tab={p as ApprovalTab} key={p} />,
+  "roles/menu": (p) => <MenuPermissions tab={p as MenuTab} key={p} />,
+  "roles/data": (p) => <DataPermissions tab={p as DataTab} key={p} />,
+  "roles/assignment": (p) => <RoleAssignment tab={p as AssignTab} key={p} />,
+  "roles/audit": (p) => <PermissionAudit tab={p as AuditTab} key={p} />,
 
   // ── Payment Management ──
-  "payments/transactions": () => <PaymentsView embedded initialTab="tx" />,
-  "payments/school": () => <PaymentsView embedded initialTab="school" />,
-  "payments/invoices": () => <PaymentsView embedded initialTab="invoices" />,
-  "payments/refunds": () => <PaymentsView embedded initialTab="refunds" />,
-  "payments/gateway": () => <PaymentsView embedded initialTab="gateway" />,
-  "payments/tax": () => <PaymentsView embedded initialTab="tax" />,
-  "payments/revenue": () => <PaymentsView embedded initialTab="revenue" />,
+  "payments/transactions": (p) => <TransactionPages tab={p as TxTab} key={p} />,
+  "payments/school": (p) => <TransactionPages tab="all" kind={p === "renewal" ? "renewal" : "subscription"} key={p} />,
+  "payments/invoices": (p) => <InvoicePages tab={p as InvoiceTab} key={p} />,
+  "payments/refunds": (p) => <RefundPages tab={p as RefundTab} key={p} />,
+  "payments/gateway": (p) => <GatewayPages tab={p as GatewayTab} key={p} />,
+  "payments/tax": (p) => <TaxPages tab={p as TaxTab} key={p} />,
+  "payments/revenue": (p) => <RevenuePages tab={p as RevenueTab} key={p} />,
 
   // ── Support Management ──
-  "support/tickets": () => <SupportView embedded initialTab="tickets" />,
-  "support/categories": () => <SupportView embedded initialTab="categories" />,
-  "support/assignment": () => <SupportView embedded initialTab="assignment" />,
-  "support/kb": () => <SupportView embedded initialTab="kb" />,
-  "support/feedback": () => <SupportView embedded initialTab="feedback" />,
-  "support/escalations": () => <SupportView embedded initialTab="escalations" />,
+  "support/tickets": (p) => <TicketPages tab={p as TicketTab} key={p} />,
+  "support/categories": (p) => <CategoryPages tab={p as CatTab} key={p} />,
+  "support/assignment": (p) => <AssignmentPages tab={p as SupAssignTab} key={p} />,
+  "support/kb": (p) => <KnowledgePages tab={p as KbTab} key={p} />,
+  "support/feedback": (p) => <FeedbackPages tab={p as FeedbackTab} key={p} />,
+  "support/escalations": (p) => <EscalationPages tab={p as EscTab} key={p} />,
 
   // ── Reports & Analytics: one submenu per report group ──
-  ...Object.fromEntries(["schools", "users", "financial", "subscriptions", "modules", "security", "system"].map((g) => [`reports/${g}`, () => <ReportsView embedded initialGroup={g} key={g} />])),
+  "reports/subscriptions": (p) => <SubscriptionReports tab={p as SubReportTab} key={p} />,
+  "reports/modules": (p) => <ModuleReports tab={p as ModReportTab} key={p} />,
+  "reports/security": (p) => <SecurityReports tab={p as SecReportTab} key={p} />,
+  "reports/system": (p) => <SystemReports tab={p as SysReportTab} key={p} />,
+  "reports/schools": (p) => <SchoolReports tab={p as SchoolReportTab} key={p} />,
+  "reports/users": (p) => <UserReports tab={p as UserReportTab} key={p} />,
+  "reports/financial": (p) => (p === "revenue" ? <FinancialRevenue key={p} /> : p === "collection" ? <FinancialCollection key={p} /> : p === "outstanding" ? <FinancialOutstanding key={p} /> : <ReportsView embedded initialGroup="financial" key={p} />),
 
   // ── Communication ──
-  "communication/announcements": () => <CommunicationView embedded initialTab="announcements" />,
-  "communication/email": () => <CommunicationView embedded initialTab="email" />,
-  "communication/sms": () => <CommunicationView embedded initialTab="sms" />,
-  "communication/whatsapp": () => <CommunicationView embedded initialTab="whatsapp" />,
-  "communication/notifications": () => <CommunicationView embedded initialTab="notifications" />,
-  "communication/history": () => <CommunicationView embedded initialTab="history" />,
+  "communication/announcements": (p) => <AnnouncementPages tab={p as AnnTab} key={p} />,
+  "communication/email": (p) => <ChannelPages channel="email" tab={p as ChanTab} key={p} />,
+  "communication/sms": (p) => <ChannelPages channel="sms" tab={p as ChanTab} key={p} />,
+  "communication/whatsapp": (p) => <ChannelPages channel="whatsapp" tab={p as ChanTab} key={p} />,
+  "communication/notifications": (p) => <NotificationPages tab={p as NotifTab} key={p} />,
+  "communication/history": (p) => <HistoryPages tab={p as HistTab} key={p} />,
 
   // ── Website / CMS ──
-  "cms/pages": () => <WebsiteView embedded initialTab="pages" />,
-  "cms/content": () => <WebsiteView embedded initialTab="pages" />,
-  "cms/banners": () => <WebsiteView embedded initialTab="banners" />,
-  "cms/blog": () => <WebsiteView embedded initialTab="blog" />,
-  "cms/testimonials": () => <WebsiteView embedded initialTab="testimonials" />,
-  "cms/faq": () => <WebsiteView embedded initialTab="faq" />,
-  "cms/seo": () => <WebsiteView embedded initialTab="seo" />,
+  "cms/pages": (p) => <WebsitePageEditor tab={p as PageTab} key={p} />,
+  "cms/content": (p) => <ContentPages tab={p as ContentTab} key={p} />,
+  "cms/banners": (p) => <BannerPages tab={p as BannerTab} key={p} />,
+  "cms/blog": (p) => <BlogPages tab={p as BlogTab} key={p} />,
+  "cms/testimonials": (p) => <TestimonialPages tab={p as TestiTab} key={p} />,
+  "cms/faq": (p) => <FaqPages tab={p as FaqTab} key={p} />,
+  "cms/seo": (p) => <SeoPages tab={p as CmsSeoTab} key={p} />,
 
   // ── Integration Management ──
-  "integrations/payment": () => <IntegrationsView embedded initialTab="payments" />,
-  "integrations/sms": () => <IntegrationsView embedded initialTab="messaging" />,
-  "integrations/whatsapp": () => <IntegrationsView embedded initialTab="messaging" />,
-  "integrations/email": () => <IntegrationsView embedded initialTab="messaging" />,
-  "integrations/maps": () => <IntegrationsView embedded initialTab="apps" />,
-  "integrations/biometric": () => <IntegrationsView embedded initialTab="apps" />,
-  "integrations/api": () => <IntegrationsView embedded initialTab="api" />,
+  "integrations/payment": (p) => <PaymentIntegration tab={p as PayTab} key={p} />,
+  "integrations/sms": () => <SmsIntegration />,
+  "integrations/whatsapp": () => <WhatsappIntegration />,
+  "integrations/email": (p) => <EmailIntegration tab={p as EmailTab} key={p} />,
+  "integrations/maps": (p) => <MapsIntegration tab={p as "api" | "tracking"} key={p} />,
+  "integrations/biometric": () => <BiometricIntegration />,
+  "integrations/api": (p) => <ApiManagement tab={p as ApiTab} key={p} />,
 
   // ── Security & Audit ──
-  "security/login": () => <SecurityView embedded initialTab="login" />,
-  "security/audit": () => <SecurityView embedded initialTab="audit" />,
+  "security/login": (p) => <LoginSecurity tab={p as SecLoginTab} key={p} />,
+  "security/audit": (p) => <AuditLogs tab={p as SecAuditTab} key={p} />,
   "security/access": () => <SecurityView embedded initialTab="access" />,
   "security/backups": () => <SecurityView embedded initialTab="backups" />,
   "security/retention": () => <SecurityView embedded initialTab="retention" />,

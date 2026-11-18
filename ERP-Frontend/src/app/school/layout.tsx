@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { ChevronDown, GraduationCap, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
+import { ChevronDown, GraduationCap, UserRound, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
 import { ReportHost } from "@/components/admin/report-host";
+import { Assist } from "@/components/admin/assist";
 import { BUILT, MENU, sectionHref } from "./s/menu";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
@@ -95,12 +96,13 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
             <p className="px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">Overview</p>
             {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod]) => {
               const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
+              const ModIcon = key === "profile" ? UserRound : LayoutDashboard;
               const open = shut[key] === undefined ? inside : !shut[key];
               return (
                 <div key={key}>
                   <button type="button" aria-expanded={open} onClick={() => setShut({ ...shut, [key]: open })}
                     className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
-                    <LayoutDashboard className="size-[18px] shrink-0" aria-hidden="true" />
+                    <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />
                     <span className="flex-1">{mod.label}</span>
                     <ChevronDown className={`size-3.5 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
@@ -140,6 +142,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
       <ReportHost />
+      <Assist scope="school" />
     </SchoolContext.Provider>
   );
 }

@@ -4,13 +4,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { ArrowUp, Download, ExternalLink, Sparkles, X } from "lucide-react";
+import { ArrowUp, Download, ExternalLink, Loader2, Mic, Sparkles, X } from "lucide-react";
 import { adminFetch, json } from "@/lib/admin-api";
+import { schoolFetch } from "@/lib/school-api";
 import { downloadCsv } from "./csv";
-import { findNavigation } from "@/app/super-admin/s/navigate";
+import { useDictation } from "./voice";
+import { findNavigation, type NavConfig } from "@/app/super-admin/s/navigate";
+import { MENU as SCHOOL_MENU, BUILT as SCHOOL_BUILT, sectionHref as schoolHref } from "@/app/school/s/menu";
 
 type Cell = string | number | null;
-type Action = { kind: "export"; label: string; name: string; head: string[]; rows: Cell[][]; auto?: boolean } | { kind: "link"; label: string; href: string };
+type Action = { kind: "export"; label: string; name: string; head: string[]; rows: Cell[][]; auto?: boolean } | { kind: "link"; label: string; href: string; go?: boolean };
 interface Msg { role: "user" | "assistant"; content: string; actions?: Action[] }
 
 /** The assistant's text with **bold** shown as bold. Nothing else is interpreted, so no markup can slip in. */
@@ -18,7 +21,17 @@ function Rich({ text }: { text: string }) {
   return <>{text.split("**").map((part, i) => (i % 2 ? <strong key={i} className="font-semibold text-slate-900">{part}</strong> : part))}</>;
 }
 
-const KINDS =["Maintenance notice", "Release notes", "Policy update"];
+const KINDS = ["Maintenance notice", "Release notes", "Policy update"];
+const SCHOOL_NAV: NavConfig = { menu: SCHOOL_MENU, href: schoolHref, only: SCHOOL_BUILT };
+const SCHOOL_IDEAS = [
+  "How many students are in each class?",
+  "Export the students list",
+  "List all staff",
+  "Which classes have no class teacher?",
+  "Show recent activity",
+  "Open student statistics",
+  "How do I add a qualification?",
+];
 const IDEAS = [
   "Export all schools list",
   "Which schools need attention?",
@@ -33,7 +46,8 @@ const IDEAS = [
 ];
 
 /** The "Ask AI" button in the corner of the Super Admin portal, with its chat panel. */
-export function Assist() {
+export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
+  const school = scope === "school";
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -48,16 +62,6 @@ export function Assist() {
   const [copied, setCopied] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const end = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { if (open) input.current?.focus(); }, [open]);
-  useEffect(() => { end.current?.scrollIntoView({ block: "end" }); }, [msgs, busy, open]);
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
   const send = async (raw: string) => {
     const content = raw.trim();
     if (!content || busy) return;
@@ -65,10 +69,11 @@ export function Assist() {
     setText("");
     setError("");
     // "open payment gateway", "go to schools": take the person there
-    const dest = findNavigation(content);
+    const dest = findNavigation(content, school ? SCHOOL_NAV : undefined);
     if (dest?.how) {
       // "how can I open the roles page": the path in bold, and a button, nothing more
-      setMsgs([...next, { role: "assistant", content: `Open **${dest.label.replaceAll("›", "→")}**.`, actions: [{ kind: "link", label: "Open it", href: dest.href }] }]);
+      const reply = `Open **${dest.label.replaceAll("›", "→")}**.`;
+      setMsgs([...next, { role: "assistant", content: reply, actions: [{ kind: "link", label: "Open it", href: dest.href }] }]);
       return;
     }
     if (dest) {
@@ -80,8 +85,15 @@ export function Assist() {
     setMsgs(next);
     setBusy(true);
     try {
-      const r = await adminFetch<{ reply: string; actions?: Action[] }>("/assist/chat", json("POST", { messages: next.slice(-12).map((m) => ({ role: m.role, content: m.content })), page: pathname }));
+      const payload = { messages: next.slice(-12).map((m) => ({ role: m.role, content: m.content })), page: pathname };
+      const r = school
+        ? await schoolFetch<{ reply: string; actions?: Action[] }>("/school/assist/chat", json("POST", payload))
+        : await adminFetch<{ reply: string; actions?: Action[] }>("/assist/chat", json("POST", payload));
       setMsgs([...next, { role: "assistant", content: r.reply, actions: r.actions }]);
+
+      // "open payment gateway" in any language: the assistant says go, and the portal goes
+      const go = r.actions?.find((a): a is Extract<Action, { kind: "link" }> => a.kind === "link" && a.go === true);
+      if (go) { router.push(go.href); window.setTimeout(() => setOpen(false), 600); }
       // an export that was asked for opens its Excel / PDF / CSV window straight away
       const auto = r.actions?.find((a): a is Extract<Action, { kind: "export" }> => a.kind === "export" && a.auto === true);
       if (auto) downloadCsv(auto.name, auto.head, auto.rows);
@@ -93,6 +105,11 @@ export function Assist() {
   };
 
   const submit = (e: FormEvent) => { e.preventDefault(); void send(text); };
+
+
+  // asking by voice, like dictation in a chat app: the recording is turned into text and sent when you stop talking
+  const voice = useDictation({ onText: (t) => { setText(t); void send(t); }, onError: (m) => setError(m), endpoint: school ? "/school/assist/transcribe" : "/admin/assist/transcribe" });
+  useEffect(() => { if (!open) voice.cancel(); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const makeDraft = async (e: FormEvent) => {
     e.preventDefault();
@@ -129,13 +146,15 @@ export function Assist() {
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 bg-gradient-to-br from-[#dceff9] to-white px-5 py-4">
               <div className="flex min-w-0 items-start gap-2.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#026f9b] text-white"><Sparkles className="size-[18px]" aria-hidden="true" /></span>
-                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">Ask about your platform. I answer from live data and can export lists, but never change anything.</p></div>
+                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">{school ? "Ask about your school. I answer from your school's live data and can export lists, but never change anything." : "Ask about your platform. I answer from live data and can export lists, but never change anything."}</p></div>
               </div>
-              <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="shrink-0 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>
+              <div className="flex shrink-0 items-center gap-1">
+                <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>
+              </div>
             </header>
 
             <div role="tablist" className="flex gap-1 border-b border-slate-200 px-5">
-              {([["ask", "Ask"], ["notice", "Draft a notice"]] as const).map(([k, l]) => (
+              {(school ? ([["ask", "Ask"]] as const) : ([["ask", "Ask"], ["notice", "Draft a notice"]] as const)).map(([k, l]) => (
                 <button key={k} type="button" role="tab" aria-selected={mode === k} onClick={() => { setMode(k); setError(""); }}
                   className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-medium ${mode === k ? "border-[#0294ce] text-slate-900" : "border-transparent text-slate-500"}`}>{l}</button>
               ))}
@@ -173,7 +192,7 @@ export function Assist() {
               {!msgs.length && (
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500">Try one of these, or type your own question.</p>
-                  {IDEAS.map((q) => (
+                  {(school ? SCHOOL_IDEAS : IDEAS).map((q) => (
                     <button key={q} type="button" onClick={() => void send(q)} className="block w-full rounded-full border border-slate-200 px-4 py-2 text-left text-sm text-slate-700 transition hover:border-[#026f9b] hover:bg-[#f3f9fd]">{q}</button>
                   ))}
                 </div>
@@ -204,10 +223,18 @@ export function Assist() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(text); } }}
-                placeholder="Ask anything about the platform…"
+                placeholder={voice.listening ? "Listening… speak now" : voice.transcribing ? "Understanding what you said…" : "Ask anything about the platform…"}
                 aria-label="Your question"
                 className="min-h-[44px] min-w-0 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-[#0294ce] focus:ring-2 focus:ring-[#0294ce]/30"
               />
+              {voice.supported && (
+                <button type="button" aria-pressed={voice.listening} aria-label={voice.listening ? "Stop and send" : "Speak your question"} title={voice.listening ? "Stop and send" : "Speak your question (English, Hindi or Telugu)"} disabled={busy || voice.transcribing}
+                  onClick={() => (voice.listening ? voice.stop() : void voice.start())}
+                  className={`relative grid size-11 shrink-0 place-items-center rounded-full border transition disabled:opacity-60 ${voice.listening ? "border-[#e53a35] bg-[#fce0df] text-[#ac2c28]" : "border-slate-200 bg-white text-[#026f9b] hover:border-[#026f9b]"}`}>
+                  {voice.listening && <span className="absolute inset-0 animate-ping rounded-full bg-[#e53a35]/25" aria-hidden="true" />}
+                  {voice.transcribing ? <Loader2 className="relative size-5 animate-spin" aria-hidden="true" /> : <Mic className="relative size-5" aria-hidden="true" />}
+                </button>
+              )}
               <button type="submit" disabled={busy || !text.trim()} aria-label="Send" className="grid size-11 shrink-0 place-items-center rounded-full bg-[#026f9b] text-white shadow-sm shadow-sky-900/20 transition hover:bg-[#014a67] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0294ce] disabled:bg-[#c0e4f3] disabled:shadow-none"><ArrowUp className="size-5" strokeWidth={2.5} aria-hidden="true" /></button>
             </form>}
           </aside>

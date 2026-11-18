@@ -176,6 +176,43 @@
    }
   ]
  },
+ "profile": {
+  "label": "My Profile",
+  "sections": [
+   {
+    "key": "personal-details",
+    "label": "Personal Details",
+    "pages": [
+     {
+      "key": "contact",
+      "title": "Contact"
+     },
+     {
+      "key": "employment",
+      "title": "Employment"
+     },
+     {
+      "key": "qualification",
+      "title": "Qualification"
+     },
+     {
+      "key": "documents",
+      "title": "Documents"
+     }
+    ]
+   },
+   {
+    "key": "my-payslips",
+    "label": "My Payslips",
+    "pages": [
+     {
+      "key": "payslips",
+      "title": "Payslips"
+     }
+    ]
+   }
+  ]
+ },
  "front-office": {
   "label": "Front Office",
   "flow": "Flow: Enquiry / Visitor → Registration → Assign responsible person → Follow-up / Approval → Resolution → Report",

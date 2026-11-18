@@ -11,20 +11,20 @@ import { ErrorBanner, Modal, btnPrimary, inputCls, useDebounced, useLoad } from 
 import { PageBar, type YearOpt } from "./page-bar";
 import { PlatformNotices } from "./notices";
 
-const small = "rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-800 hover:border-slate-400 disabled:opacity-50";
-const day = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
-const Row = ({ k, v }: { k: string; v: React.ReactNode }) => <div className="grid grid-cols-[8rem_1fr] gap-3 py-1.5 text-sm"><dt className="text-slate-500">{k}</dt><dd className="break-words font-medium text-slate-900">{v}</dd></div>;
-const Footer = ({ on }: { on: () => void }) => <div className="mt-4 flex justify-end border-t border-slate-100 pt-3"><button type="button" className={`${btnPrimary} !px-4 !py-1.5 text-[13px]`} onClick={on}>Close</button></div>;
-const NOT_YET = "Not recorded yet";
-const Empty = ({ text }: { text: string }) => <p className="px-5 py-8 text-center text-sm text-slate-500">{text}</p>;
+export const small = "rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-800 hover:border-slate-400 disabled:opacity-50";
+export const day = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—");
+export const Row = ({ k, v }: { k: string; v: React.ReactNode }) => <div className="grid grid-cols-[8rem_1fr] gap-3 py-1.5 text-sm"><dt className="text-slate-500">{k}</dt><dd className="break-words font-medium text-slate-900">{v}</dd></div>;
+export const Footer = ({ on }: { on: () => void }) => <div className="mt-4 flex justify-end border-t border-slate-100 pt-3"><button type="button" className={`${btnPrimary} !px-4 !py-1.5 text-[13px]`} onClick={on}>Close</button></div>;
+export const NOT_YET = "Not recorded yet";
+export const Empty = ({ text }: { text: string }) => <p className="px-5 py-8 text-center text-sm text-slate-500">{text}</p>;
 const NO_ATTENDANCE = "Attendance has not been recorded yet. It fills in once attendance is taken.";
 
-interface YearInfo { id: string; name: string; start_date: string; end_date: string; is_current: boolean }
-interface YearData { years: YearInfo[]; year: YearInfo | null }
-const asOpts = (years: YearInfo[]): YearOpt[] => years.map((y) => ({ id: y.id, name: y.name }));
+export interface YearInfo { id: string; name: string; start_date: string; end_date: string; is_current: boolean }
+export interface YearData { years: YearInfo[]; year: YearInfo | null }
+export const asOpts = (years: YearInfo[]): YearOpt[] => years.map((y) => ({ id: y.id, name: y.name }));
 
 /** The academic year the page is showing. Empty means the school's current year. */
-function useYear() {
+export function useYear() {
   const [year, setYear] = useState("");
   return { year, setYear };
 }

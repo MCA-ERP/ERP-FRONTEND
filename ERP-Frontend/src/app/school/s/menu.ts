@@ -11,7 +11,7 @@ export interface MenuModule { label: string; flow?: string; sections: MenuSectio
 export const MENU = data as Record<string, MenuModule>;
 
 /** Modules whose pages are built. Others stay out of the sidebar until they are. */
-export const BUILT = new Set(["dashboard"]);
+export const BUILT = new Set(["dashboard", "profile"]);
 
 /** The address of a submenu. The first Dashboard page is the school's home. */
 export const sectionHref = (module: string, section: string) => (module === "dashboard" && section === "main-dashboard" ? "/school" : `/school/${module}/${section}`);
@@ -25,6 +25,16 @@ export const PAGE_TEXT: Record<string, Record<string, [string, string]>> = {
   },
   "dashboard/staff-statistics": { "total-staff": ["Total Staff", "Everyone on the school's payroll."], teaching: ["Teaching", "Teachers by department and level."], "non-teaching": ["Non-Teaching", "Administration, accounts, transport and support staff."] },
   "dashboard/attendance-overview": { today: ["Today", "Student attendance marked today."], "class-wise": ["Class-wise", "Attendance by class and section today."], monthly: ["Monthly", "Average daily attendance by month."] },
+  "dashboard/fee-overview": { collected: ["Collected", "Fees received this academic year."], pending: ["Pending", "Fees billed and not yet paid."], overdue: ["Overdue", "Fees past their due date."] },
+  "dashboard/academic-overview": { classes: ["Classes", "Classes, sections and strength."], subjects: ["Subjects", "Subjects taught and syllabus progress."], timetable: ["Timetable", "Timetable health this week."] },
+  "dashboard/exam-overview": { "upcoming-exams": ["Upcoming Exams", "Exams scheduled this term."], "results-pending": ["Results Pending", "Exams where results are still being prepared."] },
+  "dashboard/alerts": { "pending-approvals": ["Pending Approvals", "Everything waiting for your decision."], reminders: ["Reminders", "Reminders for the coming weeks."] },
+  "dashboard/recent-activity": { "user-activity": ["User Activity", "What people did in the portal recently."], "recent-changes": ["Recent Changes", "Changes to important records."] },
+  "profile/personal-details": {
+    contact: ["Contact", "How the school reaches you. Your official email can't be changed here."], employment: ["Employment", "Your employment record. Ask HR if anything here is wrong."],
+    qualification: ["Qualification", "Your degrees and certificates. HR verifies anything you add."], documents: ["Documents", "Documents HR keeps on file for you."],
+  },
+  "profile/my-payslips": { payslips: ["Payslips", "Your monthly payslips. Download any month as a PDF for loans, visas or tax filing."] },
   "dashboard/admission-overview": {
     enquiries: ["Enquiries", "Admission enquiries this year."], applications: ["Applications", "Applications received this year."],
     approved: ["Approved", "Applications approved for admission."], rejected: ["Rejected", "Applications that were not approved."],

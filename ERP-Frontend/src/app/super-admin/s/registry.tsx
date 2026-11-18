@@ -19,6 +19,9 @@ import { DataPermissions, MenuPermissions, PermissionAudit, RoleAssignment, type
 import { TransactionPages, type TxTab } from "@/app/super-admin/payments/tx-pages";
 import { GatewayPages, InvoicePages, RefundPages, RevenuePages, TaxPages, type GatewayTab, type InvoiceTab, type RefundTab, type RevenueTab, type TaxTab } from "@/app/super-admin/payments/pay-pages";
 import { ApiManagement, BiometricIntegration, EmailIntegration, MapsIntegration, PaymentIntegration, SmsIntegration, WhatsappIntegration, type ApiTab, type EmailTab, type PayTab } from "@/app/super-admin/integrations/int-pages";
+import { IncidentPages, SecuritySettingsPages, type IncidentTab, type SettingsTab } from "@/app/super-admin/security/sec-settings";
+import { ConfigPages, DateTimePages, EmailConfiguration, FilePages, GeneralPages, LanguagePages, RegionalPages, type SysConfigTab, type DateTimeTab, type FilesTab, type GeneralTab, type LanguageTab, type RegionalTab } from "@/app/super-admin/settings/sys-pages";
+import { AccessControlPages, BackupPages, RetentionPages, type AccessTab, type BackupTab, type RetentionTab } from "@/app/super-admin/security/sec-pages2";
 import { AuditLogs, LoginSecurity, type AuditTab as SecAuditTab, type LoginTab as SecLoginTab } from "@/app/super-admin/security/sec-pages";
 import { BannerPages, BlogPages, ContentPages, FaqPages, SeoPages, TestimonialPages, type BannerTab, type BlogTab, type ContentTab, type FaqTab, type SeoTab as CmsSeoTab, type TestiTab } from "@/app/super-admin/website/cms-pages";
 import { WebsitePageEditor, type PageTab } from "@/app/super-admin/website/page-editor";
@@ -73,11 +76,11 @@ export const PAGED = new Set([
   "schools/registration", "schools/directory", "schools/status", "schools/profile", "schools/configuration", "schools/campus", "schools/admin",
   "schools/documents", "schools/history", "subscriptions/plans", "subscriptions/features", "subscriptions/list", "subscriptions/school", "subscriptions/renewal",
   "subscriptions/change", "subscriptions/trial", "subscriptions/discounts", "subscriptions/billing", "modules/catalogue", "modules/academic", "modules/administrative", "modules/communication", "modules/advanced",
-  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates", "roles/catalogue", "roles/creation", "roles/permissions", "roles/approvals", "roles/menu", "roles/data", "roles/assignment", "roles/audit", "payments/transactions", "payments/school", "payments/invoices", "payments/refunds", "payments/gateway", "payments/tax", "payments/revenue", "support/tickets", "support/categories", "support/assignment", "support/kb", "support/feedback", "support/escalations", "reports/schools", "reports/users", "reports/financial", "reports/subscriptions", "reports/modules", "reports/security", "reports/system", "communication/announcements", "communication/email", "communication/sms", "communication/whatsapp", "communication/notifications", "communication/history", "cms/pages", "cms/content", "cms/banners", "cms/blog", "cms/testimonials", "cms/faq", "cms/seo", "integrations/payment", "integrations/sms", "integrations/whatsapp", "integrations/email", "integrations/maps", "integrations/biometric", "integrations/api", "security/login", "security/audit",
+  "modules/configuration", "modules/allocation", "modules/pricing", "modules/updates", "roles/catalogue", "roles/creation", "roles/permissions", "roles/approvals", "roles/menu", "roles/data", "roles/assignment", "roles/audit", "payments/transactions", "payments/school", "payments/invoices", "payments/refunds", "payments/gateway", "payments/tax", "payments/revenue", "support/tickets", "support/categories", "support/assignment", "support/kb", "support/feedback", "support/escalations", "reports/schools", "reports/users", "reports/financial", "reports/subscriptions", "reports/modules", "reports/security", "reports/system", "communication/announcements", "communication/email", "communication/sms", "communication/whatsapp", "communication/notifications", "communication/history", "cms/pages", "cms/content", "cms/banners", "cms/blog", "cms/testimonials", "cms/faq", "cms/seo", "integrations/payment", "integrations/sms", "integrations/whatsapp", "integrations/email", "integrations/maps", "integrations/biometric", "integrations/api", "security/login", "security/audit", "security/access", "security/backups", "security/retention", "security/settings", "security/incidents", "system-settings/general", "system-settings/regional", "system-settings/language", "system-settings/datetime", "system-settings/files", "system-settings/email", "system-settings/config",
   "users/platform", "users/school", "users/staff", "users/directory", "users/accounts", "users/login",
 ]);
 
-const SETTINGS_TAB = { general: "general", regional: "regional", language: "regional", datetime: "datetime", files: "app", email: "notify", config: "maintenance", version: "versions" } as const;
+const SETTINGS_TAB = { version: "versions" } as const;
 
 type Render = (page: string) => ReactNode;
 const table: Record<string, Render> = {
@@ -188,13 +191,20 @@ const table: Record<string, Render> = {
   // ── Security & Audit ──
   "security/login": (p) => <LoginSecurity tab={p as SecLoginTab} key={p} />,
   "security/audit": (p) => <AuditLogs tab={p as SecAuditTab} key={p} />,
-  "security/access": () => <SecurityView embedded initialTab="access" />,
-  "security/backups": () => <SecurityView embedded initialTab="backups" />,
-  "security/retention": () => <SecurityView embedded initialTab="retention" />,
-  "security/settings": () => <SecurityView embedded initialTab="settings" />,
-  "security/incidents": () => <SecurityView embedded initialTab="incidents" />,
+  "security/access": (p) => <AccessControlPages tab={p as AccessTab} key={p} />,
+  "security/backups": (p) => <BackupPages tab={p as BackupTab} key={p} />,
+  "security/retention": (p) => <RetentionPages tab={p as RetentionTab} key={p} />,
+  "security/settings": (p) => <SecuritySettingsPages tab={p as SettingsTab} key={p} />,
+  "security/incidents": (p) => <IncidentPages tab={p as IncidentTab} key={p} />,
 
   // ── System Settings ──
+  "system-settings/general": (p) => <GeneralPages tab={p as GeneralTab} key={p} />,
+  "system-settings/regional": (p) => <RegionalPages tab={p as RegionalTab} key={p} />,
+  "system-settings/language": (p) => <LanguagePages tab={p as LanguageTab} key={p} />,
+  "system-settings/datetime": (p) => <DateTimePages tab={p as DateTimeTab} key={p} />,
+  "system-settings/files": (p) => <FilePages tab={p as FilesTab} key={p} />,
+  "system-settings/email": () => <EmailConfiguration key="e" />,
+  "system-settings/config": (p) => <ConfigPages tab={p as SysConfigTab} key={p} />,
   ...Object.fromEntries(Object.entries(SETTINGS_TAB).map(([k, tab]) => [`system-settings/${k}`, () => <SettingsView embedded initialTab={tab} key={k} />])),
 };
 

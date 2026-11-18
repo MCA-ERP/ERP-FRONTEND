@@ -1904,8 +1904,8 @@
     "pages": [
      {
       "key": "sms",
-      "title": "SMS Integration",
-      "description": ""
+      "title": "SMS Provider Configuration",
+      "description": "The service that sends SMS for the platform and schools."
      }
     ]
    },
@@ -1915,8 +1915,8 @@
     "pages": [
      {
       "key": "whatsapp",
-      "title": "WhatsApp Integration",
-      "description": ""
+      "title": "Business API Configuration",
+      "description": "WhatsApp Business account used for template messages."
      }
     ]
    },
@@ -1958,8 +1958,8 @@
     "pages": [
      {
       "key": "biometric",
-      "title": "Biometric",
-      "description": ""
+      "title": "Device Configuration",
+      "description": "Fingerprint and face devices for staff and student attendance."
      }
     ]
    },
@@ -2209,8 +2209,8 @@
     "pages": [
      {
       "key": "email",
-      "title": "Email Configuration",
-      "description": ""
+      "title": "SMTP Settings",
+      "description": "The mail server the platform sends from."
      }
     ]
    },

@@ -159,6 +159,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     return [];
   }, [items, pathname]);
 
+  // Clicking the open module again hides its submenu; clicking once more shows it. Moving to another module starts fresh.
+  const [shut, setShut] = useState<Record<string, boolean>>({});
+  const openGroup = useMemo(() => {
+    const all = items.flatMap((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])]);
+    const cur = bestOf(pathname, all);
+    return items.find((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])].includes(cur ?? ""))?.href ?? null;
+  }, [items, pathname]);
+  useEffect(() => { setShut({}); }, [openGroup]);
+
   if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center p-6">
@@ -169,15 +178,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </div>
     );
   }
-
-  // Clicking the open module again hides its submenu; clicking once more shows it. Moving to another module starts fresh.
-  const [shut, setShut] = useState<Record<string, boolean>>({});
-  const openGroup = useMemo(() => {
-    const all = items.flatMap((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])]);
-    const cur = bestOf(pathname, all);
-    return items.find((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])].includes(cur ?? ""))?.href ?? null;
-  }, [items, pathname]);
-  useEffect(() => { setShut({}); }, [openGroup]);
 
   if (!user) return <div className="flex min-h-screen items-center justify-center text-sm text-slate-400">Checking access…</div>;
 

@@ -52,8 +52,9 @@ function ServicePanel({ service, title, only }: { service: Service; title: strin
 // ── payment ──
 export type PayTab = "razorpay" | "other";
 export function PaymentIntegration({ tab }: { tab: PayTab }) {
-  if (tab === "razorpay") return <ServicePanel service="razorpay" title="Razorpay" />;
-  const { data } = useDetail("razorpay");
+  return tab === "razorpay" ? <ServicePanel service="razorpay" title="Razorpay" /> : <OtherGateways />;
+}
+function OtherGateways() {
   const card = (code: string, name: string, sub: string, ok: boolean, hint?: string) => (
     <div key={code} className="rounded-2xl border border-slate-200 bg-white p-4">
       <div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-lg bg-[#dceff9] text-xs font-bold text-[#026f9b]">{code}</span><div><p className="text-[13.5px] font-semibold text-slate-900">{name}</p><p className="text-xs text-slate-500">{sub}</p></div></div>
@@ -67,7 +68,6 @@ export function PaymentIntegration({ tab }: { tab: PayTab }) {
       {card("PU", "PayU", "Cards and net banking", false)}
       {card("PP", "PhonePe PG", "UPI-first checkout", false)}
       {card("BT", "Bank transfer", "NEFT / RTGS · manual reconciliation", true)}
-      {data && null}
     </div>
   );
 }
@@ -98,7 +98,7 @@ function EmailProvider() {
           <div key={c.name} className="flex items-center gap-4 border-b border-slate-100 px-5 py-3.5"><div className="min-w-0 flex-1"><p className="text-[13.5px] font-medium text-slate-900">{c.name}</p><p className="text-xs text-slate-500">{c.detail}</p></div><Chip tone={tone[c.status]}>{c.status}</Chip></div>
         ))}
         {!dns.data?.checks.length && <p className="px-5 py-6 text-sm text-slate-500">{dns.loading ? "Checking…" : "Set the sender address first (Settings › Email & SMS)."}</p>}
-        <ToggleRow label="Track opens" checked={track} onChange={(v) => { setTrack(v); setSaved(false); }} />
+        <div className="px-5"><ToggleRow label="Track opens" checked={track} onChange={(v) => { setTrack(v); setSaved(false); }} /></div>
         <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 px-5 py-3">
           {saved && <span role="status" className="mr-auto text-sm font-semibold text-emerald-700">Saved</span>}
           <button type="button" className={`${btnGhost} !px-4 !py-1.5 text-[13px]`} onClick={() => set.data && setTrack(set.data.settings["communication.track_email_opens"] !== false)}>Discard</button>
@@ -204,7 +204,7 @@ function Logs() {
   return (
     <div className="space-y-5">
       <ErrorBanner message={all.error} />
-      <Panel title="Webhook log" sub={`${rows.length} calls`} right={<ExportPrint name="webhook-log" head={["Time", "Event", "Endpoint", "Status", "Time taken"]} rows={rows.map((d) => [d.attempted_at, d.event, url(d), d.status_code, d.duration_ms])} />}>
+      <Panel title="API log" sub={`${rows.length} calls`} right={<ExportPrint name="webhook-log" head={["Time", "Event", "Endpoint", "Status", "Time taken"]} rows={rows.map((d) => [d.attempted_at, d.event, url(d), d.status_code, d.duration_ms])} />}>
         <Search v={search} set={setSearch} label="Search webhook log" />
         <SimpleTable head={[{ h: "Time" }, { h: "Event" }, { h: "Endpoint" }, { h: "Status" }, { h: "Time taken" }, { h: "" }]} empty={all.loading ? "Loading…" : "No deliveries yet."}
           rows={rows.map((d) => [when(d.attempted_at), <Tag key="e">{d.event}</Tag>, url(d), <Chip key="s" tone={d.success ? "good" : "warn"}>{d.status_code ?? "—"}</Chip>, d.duration_ms != null ? `${d.duration_ms} ms` : "—", <button key="v" type="button" className={small} onClick={() => setView(d)}>View details</button>])} />

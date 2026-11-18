@@ -367,7 +367,9 @@ export type SeoTab = "title" | "description" | "sitemap";
 const RULE = { title: { key: "meta_title", head: "Meta titles", min: 30, max: 60, tag: "title" }, description: { key: "meta_description", head: "Meta descriptions", min: 120, max: 160, tag: "description" } } as const;
 
 export function SeoPages({ tab }: { tab: SeoTab }) {
-  if (tab === "sitemap") return <SitemapPanel />;
+  return tab === "sitemap" ? <SitemapPanel /> : <MetaTable tab={tab} />;
+}
+function MetaTable({ tab }: { tab: "title" | "description" }) {
   const rule = RULE[tab];
   const { items, loading, error, busy, run } = useItems("page");
   const [search, setSearch] = useState("");

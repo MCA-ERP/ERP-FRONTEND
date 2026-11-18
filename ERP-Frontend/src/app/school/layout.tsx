@@ -4,14 +4,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { GraduationCap, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
+import { ChevronDown, GraduationCap, UserRound, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
+import { ReportHost } from "@/components/admin/report-host";
+import { Assist } from "@/components/admin/assist";
+import { BUILT, MENU, sectionHref } from "./s/menu";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
 import LogoutButton from "@/components/logout";
 import { SchoolContext } from "./context";
 
 const nav = [
-  { href: "/school", label: "Home", icon: LayoutDashboard },
   { href: "/school/setup", label: "Academic setup", icon: Settings2, permission: "academics.setup.manage" },
   { href: "/school/students", label: "Students", icon: GraduationCap, module: "student_information" },
   { href: "/school/billing", label: "Billing", icon: ReceiptText, permission: "admin.settings.manage" },
@@ -25,6 +27,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ServerUser | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState("");
+  const [shut, setShut] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let live = true;
@@ -82,28 +85,46 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   return (
     <SchoolContext.Provider value={ctx}>
       <div className="min-h-screen bg-mca-cloud lg:flex">
-        <aside className="border-b border-slate-200 bg-white lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
-          <div className="flex items-center gap-3 px-5 py-4">
+        <aside className="border-b border-sky-100 bg-[#dceff9] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:shrink-0 lg:flex-col lg:border-b-0">
+          <div className="px-5 pb-3 pt-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/mca-logo.svg" alt="" className="h-8 w-8" />
-            <div className="min-w-0">
-              <p className="truncate text-sm font-extrabold text-slate-900">{ctx.school.name}</p>
-              <p className="text-xs text-slate-500">{ctx.user.roleDisplayName ?? ctx.user.role}</p>
-            </div>
+            <img src="/mca-logo.svg" alt="My Class Assist" className="h-14 w-auto" />
+            <p className="mt-2 truncate text-[13px] font-semibold text-slate-900">{ctx.school.name}</p>
+            <p className="text-[11px] font-medium uppercase tracking-wide text-[#026f9b]">{ctx.user.roleDisplayName ?? ctx.user.role}</p>
           </div>
-          <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">
-            {items.map(({ href, label, icon: Icon }) => {
-              const active = href === "/school" ? pathname === href : pathname.startsWith(href);
+          <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4">
+            <p className="px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">Overview</p>
+            {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod]) => {
+              const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
+              const ModIcon = key === "profile" ? UserRound : LayoutDashboard;
+              const open = shut[key] === undefined ? inside : !shut[key];
               return (
-                <Link
-                  key={href}
-                  href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={`flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                    active ? "bg-mca-blue-sky text-mca-blue-shade" : "text-slate-600 hover:bg-slate-50"
-                  }`}
-                >
-                  <Icon className="size-4" aria-hidden="true" />
+                <div key={key}>
+                  <button type="button" aria-expanded={open} onClick={() => setShut({ ...shut, [key]: open })}
+                    className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
+                    <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />
+                    <span className="flex-1">{mod.label}</span>
+                    <ChevronDown className={`size-3.5 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+                  </button>
+                  {open && (
+                    <div className="ml-[19px] mt-0.5 flex flex-col gap-px border-l-2 border-[#026f9b]/25 pl-2.5">
+                      {mod.sections.map((sec) => {
+                        const href = sectionHref(key, sec.key);
+                        const on = pathname === href;
+                        return <Link key={sec.key} href={href} aria-current={on ? "page" : undefined} className={`rounded-full px-3 py-1.5 text-[13px] ${on ? "bg-white font-semibold text-slate-900 shadow-sm" : "text-slate-800 hover:bg-white/50"}`}>{sec.label}</Link>;
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <p className="px-2 pb-1 pt-4 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">More</p>
+            {items.map(({ href, label, icon: Icon }) => {
+              const active = pathname.startsWith(href);
+              return (
+                <Link key={href} href={href} aria-current={active ? "page" : undefined}
+                  className={`flex items-center gap-3 rounded-full px-3 py-2 text-[13.5px] ${active ? "bg-white font-semibold text-slate-900 shadow-sm" : "font-medium text-slate-800 hover:bg-white/50"}`}>
+                  <Icon className="size-[18px]" aria-hidden="true" />
                   {label}
                 </Link>
               );
@@ -120,6 +141,8 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
           <main className="mx-auto max-w-6xl p-6">{children}</main>
         </div>
       </div>
+      <ReportHost />
+      <Assist scope="school" />
     </SchoolContext.Provider>
   );
 }

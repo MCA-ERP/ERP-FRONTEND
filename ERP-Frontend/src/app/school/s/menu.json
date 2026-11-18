@@ -1,0 +1,4557 @@
+{
+ "dashboard": {
+  "label": "Dashboard",
+  "sections": [
+   {
+    "key": "main-dashboard",
+    "label": "Main Dashboard",
+    "pages": [
+     {
+      "key": "school-overview",
+      "title": "School Overview"
+     },
+     {
+      "key": "kpi-cards",
+      "title": "KPI Cards"
+     }
+    ]
+   },
+   {
+    "key": "student-statistics",
+    "label": "Student Statistics",
+    "pages": [
+     {
+      "key": "total",
+      "title": "Total"
+     },
+     {
+      "key": "active",
+      "title": "Active"
+     },
+     {
+      "key": "inactive",
+      "title": "Inactive"
+     },
+     {
+      "key": "new-admissions",
+      "title": "New Admissions"
+     }
+    ]
+   },
+   {
+    "key": "staff-statistics",
+    "label": "Staff Statistics",
+    "pages": [
+     {
+      "key": "total-staff",
+      "title": "Total Staff"
+     },
+     {
+      "key": "teaching",
+      "title": "Teaching"
+     },
+     {
+      "key": "non-teaching",
+      "title": "Non-Teaching"
+     }
+    ]
+   },
+   {
+    "key": "attendance-overview",
+    "label": "Attendance Overview",
+    "pages": [
+     {
+      "key": "today",
+      "title": "Today"
+     },
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     },
+     {
+      "key": "monthly",
+      "title": "Monthly"
+     }
+    ]
+   },
+   {
+    "key": "admission-overview",
+    "label": "Admission Overview",
+    "pages": [
+     {
+      "key": "enquiries",
+      "title": "Enquiries"
+     },
+     {
+      "key": "applications",
+      "title": "Applications"
+     },
+     {
+      "key": "approved",
+      "title": "Approved"
+     },
+     {
+      "key": "rejected",
+      "title": "Rejected"
+     }
+    ]
+   },
+   {
+    "key": "fee-overview",
+    "label": "Fee Overview",
+    "pages": [
+     {
+      "key": "collected",
+      "title": "Collected"
+     },
+     {
+      "key": "pending",
+      "title": "Pending"
+     },
+     {
+      "key": "overdue",
+      "title": "Overdue"
+     }
+    ]
+   },
+   {
+    "key": "academic-overview",
+    "label": "Academic Overview",
+    "pages": [
+     {
+      "key": "classes",
+      "title": "Classes"
+     },
+     {
+      "key": "subjects",
+      "title": "Subjects"
+     },
+     {
+      "key": "timetable",
+      "title": "Timetable"
+     }
+    ]
+   },
+   {
+    "key": "exam-overview",
+    "label": "Exam Overview",
+    "pages": [
+     {
+      "key": "upcoming-exams",
+      "title": "Upcoming Exams"
+     },
+     {
+      "key": "results-pending",
+      "title": "Results Pending"
+     }
+    ]
+   },
+   {
+    "key": "alerts",
+    "label": "Alerts",
+    "pages": [
+     {
+      "key": "pending-approvals",
+      "title": "Pending Approvals"
+     },
+     {
+      "key": "reminders",
+      "title": "Reminders"
+     }
+    ]
+   },
+   {
+    "key": "recent-activity",
+    "label": "Recent Activity",
+    "pages": [
+     {
+      "key": "user-activity",
+      "title": "User Activity"
+     },
+     {
+      "key": "recent-changes",
+      "title": "Recent Changes"
+     }
+    ]
+   }
+  ]
+ },
+ "profile": {
+  "label": "My Profile",
+  "sections": [
+   {
+    "key": "personal-details",
+    "label": "Personal Details",
+    "pages": [
+     {
+      "key": "contact",
+      "title": "Contact"
+     },
+     {
+      "key": "employment",
+      "title": "Employment"
+     },
+     {
+      "key": "qualification",
+      "title": "Qualification"
+     },
+     {
+      "key": "documents",
+      "title": "Documents"
+     }
+    ]
+   },
+   {
+    "key": "my-payslips",
+    "label": "My Payslips",
+    "pages": [
+     {
+      "key": "payslips",
+      "title": "Payslips"
+     }
+    ]
+   }
+  ]
+ },
+ "front-office": {
+  "label": "Front Office",
+  "flow": "Flow: Enquiry / Visitor → Registration → Assign responsible person → Follow-up / Approval → Resolution → Report",
+  "sections": [
+   {
+    "key": "enquiry-desk",
+    "label": "Enquiry Desk",
+    "pages": [
+     {
+      "key": "new-enquiry",
+      "title": "New Enquiry"
+     },
+     {
+      "key": "enquiry-list",
+      "title": "Enquiry List"
+     },
+     {
+      "key": "follow-ups",
+      "title": "Follow-ups"
+     }
+    ]
+   },
+   {
+    "key": "visitor-management",
+    "label": "Visitor Management",
+    "pages": [
+     {
+      "key": "visitor-entry",
+      "title": "Visitor Entry"
+     },
+     {
+      "key": "visitor-list",
+      "title": "Visitor List"
+     },
+     {
+      "key": "visitor-pass",
+      "title": "Visitor Pass"
+     }
+    ]
+   },
+   {
+    "key": "appointment-management",
+    "label": "Appointment Management",
+    "pages": [
+     {
+      "key": "new-appointment",
+      "title": "New Appointment"
+     },
+     {
+      "key": "appointment-list",
+      "title": "Appointment List"
+     },
+     {
+      "key": "calendar",
+      "title": "Calendar"
+     }
+    ]
+   },
+   {
+    "key": "telephone-management",
+    "label": "Telephone Management",
+    "pages": [
+     {
+      "key": "incoming-calls",
+      "title": "Incoming Calls"
+     },
+     {
+      "key": "outgoing-calls",
+      "title": "Outgoing Calls"
+     },
+     {
+      "key": "call-register",
+      "title": "Call Register"
+     }
+    ]
+   },
+   {
+    "key": "postal-management",
+    "label": "Postal Management",
+    "pages": [
+     {
+      "key": "incoming-post",
+      "title": "Incoming Post"
+     },
+     {
+      "key": "outgoing-post",
+      "title": "Outgoing Post"
+     },
+     {
+      "key": "post-register",
+      "title": "Post Register"
+     }
+    ]
+   },
+   {
+    "key": "complaint-register",
+    "label": "Complaint Register",
+    "pages": [
+     {
+      "key": "new-complaint",
+      "title": "New Complaint"
+     },
+     {
+      "key": "complaint-list",
+      "title": "Complaint List"
+     },
+     {
+      "key": "resolution",
+      "title": "Resolution"
+     }
+    ]
+   },
+   {
+    "key": "gate-pass",
+    "label": "Gate Pass",
+    "pages": [
+     {
+      "key": "student-gate-pass",
+      "title": "Student Gate Pass"
+     },
+     {
+      "key": "staff-gate-pass",
+      "title": "Staff Gate Pass"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "front-office-reports",
+    "label": "Front Office Reports",
+    "pages": [
+     {
+      "key": "enquiry-report",
+      "title": "Enquiry Report"
+     },
+     {
+      "key": "visitor-report",
+      "title": "Visitor Report"
+     },
+     {
+      "key": "complaint-report",
+      "title": "Complaint Report"
+     }
+    ]
+   }
+  ]
+ },
+ "admission": {
+  "label": "Admission Management",
+  "flow": "Admission flow: 1 Enquiry → 2 Follow-up / convert → 3 Application form → 4 Documents → 5 Review → 6 Test / interview → 7 Approval → 8 Admission fee → 9 Registration → 10 Class allocation + logins",
+  "sections": [
+   {
+    "key": "admission-enquiry",
+    "label": "Admission Enquiry",
+    "pages": [
+     {
+      "key": "new-enquiry",
+      "title": "New Enquiry"
+     },
+     {
+      "key": "enquiry-list",
+      "title": "Enquiry List"
+     },
+     {
+      "key": "enquiry-follow-up",
+      "title": "Enquiry Follow-up"
+     }
+    ]
+   },
+   {
+    "key": "admission-application",
+    "label": "Admission Application",
+    "pages": [
+     {
+      "key": "new-application",
+      "title": "New Application"
+     },
+     {
+      "key": "online-applications",
+      "title": "Online Applications"
+     },
+     {
+      "key": "application-list",
+      "title": "Application List"
+     }
+    ]
+   },
+   {
+    "key": "application-processing",
+    "label": "Application Processing",
+    "pages": [
+     {
+      "key": "document-verification",
+      "title": "Document Verification"
+     },
+     {
+      "key": "eligibility-check",
+      "title": "Eligibility Check"
+     },
+     {
+      "key": "application-status",
+      "title": "Application Status"
+     }
+    ]
+   },
+   {
+    "key": "entrance-examination",
+    "label": "Entrance Examination",
+    "pages": [
+     {
+      "key": "exam-setup",
+      "title": "Exam Setup"
+     },
+     {
+      "key": "exam-schedule",
+      "title": "Exam Schedule"
+     },
+     {
+      "key": "marks-entry",
+      "title": "Marks Entry"
+     },
+     {
+      "key": "results",
+      "title": "Results"
+     }
+    ]
+   },
+   {
+    "key": "interview-management",
+    "label": "Interview Management",
+    "pages": [
+     {
+      "key": "interview-schedule",
+      "title": "Interview Schedule"
+     },
+     {
+      "key": "interview-panel",
+      "title": "Interview Panel"
+     },
+     {
+      "key": "interview-results",
+      "title": "Interview Results"
+     }
+    ]
+   },
+   {
+    "key": "admission-approval",
+    "label": "Admission Approval",
+    "pages": [
+     {
+      "key": "pending-approval",
+      "title": "Pending Approval"
+     },
+     {
+      "key": "approved",
+      "title": "Approved"
+     },
+     {
+      "key": "rejected",
+      "title": "Rejected"
+     },
+     {
+      "key": "waitlisted",
+      "title": "Waitlisted"
+     }
+    ]
+   },
+   {
+    "key": "admission-fee",
+    "label": "Admission Fee",
+    "pages": [
+     {
+      "key": "admission-fee-setup",
+      "title": "Admission Fee Setup"
+     },
+     {
+      "key": "fee-collection",
+      "title": "Fee Collection"
+     },
+     {
+      "key": "payment-status",
+      "title": "Payment Status"
+     }
+    ]
+   },
+   {
+    "key": "student-registration",
+    "label": "Student Registration",
+    "pages": [
+     {
+      "key": "generate-admission-number",
+      "title": "Generate Admission Number"
+     },
+     {
+      "key": "student-id",
+      "title": "Student ID"
+     },
+     {
+      "key": "registration",
+      "title": "Registration"
+     }
+    ]
+   },
+   {
+    "key": "class-allocation",
+    "label": "Class Allocation",
+    "pages": [
+     {
+      "key": "academic-year",
+      "title": "Academic Year"
+     },
+     {
+      "key": "class",
+      "title": "Class"
+     },
+     {
+      "key": "section",
+      "title": "Section"
+     },
+     {
+      "key": "roll-number",
+      "title": "Roll Number"
+     }
+    ]
+   },
+   {
+    "key": "admission-documents",
+    "label": "Admission Documents",
+    "pages": [
+     {
+      "key": "birth-certificate",
+      "title": "Birth Certificate"
+     },
+     {
+      "key": "previous-school-records",
+      "title": "Previous School Records"
+     },
+     {
+      "key": "photos",
+      "title": "Photos"
+     },
+     {
+      "key": "other-documents",
+      "title": "Other Documents"
+     }
+    ]
+   },
+   {
+    "key": "admission-communication",
+    "label": "Admission Communication",
+    "pages": [
+     {
+      "key": "application-confirmation",
+      "title": "Application Confirmation"
+     },
+     {
+      "key": "interview-notification",
+      "title": "Interview Notification"
+     },
+     {
+      "key": "admission-confirmation",
+      "title": "Admission Confirmation"
+     }
+    ]
+   },
+   {
+    "key": "admission-reports",
+    "label": "Admission Reports",
+    "pages": [
+     {
+      "key": "enquiry-report",
+      "title": "Enquiry Report"
+     },
+     {
+      "key": "application-report",
+      "title": "Application Report"
+     },
+     {
+      "key": "conversion-report",
+      "title": "Conversion Report"
+     },
+     {
+      "key": "admission-report",
+      "title": "Admission Report"
+     },
+     {
+      "key": "rejection-report",
+      "title": "Rejection Report"
+     }
+    ]
+   }
+  ]
+ },
+ "students": {
+  "label": "Student Management",
+  "sections": [
+   {
+    "key": "student-directory",
+    "label": "Student Directory",
+    "pages": [
+     {
+      "key": "all-students",
+      "title": "All Students"
+     },
+     {
+      "key": "active-students",
+      "title": "Active Students"
+     },
+     {
+      "key": "inactive-students",
+      "title": "Inactive Students"
+     }
+    ]
+   },
+   {
+    "key": "student-registration",
+    "label": "Student Registration",
+    "pages": [
+     {
+      "key": "add-student",
+      "title": "Add Student"
+     },
+     {
+      "key": "bulk-import",
+      "title": "Bulk Import"
+     },
+     {
+      "key": "registration-list",
+      "title": "Registration List"
+     }
+    ]
+   },
+   {
+    "key": "student-profile",
+    "label": "Student Profile",
+    "pages": [
+     {
+      "key": "personal-details",
+      "title": "Personal Details"
+     },
+     {
+      "key": "academic-details",
+      "title": "Academic Details"
+     },
+     {
+      "key": "contact-details",
+      "title": "Contact Details"
+     }
+    ]
+   },
+   {
+    "key": "parent-guardian",
+    "label": "Parent / Guardian",
+    "pages": [
+     {
+      "key": "father-details",
+      "title": "Father Details"
+     },
+     {
+      "key": "mother-details",
+      "title": "Mother Details"
+     },
+     {
+      "key": "guardian-details",
+      "title": "Guardian Details"
+     }
+    ]
+   },
+   {
+    "key": "student-documents",
+    "label": "Student Documents",
+    "pages": [
+     {
+      "key": "birth-certificate",
+      "title": "Birth Certificate"
+     },
+     {
+      "key": "photos",
+      "title": "Photos"
+     },
+     {
+      "key": "previous-records",
+      "title": "Previous Records"
+     },
+     {
+      "key": "other-documents",
+      "title": "Other Documents"
+     }
+    ]
+   },
+   {
+    "key": "student-id",
+    "label": "Student ID",
+    "pages": [
+     {
+      "key": "id-card-design",
+      "title": "ID Card Design"
+     },
+     {
+      "key": "generate-id",
+      "title": "Generate ID"
+     },
+     {
+      "key": "print-id",
+      "title": "Print ID"
+     }
+    ]
+   },
+   {
+    "key": "class-allocation",
+    "label": "Class Allocation",
+    "pages": [
+     {
+      "key": "class-assignment",
+      "title": "Class Assignment"
+     },
+     {
+      "key": "section-assignment",
+      "title": "Section Assignment"
+     },
+     {
+      "key": "roll-number",
+      "title": "Roll Number"
+     }
+    ]
+   },
+   {
+    "key": "student-promotion",
+    "label": "Student Promotion",
+    "pages": [
+     {
+      "key": "promotion-list",
+      "title": "Promotion List"
+     },
+     {
+      "key": "promote-students",
+      "title": "Promote Students"
+     },
+     {
+      "key": "promotion-history",
+      "title": "Promotion History"
+     }
+    ]
+   },
+   {
+    "key": "student-transfer",
+    "label": "Student Transfer",
+    "pages": [
+     {
+      "key": "transfer-within-school",
+      "title": "Transfer Within School"
+     },
+     {
+      "key": "campus-transfer",
+      "title": "Campus Transfer"
+     }
+    ]
+   },
+   {
+    "key": "student-withdrawal",
+    "label": "Student Withdrawal",
+    "pages": [
+     {
+      "key": "withdrawal-request",
+      "title": "Withdrawal Request"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     },
+     {
+      "key": "leaving-records",
+      "title": "Leaving Records"
+     }
+    ]
+   },
+   {
+    "key": "student-behaviour",
+    "label": "Student Behaviour",
+    "pages": [
+     {
+      "key": "behaviour-records",
+      "title": "Behaviour Records"
+     },
+     {
+      "key": "disciplinary-actions",
+      "title": "Disciplinary Actions"
+     },
+     {
+      "key": "remarks",
+      "title": "Remarks"
+     }
+    ]
+   },
+   {
+    "key": "student-health",
+    "label": "Student Health",
+    "pages": [
+     {
+      "key": "medical-information",
+      "title": "Medical Information"
+     },
+     {
+      "key": "health-incidents",
+      "title": "Health Incidents"
+     }
+    ]
+   },
+   {
+    "key": "student-achievements",
+    "label": "Student Achievements",
+    "pages": [
+     {
+      "key": "academic",
+      "title": "Academic"
+     },
+     {
+      "key": "sports",
+      "title": "Sports"
+     },
+     {
+      "key": "cultural-achievements",
+      "title": "Cultural Achievements"
+     }
+    ]
+   },
+   {
+    "key": "student-certificates",
+    "label": "Student Certificates",
+    "pages": [
+     {
+      "key": "bonafide",
+      "title": "Bonafide"
+     },
+     {
+      "key": "study",
+      "title": "Study"
+     },
+     {
+      "key": "character",
+      "title": "Character"
+     },
+     {
+      "key": "transfer",
+      "title": "Transfer"
+     }
+    ]
+   },
+   {
+    "key": "student-reports",
+    "label": "Student Reports",
+    "pages": [
+     {
+      "key": "student-list",
+      "title": "Student List"
+     },
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     },
+     {
+      "key": "gender-wise",
+      "title": "Gender-wise"
+     },
+     {
+      "key": "status-reports",
+      "title": "Status Reports"
+     }
+    ]
+   }
+  ]
+ },
+ "parents": {
+  "label": "Parent Management",
+  "sections": [
+   {
+    "key": "parent-directory",
+    "label": "Parent Directory",
+    "pages": [
+     {
+      "key": "all-parents",
+      "title": "All Parents"
+     },
+     {
+      "key": "active-parents",
+      "title": "Active Parents"
+     },
+     {
+      "key": "inactive-parents",
+      "title": "Inactive Parents"
+     }
+    ]
+   },
+   {
+    "key": "parent-registration",
+    "label": "Parent Registration",
+    "pages": [
+     {
+      "key": "add-parent",
+      "title": "Add Parent"
+     },
+     {
+      "key": "bulk-import",
+      "title": "Bulk Import"
+     }
+    ]
+   },
+   {
+    "key": "parent-profile",
+    "label": "Parent Profile",
+    "pages": [
+     {
+      "key": "personal-details",
+      "title": "Personal Details"
+     },
+     {
+      "key": "contact-details",
+      "title": "Contact Details"
+     },
+     {
+      "key": "address",
+      "title": "Address"
+     }
+    ]
+   },
+   {
+    "key": "family-mapping",
+    "label": "Family Mapping",
+    "pages": [
+     {
+      "key": "link-students",
+      "title": "Link Students"
+     },
+     {
+      "key": "sibling-mapping",
+      "title": "Sibling Mapping"
+     },
+     {
+      "key": "guardian-mapping",
+      "title": "Guardian Mapping"
+     }
+    ]
+   },
+   {
+    "key": "parent-access",
+    "label": "Parent Access",
+    "pages": [
+     {
+      "key": "create-login",
+      "title": "Create Login"
+     },
+     {
+      "key": "reset-password",
+      "title": "Reset Password"
+     },
+     {
+      "key": "activate-deactivate",
+      "title": "Activate / Deactivate"
+     }
+    ]
+   },
+   {
+    "key": "parent-communication",
+    "label": "Parent Communication",
+    "pages": [
+     {
+      "key": "messages",
+      "title": "Messages"
+     },
+     {
+      "key": "notifications",
+      "title": "Notifications"
+     },
+     {
+      "key": "meeting-history",
+      "title": "Meeting History"
+     }
+    ]
+   },
+   {
+    "key": "parent-requests",
+    "label": "Parent Requests",
+    "pages": [
+     {
+      "key": "leave-requests",
+      "title": "Leave Requests"
+     },
+     {
+      "key": "profile-corrections",
+      "title": "Profile Corrections"
+     },
+     {
+      "key": "mobile-number-changes",
+      "title": "Mobile Number Changes"
+     },
+     {
+      "key": "other-requests",
+      "title": "Other Requests"
+     }
+    ]
+   },
+   {
+    "key": "parent-feedback",
+    "label": "Parent Feedback",
+    "pages": [
+     {
+      "key": "feedback-list",
+      "title": "Feedback List"
+     },
+     {
+      "key": "complaints",
+      "title": "Complaints"
+     },
+     {
+      "key": "resolution",
+      "title": "Resolution"
+     }
+    ]
+   },
+   {
+    "key": "parent-reports",
+    "label": "Parent Reports",
+    "pages": [
+     {
+      "key": "parent-list",
+      "title": "Parent List"
+     },
+     {
+      "key": "family-mapping",
+      "title": "Family Mapping"
+     },
+     {
+      "key": "login-activity",
+      "title": "Login Activity"
+     }
+    ]
+   }
+  ]
+ },
+ "academics": {
+  "label": "Academic Management",
+  "sections": [
+   {
+    "key": "academic-year",
+    "label": "Academic Year",
+    "pages": [
+     {
+      "key": "create-year",
+      "title": "Create Year"
+     },
+     {
+      "key": "edit-year",
+      "title": "Edit Year"
+     },
+     {
+      "key": "activate-year",
+      "title": "Activate Year"
+     },
+     {
+      "key": "close-year",
+      "title": "Close Year"
+     }
+    ]
+   },
+   {
+    "key": "school-board",
+    "label": "School Board",
+    "pages": [
+     {
+      "key": "cbse",
+      "title": "CBSE"
+     },
+     {
+      "key": "icse",
+      "title": "ICSE"
+     },
+     {
+      "key": "state-board",
+      "title": "State Board"
+     },
+     {
+      "key": "other-board",
+      "title": "Other Board"
+     }
+    ]
+   },
+   {
+    "key": "class-management",
+    "label": "Class Management",
+    "pages": [
+     {
+      "key": "add-class",
+      "title": "Add Class"
+     },
+     {
+      "key": "edit-class",
+      "title": "Edit Class"
+     },
+     {
+      "key": "class-list",
+      "title": "Class List"
+     }
+    ]
+   },
+   {
+    "key": "section-management",
+    "label": "Section Management",
+    "pages": [
+     {
+      "key": "add-section",
+      "title": "Add Section"
+     },
+     {
+      "key": "assign-class-teacher",
+      "title": "Assign Class Teacher"
+     },
+     {
+      "key": "section-list",
+      "title": "Section List"
+     }
+    ]
+   },
+   {
+    "key": "subject-management",
+    "label": "Subject Management",
+    "pages": [
+     {
+      "key": "add-subject",
+      "title": "Add Subject"
+     },
+     {
+      "key": "subject-category",
+      "title": "Subject Category"
+     },
+     {
+      "key": "subject-list",
+      "title": "Subject List"
+     }
+    ]
+   },
+   {
+    "key": "subject-allocation",
+    "label": "Subject Allocation",
+    "pages": [
+     {
+      "key": "class-wise-subject",
+      "title": "Class-wise Subject"
+     },
+     {
+      "key": "teacher-wise-subject",
+      "title": "Teacher-wise Subject"
+     }
+    ]
+   },
+   {
+    "key": "curriculum-management",
+    "label": "Curriculum Management",
+    "pages": [
+     {
+      "key": "curriculum",
+      "title": "Curriculum"
+     },
+     {
+      "key": "syllabus",
+      "title": "Syllabus"
+     },
+     {
+      "key": "learning-objectives",
+      "title": "Learning Objectives"
+     }
+    ]
+   },
+   {
+    "key": "lesson-planning",
+    "label": "Lesson Planning",
+    "pages": [
+     {
+      "key": "lesson-plan",
+      "title": "Lesson Plan"
+     },
+     {
+      "key": "chapter-plan",
+      "title": "Chapter Plan"
+     },
+     {
+      "key": "lesson-progress",
+      "title": "Lesson Progress"
+     }
+    ]
+   },
+   {
+    "key": "academic-calendar",
+    "label": "Academic Calendar",
+    "pages": [
+     {
+      "key": "holidays",
+      "title": "Holidays"
+     },
+     {
+      "key": "working-days",
+      "title": "Working Days"
+     },
+     {
+      "key": "academic-events",
+      "title": "Academic Events"
+     }
+    ]
+   },
+   {
+    "key": "academic-configuration",
+    "label": "Academic Configuration",
+    "pages": [
+     {
+      "key": "grading-system",
+      "title": "Grading System"
+     },
+     {
+      "key": "passing-marks",
+      "title": "Passing Marks"
+     },
+     {
+      "key": "promotion-rules",
+      "title": "Promotion Rules"
+     }
+    ]
+   },
+   {
+    "key": "class-promotion",
+    "label": "Class Promotion",
+    "pages": [
+     {
+      "key": "promotion-rules",
+      "title": "Promotion Rules"
+     },
+     {
+      "key": "bulk-promotion",
+      "title": "Bulk Promotion"
+     },
+     {
+      "key": "retention",
+      "title": "Retention"
+     }
+    ]
+   },
+   {
+    "key": "academic-reports",
+    "label": "Academic Reports",
+    "pages": [
+     {
+      "key": "class-reports",
+      "title": "Class Reports"
+     },
+     {
+      "key": "subject-reports",
+      "title": "Subject Reports"
+     },
+     {
+      "key": "syllabus-completion",
+      "title": "Syllabus Completion"
+     }
+    ]
+   }
+  ]
+ },
+ "attendance": {
+  "label": "Attendance Management",
+  "sections": [
+   {
+    "key": "student-attendance",
+    "label": "Student Attendance",
+    "pages": [
+     {
+      "key": "daily-attendance",
+      "title": "Daily Attendance"
+     },
+     {
+      "key": "class-wise-attendance",
+      "title": "Class-wise Attendance"
+     },
+     {
+      "key": "subject-wise-attendance",
+      "title": "Subject-wise Attendance"
+     }
+    ]
+   },
+   {
+    "key": "attendance-entry",
+    "label": "Attendance Entry",
+    "pages": [
+     {
+      "key": "mark-present",
+      "title": "Mark Present"
+     },
+     {
+      "key": "mark-absent",
+      "title": "Mark Absent"
+     },
+     {
+      "key": "late",
+      "title": "Late"
+     },
+     {
+      "key": "half-day",
+      "title": "Half Day"
+     },
+     {
+      "key": "leave",
+      "title": "Leave"
+     }
+    ]
+   },
+   {
+    "key": "attendance-correction",
+    "label": "Attendance Correction",
+    "pages": [
+     {
+      "key": "correction-request",
+      "title": "Correction Request"
+     },
+     {
+      "key": "approvals",
+      "title": "Approvals"
+     },
+     {
+      "key": "correction-history",
+      "title": "Correction History"
+     }
+    ]
+   },
+   {
+    "key": "staff-attendance",
+    "label": "Staff Attendance",
+    "pages": [
+     {
+      "key": "daily-staff-attendance",
+      "title": "Daily Staff Attendance"
+     },
+     {
+      "key": "department-wise",
+      "title": "Department-wise"
+     }
+    ]
+   },
+   {
+    "key": "biometric-attendance",
+    "label": "Biometric Attendance",
+    "pages": [
+     {
+      "key": "device-setup",
+      "title": "Device Setup"
+     },
+     {
+      "key": "device-mapping",
+      "title": "Device Mapping"
+     },
+     {
+      "key": "attendance-sync",
+      "title": "Attendance Sync"
+     }
+    ]
+   },
+   {
+    "key": "rfid-and-qr-attendance",
+    "label": "RFID & QR Attendance",
+    "pages": [
+     {
+      "key": "readers-and-scanners",
+      "title": "Readers & Scanners"
+     },
+     {
+      "key": "cards-and-qr-codes",
+      "title": "Cards & QR Codes"
+     },
+     {
+      "key": "live-scans",
+      "title": "Live Scans"
+     },
+     {
+      "key": "sync-and-exceptions",
+      "title": "Sync & Exceptions"
+     }
+    ]
+   },
+   {
+    "key": "leave-management",
+    "label": "Leave Management",
+    "pages": [
+     {
+      "key": "student-leave",
+      "title": "Student Leave"
+     },
+     {
+      "key": "staff-leave",
+      "title": "Staff Leave"
+     },
+     {
+      "key": "leave-approval",
+      "title": "Leave Approval"
+     }
+    ]
+   },
+   {
+    "key": "attendance-reports",
+    "label": "Attendance Reports",
+    "pages": [
+     {
+      "key": "daily",
+      "title": "Daily"
+     },
+     {
+      "key": "monthly",
+      "title": "Monthly"
+     },
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     },
+     {
+      "key": "student-wise",
+      "title": "Student-wise"
+     }
+    ]
+   },
+   {
+    "key": "attendance-settings",
+    "label": "Attendance Settings",
+    "pages": [
+     {
+      "key": "attendance-rules",
+      "title": "Attendance Rules"
+     },
+     {
+      "key": "late-rules",
+      "title": "Late Rules"
+     },
+     {
+      "key": "notification-settings",
+      "title": "Notification Settings"
+     }
+    ]
+   }
+  ]
+ },
+ "timetable": {
+  "label": "Timetable Management",
+  "sections": [
+   {
+    "key": "timetable-setup",
+    "label": "Timetable Setup",
+    "pages": [
+     {
+      "key": "academic-periods",
+      "title": "Academic Periods"
+     },
+     {
+      "key": "working-days",
+      "title": "Working Days"
+     },
+     {
+      "key": "break-times",
+      "title": "Break Times"
+     }
+    ]
+   },
+   {
+    "key": "class-timetable",
+    "label": "Class Timetable",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create"
+     },
+     {
+      "key": "edit",
+      "title": "Edit"
+     },
+     {
+      "key": "view",
+      "title": "View"
+     },
+     {
+      "key": "publish",
+      "title": "Publish"
+     }
+    ]
+   },
+   {
+    "key": "teacher-timetable",
+    "label": "Teacher Timetable",
+    "pages": [
+     {
+      "key": "teacher-allocation",
+      "title": "Teacher Allocation"
+     },
+     {
+      "key": "availability",
+      "title": "Availability"
+     }
+    ]
+   },
+   {
+    "key": "room-management",
+    "label": "Room Management",
+    "pages": [
+     {
+      "key": "classroom-list",
+      "title": "Classroom List"
+     },
+     {
+      "key": "room-allocation",
+      "title": "Room Allocation"
+     }
+    ]
+   },
+   {
+    "key": "subject-allocation",
+    "label": "Subject Allocation",
+    "pages": [
+     {
+      "key": "subject",
+      "title": "Subject"
+     },
+     {
+      "key": "teacher",
+      "title": "Teacher"
+     },
+     {
+      "key": "period-mapping",
+      "title": "Period Mapping"
+     }
+    ]
+   },
+   {
+    "key": "substitution",
+    "label": "Substitution",
+    "pages": [
+     {
+      "key": "substitute-teacher",
+      "title": "Substitute Teacher"
+     },
+     {
+      "key": "free-periods",
+      "title": "Free Periods"
+     },
+     {
+      "key": "substitution-history",
+      "title": "Substitution History"
+     }
+    ]
+   },
+   {
+    "key": "timetable-view",
+    "label": "Timetable View",
+    "pages": [
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     },
+     {
+      "key": "teacher-wise",
+      "title": "Teacher-wise"
+     },
+     {
+      "key": "room-wise",
+      "title": "Room-wise"
+     }
+    ]
+   },
+   {
+    "key": "timetable-reports",
+    "label": "Timetable Reports",
+    "pages": [
+     {
+      "key": "workload",
+      "title": "Workload"
+     },
+     {
+      "key": "period-allocation",
+      "title": "Period Allocation"
+     },
+     {
+      "key": "conflicts",
+      "title": "Conflicts"
+     }
+    ]
+   }
+  ]
+ },
+ "examinations": {
+  "label": "Examination Management",
+  "sections": [
+   {
+    "key": "exam-configuration",
+    "label": "Exam Configuration",
+    "pages": [
+     {
+      "key": "exam-types",
+      "title": "Exam Types"
+     },
+     {
+      "key": "grading-system",
+      "title": "Grading System"
+     },
+     {
+      "key": "marks-settings",
+      "title": "Marks Settings"
+     }
+    ]
+   },
+   {
+    "key": "exam-setup",
+    "label": "Exam Setup",
+    "pages": [
+     {
+      "key": "create-exam",
+      "title": "Create Exam"
+     },
+     {
+      "key": "exam-list",
+      "title": "Exam List"
+     },
+     {
+      "key": "edit-exam",
+      "title": "Edit Exam"
+     }
+    ]
+   },
+   {
+    "key": "exam-schedule",
+    "label": "Exam Schedule",
+    "pages": [
+     {
+      "key": "subject-schedule",
+      "title": "Subject Schedule"
+     },
+     {
+      "key": "date-sheet",
+      "title": "Date Sheet"
+     },
+     {
+      "key": "hall-allocation",
+      "title": "Hall Allocation"
+     }
+    ]
+   },
+   {
+    "key": "exam-registration",
+    "label": "Exam Registration",
+    "pages": [
+     {
+      "key": "student-eligibility",
+      "title": "Student Eligibility"
+     },
+     {
+      "key": "hall-tickets",
+      "title": "Hall Tickets"
+     }
+    ]
+   },
+   {
+    "key": "question-papers",
+    "label": "Question Papers",
+    "pages": [
+     {
+      "key": "question-bank",
+      "title": "Question Bank"
+     },
+     {
+      "key": "paper-creation",
+      "title": "Paper Creation"
+     },
+     {
+      "key": "upload",
+      "title": "Upload"
+     }
+    ]
+   },
+   {
+    "key": "marks-entry",
+    "label": "Marks Entry",
+    "pages": [
+     {
+      "key": "subject-wise-marks",
+      "title": "Subject-wise Marks"
+     },
+     {
+      "key": "bulk-entry",
+      "title": "Bulk Entry"
+     },
+     {
+      "key": "practical-marks",
+      "title": "Practical Marks"
+     },
+     {
+      "key": "internal-assessment",
+      "title": "Internal Assessment"
+     },
+     {
+      "key": "co-scholastic-grades",
+      "title": "Co-Scholastic Grades"
+     }
+    ]
+   },
+   {
+    "key": "marks-verification",
+    "label": "Marks Verification",
+    "pages": [
+     {
+      "key": "verification",
+      "title": "Verification"
+     },
+     {
+      "key": "correction",
+      "title": "Correction"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "results-processing",
+    "label": "Results Processing",
+    "pages": [
+     {
+      "key": "grade-calculation",
+      "title": "Grade Calculation"
+     },
+     {
+      "key": "rank-calculation",
+      "title": "Rank Calculation"
+     },
+     {
+      "key": "result-analysis",
+      "title": "Result Analysis"
+     }
+    ]
+   },
+   {
+    "key": "report-cards",
+    "label": "Report Cards",
+    "pages": [
+     {
+      "key": "templates",
+      "title": "Templates"
+     },
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "preview",
+      "title": "Preview"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     },
+     {
+      "key": "publish",
+      "title": "Publish"
+     }
+    ]
+   },
+   {
+    "key": "examination-reports",
+    "label": "Examination Reports",
+    "pages": [
+     {
+      "key": "student-results",
+      "title": "Student Results"
+     },
+     {
+      "key": "class-results",
+      "title": "Class Results"
+     },
+     {
+      "key": "subject-analysis",
+      "title": "Subject Analysis"
+     }
+    ]
+   }
+  ]
+ },
+ "lms": {
+  "label": "Homework & LMS",
+  "sections": [
+   {
+    "key": "homework",
+    "label": "Homework",
+    "pages": [
+     {
+      "key": "create-homework",
+      "title": "Create Homework"
+     },
+     {
+      "key": "homework-list",
+      "title": "Homework List"
+     },
+     {
+      "key": "edit",
+      "title": "Edit"
+     }
+    ]
+   },
+   {
+    "key": "assignment",
+    "label": "Assignment",
+    "pages": [
+     {
+      "key": "create-assignment",
+      "title": "Create Assignment"
+     },
+     {
+      "key": "assign-to-class",
+      "title": "Assign to Class"
+     },
+     {
+      "key": "due-dates",
+      "title": "Due Dates"
+     }
+    ]
+   },
+   {
+    "key": "study-materials",
+    "label": "Study Materials",
+    "pages": [
+     {
+      "key": "upload-notes",
+      "title": "Upload Notes"
+     },
+     {
+      "key": "pdfs",
+      "title": "PDFs"
+     },
+     {
+      "key": "videos",
+      "title": "Videos"
+     },
+     {
+      "key": "links",
+      "title": "Links"
+     }
+    ]
+   },
+   {
+    "key": "online-classes",
+    "label": "Online Classes",
+    "pages": [
+     {
+      "key": "create-session",
+      "title": "Create Session"
+     },
+     {
+      "key": "schedule",
+      "title": "Schedule"
+     },
+     {
+      "key": "meeting-links",
+      "title": "Meeting Links"
+     }
+    ]
+   },
+   {
+    "key": "online-tests",
+    "label": "Online Tests",
+    "pages": [
+     {
+      "key": "create-test",
+      "title": "Create Test"
+     },
+     {
+      "key": "question-bank",
+      "title": "Question Bank"
+     },
+     {
+      "key": "test-results",
+      "title": "Test Results"
+     }
+    ]
+   },
+   {
+    "key": "student-submissions",
+    "label": "Student Submissions",
+    "pages": [
+     {
+      "key": "submitted",
+      "title": "Submitted"
+     },
+     {
+      "key": "pending",
+      "title": "Pending"
+     },
+     {
+      "key": "late-submissions",
+      "title": "Late Submissions"
+     }
+    ]
+   },
+   {
+    "key": "evaluation",
+    "label": "Evaluation",
+    "pages": [
+     {
+      "key": "marks",
+      "title": "Marks"
+     },
+     {
+      "key": "feedback",
+      "title": "Feedback"
+     },
+     {
+      "key": "reassessment",
+      "title": "Reassessment"
+     }
+    ]
+   },
+   {
+    "key": "syllabus-tracking",
+    "label": "Syllabus Tracking",
+    "pages": [
+     {
+      "key": "chapter-completion",
+      "title": "Chapter Completion"
+     },
+     {
+      "key": "subject-progress",
+      "title": "Subject Progress"
+     }
+    ]
+   },
+   {
+    "key": "lms-reports",
+    "label": "LMS Reports",
+    "pages": [
+     {
+      "key": "assignment-completion",
+      "title": "Assignment Completion"
+     },
+     {
+      "key": "student-performance",
+      "title": "Student Performance"
+     }
+    ]
+   }
+  ]
+ },
+ "fees": {
+  "label": "Fee & Finance Management",
+  "sections": [
+   {
+    "key": "fee-configuration",
+    "label": "Fee Configuration",
+    "pages": [
+     {
+      "key": "fee-categories",
+      "title": "Fee Categories"
+     },
+     {
+      "key": "fee-heads",
+      "title": "Fee Heads"
+     },
+     {
+      "key": "fee-groups",
+      "title": "Fee Groups"
+     }
+    ]
+   },
+   {
+    "key": "fee-structure",
+    "label": "Fee Structure",
+    "pages": [
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     },
+     {
+      "key": "section-wise",
+      "title": "Section-wise"
+     },
+     {
+      "key": "optional-fees",
+      "title": "Optional Fees"
+     }
+    ]
+   },
+   {
+    "key": "student-fee-assignment",
+    "label": "Student Fee Assignment",
+    "pages": [
+     {
+      "key": "individual",
+      "title": "Individual"
+     },
+     {
+      "key": "bulk",
+      "title": "Bulk"
+     },
+     {
+      "key": "scholarship",
+      "title": "Scholarship"
+     }
+    ]
+   },
+   {
+    "key": "fee-collection",
+    "label": "Fee Collection",
+    "pages": [
+     {
+      "key": "collect-fee",
+      "title": "Collect Fee"
+     },
+     {
+      "key": "counter-collection",
+      "title": "Counter Collection"
+     },
+     {
+      "key": "online-collection",
+      "title": "Online Collection"
+     }
+    ]
+   },
+   {
+    "key": "fee-installments",
+    "label": "Fee Installments",
+    "pages": [
+     {
+      "key": "installment-setup",
+      "title": "Installment Setup"
+     },
+     {
+      "key": "due-dates",
+      "title": "Due Dates"
+     },
+     {
+      "key": "payment-schedule",
+      "title": "Payment Schedule"
+     }
+    ]
+   },
+   {
+    "key": "fee-concessions",
+    "label": "Fee Concessions",
+    "pages": [
+     {
+      "key": "discount",
+      "title": "Discount"
+     },
+     {
+      "key": "scholarship",
+      "title": "Scholarship"
+     },
+     {
+      "key": "fee-waiver",
+      "title": "Fee Waiver"
+     }
+    ]
+   },
+   {
+    "key": "fine-management",
+    "label": "Fine Management",
+    "pages": [
+     {
+      "key": "late-fee",
+      "title": "Late Fee"
+     },
+     {
+      "key": "fine-rules",
+      "title": "Fine Rules"
+     },
+     {
+      "key": "fine-collection",
+      "title": "Fine Collection"
+     }
+    ]
+   },
+   {
+    "key": "fee-receipts",
+    "label": "Fee Receipts",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     },
+     {
+      "key": "cancel",
+      "title": "Cancel"
+     },
+     {
+      "key": "duplicate",
+      "title": "Duplicate"
+     }
+    ]
+   },
+   {
+    "key": "pending-fees",
+    "label": "Pending Fees",
+    "pages": [
+     {
+      "key": "outstanding",
+      "title": "Outstanding"
+     },
+     {
+      "key": "overdue",
+      "title": "Overdue"
+     },
+     {
+      "key": "defaulter-list",
+      "title": "Defaulter List"
+     }
+    ]
+   },
+   {
+    "key": "refund-management",
+    "label": "Refund Management",
+    "pages": [
+     {
+      "key": "refund-request",
+      "title": "Refund Request"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     },
+     {
+      "key": "refund-history",
+      "title": "Refund History"
+     }
+    ]
+   },
+   {
+    "key": "expenses",
+    "label": "Expenses",
+    "pages": [
+     {
+      "key": "expense-categories",
+      "title": "Expense Categories"
+     },
+     {
+      "key": "add-expense",
+      "title": "Add Expense"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "accounting",
+    "label": "Accounting",
+    "pages": [
+     {
+      "key": "ledger",
+      "title": "Ledger"
+     },
+     {
+      "key": "vouchers",
+      "title": "Vouchers"
+     },
+     {
+      "key": "cash-book",
+      "title": "Cash Book"
+     },
+     {
+      "key": "bank-book",
+      "title": "Bank Book"
+     }
+    ]
+   },
+   {
+    "key": "financial-reports",
+    "label": "Financial Reports",
+    "pages": [
+     {
+      "key": "collection",
+      "title": "Collection"
+     },
+     {
+      "key": "outstanding",
+      "title": "Outstanding"
+     },
+     {
+      "key": "daily-cash",
+      "title": "Daily Cash"
+     },
+     {
+      "key": "monthly-summary",
+      "title": "Monthly Summary"
+     }
+    ]
+   }
+  ]
+ },
+ "hr": {
+  "label": "HR & Staff Management",
+  "sections": [
+   {
+    "key": "employee-directory",
+    "label": "Employee Directory",
+    "pages": [
+     {
+      "key": "all-staff",
+      "title": "All Staff"
+     },
+     {
+      "key": "teaching-staff",
+      "title": "Teaching Staff"
+     },
+     {
+      "key": "non-teaching-staff",
+      "title": "Non-Teaching Staff"
+     }
+    ]
+   },
+   {
+    "key": "employee-registration",
+    "label": "Employee Registration",
+    "pages": [
+     {
+      "key": "add-employee",
+      "title": "Add Employee"
+     },
+     {
+      "key": "bulk-import",
+      "title": "Bulk Import"
+     }
+    ]
+   },
+   {
+    "key": "employee-profile",
+    "label": "Employee Profile",
+    "pages": [
+     {
+      "key": "personal",
+      "title": "Personal"
+     },
+     {
+      "key": "contact",
+      "title": "Contact"
+     },
+     {
+      "key": "qualification",
+      "title": "Qualification"
+     },
+     {
+      "key": "experience",
+      "title": "Experience"
+     }
+    ]
+   },
+   {
+    "key": "department",
+    "label": "Department",
+    "pages": [
+     {
+      "key": "department-list",
+      "title": "Department List"
+     },
+     {
+      "key": "add-department",
+      "title": "Add Department"
+     }
+    ]
+   },
+   {
+    "key": "designation",
+    "label": "Designation",
+    "pages": [
+     {
+      "key": "designation-list",
+      "title": "Designation List"
+     },
+     {
+      "key": "add-designation",
+      "title": "Add Designation"
+     }
+    ]
+   },
+   {
+    "key": "recruitment",
+    "label": "Recruitment",
+    "pages": [
+     {
+      "key": "job-openings",
+      "title": "Job Openings"
+     },
+     {
+      "key": "applications",
+      "title": "Applications"
+     },
+     {
+      "key": "interviews",
+      "title": "Interviews"
+     }
+    ]
+   },
+   {
+    "key": "staff-attendance",
+    "label": "Staff Attendance",
+    "pages": [
+     {
+      "key": "daily",
+      "title": "Daily"
+     },
+     {
+      "key": "monthly",
+      "title": "Monthly"
+     },
+     {
+      "key": "biometric",
+      "title": "Biometric"
+     }
+    ]
+   },
+   {
+    "key": "leave-management",
+    "label": "Leave Management",
+    "pages": [
+     {
+      "key": "leave-types",
+      "title": "Leave Types"
+     },
+     {
+      "key": "applications",
+      "title": "Applications"
+     },
+     {
+      "key": "approvals",
+      "title": "Approvals"
+     },
+     {
+      "key": "leave-balance",
+      "title": "Leave Balance"
+     }
+    ]
+   },
+   {
+    "key": "staff-documents",
+    "label": "Staff Documents",
+    "pages": [
+     {
+      "key": "certificates",
+      "title": "Certificates"
+     },
+     {
+      "key": "id-proof",
+      "title": "ID Proof"
+     },
+     {
+      "key": "contracts",
+      "title": "Contracts"
+     }
+    ]
+   },
+   {
+    "key": "staff-performance",
+    "label": "Staff Performance",
+    "pages": [
+     {
+      "key": "appraisals",
+      "title": "Appraisals"
+     },
+     {
+      "key": "reviews",
+      "title": "Reviews"
+     },
+     {
+      "key": "ratings",
+      "title": "Ratings"
+     }
+    ]
+   },
+   {
+    "key": "staff-exit",
+    "label": "Staff Exit",
+    "pages": [
+     {
+      "key": "resignation",
+      "title": "Resignation"
+     },
+     {
+      "key": "exit-approval",
+      "title": "Exit Approval"
+     },
+     {
+      "key": "relieving",
+      "title": "Relieving"
+     }
+    ]
+   },
+   {
+    "key": "hr-reports",
+    "label": "HR Reports",
+    "pages": [
+     {
+      "key": "employee-list",
+      "title": "Employee List"
+     },
+     {
+      "key": "attendance",
+      "title": "Attendance"
+     },
+     {
+      "key": "leave",
+      "title": "Leave"
+     },
+     {
+      "key": "recruitment",
+      "title": "Recruitment"
+     }
+    ]
+   }
+  ]
+ },
+ "payroll": {
+  "label": "Payroll Management",
+  "sections": [
+   {
+    "key": "salary-configuration",
+    "label": "Salary Configuration",
+    "pages": [
+     {
+      "key": "salary-heads",
+      "title": "Salary Heads"
+     },
+     {
+      "key": "allowances",
+      "title": "Allowances"
+     },
+     {
+      "key": "deductions",
+      "title": "Deductions"
+     }
+    ]
+   },
+   {
+    "key": "salary-structure",
+    "label": "Salary Structure",
+    "pages": [
+     {
+      "key": "assign-structure",
+      "title": "Assign Structure"
+     },
+     {
+      "key": "employee-wise",
+      "title": "Employee-wise"
+     },
+     {
+      "key": "designation-wise",
+      "title": "Designation-wise"
+     }
+    ]
+   },
+   {
+    "key": "payroll-processing",
+    "label": "Payroll Processing",
+    "pages": [
+     {
+      "key": "monthly-payroll",
+      "title": "Monthly Payroll"
+     },
+     {
+      "key": "generate-payroll",
+      "title": "Generate Payroll"
+     }
+    ]
+   },
+   {
+    "key": "attendance-calculation",
+    "label": "Attendance Calculation",
+    "pages": [
+     {
+      "key": "working-days",
+      "title": "Working Days"
+     },
+     {
+      "key": "paid-leave",
+      "title": "Paid Leave"
+     },
+     {
+      "key": "loss-of-pay",
+      "title": "Loss of Pay"
+     }
+    ]
+   },
+   {
+    "key": "deductions",
+    "label": "Deductions",
+    "pages": [
+     {
+      "key": "pf",
+      "title": "PF"
+     },
+     {
+      "key": "esi",
+      "title": "ESI"
+     },
+     {
+      "key": "professional-tax",
+      "title": "Professional Tax"
+     },
+     {
+      "key": "other-applicable-deductions",
+      "title": "Other Applicable Deductions"
+     }
+    ]
+   },
+   {
+    "key": "payroll-approval",
+    "label": "Payroll Approval",
+    "pages": [
+     {
+      "key": "hr-verification",
+      "title": "HR Verification"
+     },
+     {
+      "key": "finance-approval",
+      "title": "Finance Approval"
+     },
+     {
+      "key": "approval-history",
+      "title": "Approval History"
+     }
+    ]
+   },
+   {
+    "key": "payslips",
+    "label": "Payslips",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "preview",
+      "title": "Preview"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     },
+     {
+      "key": "download",
+      "title": "Download"
+     }
+    ]
+   },
+   {
+    "key": "salary-payments",
+    "label": "Salary Payments",
+    "pages": [
+     {
+      "key": "payment-register",
+      "title": "Payment Register"
+     },
+     {
+      "key": "payment-status",
+      "title": "Payment Status"
+     }
+    ]
+   },
+   {
+    "key": "payroll-reports",
+    "label": "Payroll Reports",
+    "pages": [
+     {
+      "key": "monthly-payroll",
+      "title": "Monthly Payroll"
+     },
+     {
+      "key": "annual-payroll",
+      "title": "Annual Payroll"
+     },
+     {
+      "key": "deduction-report",
+      "title": "Deduction Report"
+     }
+    ]
+   },
+   {
+    "key": "payroll-settings",
+    "label": "Payroll Settings",
+    "pages": [
+     {
+      "key": "salary-cycle",
+      "title": "Salary Cycle"
+     },
+     {
+      "key": "tax-rules",
+      "title": "Tax Rules"
+     },
+     {
+      "key": "payroll-policies",
+      "title": "Payroll Policies"
+     }
+    ]
+   }
+  ]
+ },
+ "transport": {
+  "label": "Transport Management",
+  "sections": [
+   {
+    "key": "vehicle-management",
+    "label": "Vehicle Management",
+    "pages": [
+     {
+      "key": "add-vehicle",
+      "title": "Add Vehicle"
+     },
+     {
+      "key": "vehicle-list",
+      "title": "Vehicle List"
+     },
+     {
+      "key": "vehicle-documents",
+      "title": "Vehicle Documents"
+     }
+    ]
+   },
+   {
+    "key": "driver-management",
+    "label": "Driver Management",
+    "pages": [
+     {
+      "key": "driver-registration",
+      "title": "Driver Registration"
+     },
+     {
+      "key": "license",
+      "title": "License"
+     },
+     {
+      "key": "documents",
+      "title": "Documents"
+     }
+    ]
+   },
+   {
+    "key": "attendant-management",
+    "label": "Attendant Management",
+    "pages": [
+     {
+      "key": "add-attendant",
+      "title": "Add Attendant"
+     },
+     {
+      "key": "staff-allocation",
+      "title": "Staff Allocation"
+     }
+    ]
+   },
+   {
+    "key": "route-management",
+    "label": "Route Management",
+    "pages": [
+     {
+      "key": "add-route",
+      "title": "Add Route"
+     },
+     {
+      "key": "route-list",
+      "title": "Route List"
+     },
+     {
+      "key": "route-details",
+      "title": "Route Details"
+     }
+    ]
+   },
+   {
+    "key": "stop-management",
+    "label": "Stop Management",
+    "pages": [
+     {
+      "key": "add-stop",
+      "title": "Add Stop"
+     },
+     {
+      "key": "stop-sequence",
+      "title": "Stop Sequence"
+     },
+     {
+      "key": "stop-timings",
+      "title": "Stop Timings"
+     }
+    ]
+   },
+   {
+    "key": "student-allocation",
+    "label": "Student Allocation",
+    "pages": [
+     {
+      "key": "assign-route",
+      "title": "Assign Route"
+     },
+     {
+      "key": "assign-stop",
+      "title": "Assign Stop"
+     },
+     {
+      "key": "transfer-route",
+      "title": "Transfer Route"
+     }
+    ]
+   },
+   {
+    "key": "vehicle-allocation",
+    "label": "Vehicle Allocation",
+    "pages": [
+     {
+      "key": "vehicle-to-route",
+      "title": "Vehicle to Route"
+     },
+     {
+      "key": "driver-to-vehicle",
+      "title": "Driver to Vehicle"
+     }
+    ]
+   },
+   {
+    "key": "transport-fees",
+    "label": "Transport Fees",
+    "pages": [
+     {
+      "key": "fee-structure",
+      "title": "Fee Structure"
+     },
+     {
+      "key": "collection",
+      "title": "Collection"
+     },
+     {
+      "key": "pending-fees",
+      "title": "Pending Fees"
+     }
+    ]
+   },
+   {
+    "key": "gps-tracking",
+    "label": "GPS Tracking",
+    "pages": [
+     {
+      "key": "live-tracking",
+      "title": "Live Tracking"
+     },
+     {
+      "key": "trip-history",
+      "title": "Trip History"
+     },
+     {
+      "key": "device-status",
+      "title": "Device Status"
+     }
+    ]
+   },
+   {
+    "key": "maintenance",
+    "label": "Maintenance",
+    "pages": [
+     {
+      "key": "service-schedule",
+      "title": "Service Schedule"
+     },
+     {
+      "key": "repairs",
+      "title": "Repairs"
+     },
+     {
+      "key": "insurance",
+      "title": "Insurance"
+     }
+    ]
+   },
+   {
+    "key": "transport-reports",
+    "label": "Transport Reports",
+    "pages": [
+     {
+      "key": "route-wise",
+      "title": "Route-wise"
+     },
+     {
+      "key": "vehicle-wise",
+      "title": "Vehicle-wise"
+     },
+     {
+      "key": "student-wise",
+      "title": "Student-wise"
+     }
+    ]
+   },
+   {
+    "key": "transport-settings",
+    "label": "Transport Settings",
+    "pages": [
+     {
+      "key": "capacity",
+      "title": "Capacity"
+     },
+     {
+      "key": "notifications",
+      "title": "Notifications"
+     },
+     {
+      "key": "route-rules",
+      "title": "Route Rules"
+     }
+    ]
+   }
+  ]
+ },
+ "library": {
+  "label": "Library Management",
+  "sections": [
+   {
+    "key": "book-management",
+    "label": "Book Management",
+    "pages": [
+     {
+      "key": "add-book",
+      "title": "Add Book"
+     },
+     {
+      "key": "book-list",
+      "title": "Book List"
+     },
+     {
+      "key": "edit-book",
+      "title": "Edit Book"
+     }
+    ]
+   },
+   {
+    "key": "book-categories",
+    "label": "Book Categories",
+    "pages": [
+     {
+      "key": "category-list",
+      "title": "Category List"
+     },
+     {
+      "key": "add-category",
+      "title": "Add Category"
+     }
+    ]
+   },
+   {
+    "key": "publishers",
+    "label": "Publishers",
+    "pages": [
+     {
+      "key": "publisher-list",
+      "title": "Publisher List"
+     },
+     {
+      "key": "add-publisher",
+      "title": "Add Publisher"
+     }
+    ]
+   },
+   {
+    "key": "authors",
+    "label": "Authors",
+    "pages": [
+     {
+      "key": "author-list",
+      "title": "Author List"
+     },
+     {
+      "key": "add-author",
+      "title": "Add Author"
+     }
+    ]
+   },
+   {
+    "key": "book-copies",
+    "label": "Book Copies",
+    "pages": [
+     {
+      "key": "accession-number",
+      "title": "Accession Number"
+     },
+     {
+      "key": "barcode",
+      "title": "Barcode"
+     }
+    ]
+   },
+   {
+    "key": "membership",
+    "label": "Membership",
+    "pages": [
+     {
+      "key": "student-membership",
+      "title": "Student Membership"
+     },
+     {
+      "key": "staff-membership",
+      "title": "Staff Membership"
+     }
+    ]
+   },
+   {
+    "key": "book-issue",
+    "label": "Book Issue",
+    "pages": [
+     {
+      "key": "issue-book",
+      "title": "Issue Book"
+     },
+     {
+      "key": "issue-history",
+      "title": "Issue History"
+     }
+    ]
+   },
+   {
+    "key": "book-return",
+    "label": "Book Return",
+    "pages": [
+     {
+      "key": "return-book",
+      "title": "Return Book"
+     },
+     {
+      "key": "renewal",
+      "title": "Renewal"
+     }
+    ]
+   },
+   {
+    "key": "reservation",
+    "label": "Reservation",
+    "pages": [
+     {
+      "key": "book-reservation",
+      "title": "Book Reservation"
+     },
+     {
+      "key": "reservation-queue",
+      "title": "Reservation Queue"
+     }
+    ]
+   },
+   {
+    "key": "fine-management",
+    "label": "Fine Management",
+    "pages": [
+     {
+      "key": "fine-rules",
+      "title": "Fine Rules"
+     },
+     {
+      "key": "fine-collection",
+      "title": "Fine Collection"
+     }
+    ]
+   },
+   {
+    "key": "library-reports",
+    "label": "Library Reports",
+    "pages": [
+     {
+      "key": "available",
+      "title": "Available"
+     },
+     {
+      "key": "issued",
+      "title": "Issued"
+     },
+     {
+      "key": "overdue",
+      "title": "Overdue"
+     },
+     {
+      "key": "lost",
+      "title": "Lost"
+     }
+    ]
+   },
+   {
+    "key": "library-settings",
+    "label": "Library Settings",
+    "pages": [
+     {
+      "key": "issue-limits",
+      "title": "Issue Limits"
+     },
+     {
+      "key": "return-period",
+      "title": "Return Period"
+     },
+     {
+      "key": "fine-rules",
+      "title": "Fine Rules"
+     }
+    ]
+   }
+  ]
+ },
+ "inventory": {
+  "label": "Inventory Management",
+  "sections": [
+   {
+    "key": "item-management",
+    "label": "Item Management",
+    "pages": [
+     {
+      "key": "item-list",
+      "title": "Item List"
+     },
+     {
+      "key": "add-item",
+      "title": "Add Item"
+     },
+     {
+      "key": "item-categories",
+      "title": "Item Categories"
+     }
+    ]
+   },
+   {
+    "key": "supplier-management",
+    "label": "Supplier Management",
+    "pages": [
+     {
+      "key": "supplier-list",
+      "title": "Supplier List"
+     },
+     {
+      "key": "add-supplier",
+      "title": "Add Supplier"
+     }
+    ]
+   },
+   {
+    "key": "purchase-requests",
+    "label": "Purchase Requests",
+    "pages": [
+     {
+      "key": "new-request",
+      "title": "New Request"
+     },
+     {
+      "key": "pending-requests",
+      "title": "Pending Requests"
+     }
+    ]
+   },
+   {
+    "key": "purchase-orders",
+    "label": "Purchase Orders",
+    "pages": [
+     {
+      "key": "create-po",
+      "title": "Create PO"
+     },
+     {
+      "key": "po-list",
+      "title": "PO List"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "goods-receipt",
+    "label": "Goods Receipt",
+    "pages": [
+     {
+      "key": "receive-stock",
+      "title": "Receive Stock"
+     },
+     {
+      "key": "grn",
+      "title": "GRN"
+     }
+    ]
+   },
+   {
+    "key": "stock-management",
+    "label": "Stock Management",
+    "pages": [
+     {
+      "key": "available-stock",
+      "title": "Available Stock"
+     },
+     {
+      "key": "stock-adjustment",
+      "title": "Stock Adjustment"
+     }
+    ]
+   },
+   {
+    "key": "stock-issue",
+    "label": "Stock Issue",
+    "pages": [
+     {
+      "key": "issue-to-department",
+      "title": "Issue to Department"
+     },
+     {
+      "key": "issue-to-staff",
+      "title": "Issue to Staff"
+     }
+    ]
+   },
+   {
+    "key": "asset-management",
+    "label": "Asset Management",
+    "pages": [
+     {
+      "key": "asset-register",
+      "title": "Asset Register"
+     },
+     {
+      "key": "asset-allocation",
+      "title": "Asset Allocation"
+     }
+    ]
+   },
+   {
+    "key": "maintenance",
+    "label": "Maintenance",
+    "pages": [
+     {
+      "key": "repairs",
+      "title": "Repairs"
+     },
+     {
+      "key": "service-schedule",
+      "title": "Service Schedule"
+     }
+    ]
+   },
+   {
+    "key": "reports",
+    "label": "Reports",
+    "pages": [
+     {
+      "key": "stock",
+      "title": "Stock"
+     },
+     {
+      "key": "purchase",
+      "title": "Purchase"
+     },
+     {
+      "key": "asset",
+      "title": "Asset"
+     },
+     {
+      "key": "consumption",
+      "title": "Consumption"
+     },
+     {
+      "key": "store-sales",
+      "title": "Store Sales"
+     }
+    ]
+   }
+  ]
+ },
+ "communication": {
+  "label": "Communication",
+  "sections": [
+   {
+    "key": "circulars",
+    "label": "Circulars",
+    "pages": [
+     {
+      "key": "create-circular",
+      "title": "Create Circular"
+     },
+     {
+      "key": "publish",
+      "title": "Publish"
+     },
+     {
+      "key": "archive",
+      "title": "Archive"
+     },
+     {
+      "key": "templates",
+      "title": "Templates"
+     }
+    ]
+   },
+   {
+    "key": "announcements",
+    "label": "Announcements",
+    "pages": [
+     {
+      "key": "create",
+      "title": "Create"
+     },
+     {
+      "key": "schedule",
+      "title": "Schedule"
+     },
+     {
+      "key": "publish",
+      "title": "Publish"
+     }
+    ]
+   },
+   {
+    "key": "notice-board",
+    "label": "Notice Board",
+    "pages": [
+     {
+      "key": "student-notices",
+      "title": "Student Notices"
+     },
+     {
+      "key": "staff-notices",
+      "title": "Staff Notices"
+     },
+     {
+      "key": "parent-notices",
+      "title": "Parent Notices"
+     }
+    ]
+   },
+   {
+    "key": "email",
+    "label": "Email",
+    "pages": [
+     {
+      "key": "compose",
+      "title": "Compose"
+     },
+     {
+      "key": "templates",
+      "title": "Templates"
+     },
+     {
+      "key": "sent-history",
+      "title": "Sent History"
+     }
+    ]
+   },
+   {
+    "key": "sms",
+    "label": "SMS",
+    "pages": [
+     {
+      "key": "compose",
+      "title": "Compose"
+     },
+     {
+      "key": "templates",
+      "title": "Templates"
+     },
+     {
+      "key": "delivery-reports",
+      "title": "Delivery Reports"
+     }
+    ]
+   },
+   {
+    "key": "whatsapp",
+    "label": "WhatsApp",
+    "pages": [
+     {
+      "key": "message-templates",
+      "title": "Message Templates"
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns"
+     },
+     {
+      "key": "delivery-status",
+      "title": "Delivery Status"
+     }
+    ]
+   },
+   {
+    "key": "in-app-notifications",
+    "label": "In-App Notifications",
+    "pages": [
+     {
+      "key": "create-notification",
+      "title": "Create Notification"
+     },
+     {
+      "key": "notification-history",
+      "title": "Notification History"
+     }
+    ]
+   },
+   {
+    "key": "school-diary",
+    "label": "School Diary",
+    "pages": [
+     {
+      "key": "class-diary",
+      "title": "Class Diary"
+     },
+     {
+      "key": "teacher-remarks",
+      "title": "Teacher Remarks"
+     },
+     {
+      "key": "parent-acknowledgement",
+      "title": "Parent Acknowledgement"
+     },
+     {
+      "key": "templates",
+      "title": "Templates"
+     }
+    ]
+   },
+   {
+    "key": "parent-communication",
+    "label": "Parent Communication",
+    "pages": [
+     {
+      "key": "parent-messages",
+      "title": "Parent Messages"
+     },
+     {
+      "key": "teacher-replies",
+      "title": "Teacher Replies"
+     }
+    ]
+   },
+   {
+    "key": "communication-reports",
+    "label": "Communication Reports",
+    "pages": [
+     {
+      "key": "sent",
+      "title": "Sent"
+     },
+     {
+      "key": "delivered",
+      "title": "Delivered"
+     },
+     {
+      "key": "failed",
+      "title": "Failed"
+     }
+    ]
+   }
+  ]
+ },
+ "hostel": {
+  "label": "Hostel Management",
+  "sections": [
+   {
+    "key": "hostel-setup",
+    "label": "Hostel Setup",
+    "pages": [
+     {
+      "key": "hostel-list",
+      "title": "Hostel List"
+     },
+     {
+      "key": "add-hostel",
+      "title": "Add Hostel"
+     }
+    ]
+   },
+   {
+    "key": "building-management",
+    "label": "Building Management",
+    "pages": [
+     {
+      "key": "buildings",
+      "title": "Buildings"
+     },
+     {
+      "key": "floors",
+      "title": "Floors"
+     }
+    ]
+   },
+   {
+    "key": "room-management",
+    "label": "Room Management",
+    "pages": [
+     {
+      "key": "room-list",
+      "title": "Room List"
+     },
+     {
+      "key": "room-types",
+      "title": "Room Types"
+     }
+    ]
+   },
+   {
+    "key": "bed-management",
+    "label": "Bed Management",
+    "pages": [
+     {
+      "key": "bed-list",
+      "title": "Bed List"
+     },
+     {
+      "key": "availability",
+      "title": "Availability"
+     }
+    ]
+   },
+   {
+    "key": "student-allocation",
+    "label": "Student Allocation",
+    "pages": [
+     {
+      "key": "room-allocation",
+      "title": "Room Allocation"
+     },
+     {
+      "key": "room-transfer",
+      "title": "Room Transfer"
+     }
+    ]
+   },
+   {
+    "key": "hostel-attendance",
+    "label": "Hostel Attendance",
+    "pages": [
+     {
+      "key": "daily-attendance",
+      "title": "Daily Attendance"
+     },
+     {
+      "key": "outing-register",
+      "title": "Outing Register"
+     }
+    ]
+   },
+   {
+    "key": "mess-management",
+    "label": "Mess Management",
+    "pages": [
+     {
+      "key": "meal-plans",
+      "title": "Meal Plans"
+     },
+     {
+      "key": "hostel-menu",
+      "title": "Hostel Menu"
+     },
+     {
+      "key": "day-scholar-mess",
+      "title": "Day Scholar Mess"
+     },
+     {
+      "key": "daily-menu",
+      "title": "Daily Menu"
+     },
+     {
+      "key": "opt-in-requests",
+      "title": "Opt-in Requests"
+     },
+     {
+      "key": "mess-charges",
+      "title": "Mess Charges"
+     }
+    ]
+   },
+   {
+    "key": "hostel-complaints",
+    "label": "Hostel Complaints",
+    "pages": [
+     {
+      "key": "new-complaint",
+      "title": "New Complaint"
+     },
+     {
+      "key": "assignment",
+      "title": "Assignment"
+     },
+     {
+      "key": "resolution",
+      "title": "Resolution"
+     }
+    ]
+   },
+   {
+    "key": "hostel-fees",
+    "label": "Hostel Fees",
+    "pages": [
+     {
+      "key": "fee-structure",
+      "title": "Fee Structure"
+     },
+     {
+      "key": "collection",
+      "title": "Collection"
+     }
+    ]
+   },
+   {
+    "key": "hostel-reports",
+    "label": "Hostel Reports",
+    "pages": [
+     {
+      "key": "occupancy",
+      "title": "Occupancy"
+     },
+     {
+      "key": "attendance",
+      "title": "Attendance"
+     },
+     {
+      "key": "fee-reports",
+      "title": "Fee Reports"
+     }
+    ]
+   }
+  ]
+ },
+ "visitors": {
+  "label": "Visitor Management",
+  "sections": [
+   {
+    "key": "visitor-registration",
+    "label": "Visitor Registration",
+    "pages": [
+     {
+      "key": "new-visitor",
+      "title": "New Visitor"
+     },
+     {
+      "key": "visitor-list",
+      "title": "Visitor List"
+     }
+    ]
+   },
+   {
+    "key": "visitor-verification",
+    "label": "Visitor Verification",
+    "pages": [
+     {
+      "key": "identity-verification",
+      "title": "Identity Verification"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "visitor-pass",
+    "label": "Visitor Pass",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     },
+     {
+      "key": "cancel",
+      "title": "Cancel"
+     }
+    ]
+   },
+   {
+    "key": "entry-exit",
+    "label": "Entry / Exit",
+    "pages": [
+     {
+      "key": "entry-register",
+      "title": "Entry Register"
+     },
+     {
+      "key": "exit-register",
+      "title": "Exit Register"
+     }
+    ]
+   },
+   {
+    "key": "student-gate-pass",
+    "label": "Student Gate Pass",
+    "pages": [
+     {
+      "key": "request",
+      "title": "Request"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     },
+     {
+      "key": "issue",
+      "title": "Issue"
+     }
+    ]
+   },
+   {
+    "key": "staff-gate-pass",
+    "label": "Staff Gate Pass",
+    "pages": [
+     {
+      "key": "request",
+      "title": "Request"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     }
+    ]
+   },
+   {
+    "key": "emergency-register",
+    "label": "Emergency Register",
+    "pages": [
+     {
+      "key": "emergency-contacts",
+      "title": "Emergency Contacts"
+     },
+     {
+      "key": "incident-register",
+      "title": "Incident Register"
+     }
+    ]
+   },
+   {
+    "key": "security-reports",
+    "label": "Security Reports",
+    "pages": [
+     {
+      "key": "visitor",
+      "title": "Visitor"
+     },
+     {
+      "key": "gate-pass",
+      "title": "Gate Pass"
+     },
+     {
+      "key": "incident-reports",
+      "title": "Incident Reports"
+     }
+    ]
+   }
+  ]
+ },
+ "health": {
+  "label": "Health & Student Welfare",
+  "sections": [
+   {
+    "key": "student-health-profiles",
+    "label": "Student Health Profiles",
+    "pages": [
+     {
+      "key": "medical-information",
+      "title": "Medical Information"
+     },
+     {
+      "key": "emergency-contacts",
+      "title": "Emergency Contacts"
+     },
+     {
+      "key": "vaccination-records",
+      "title": "Vaccination Records"
+     },
+     {
+      "key": "parent-updates",
+      "title": "Parent Updates"
+     }
+    ]
+   },
+   {
+    "key": "medical-visits",
+    "label": "Medical Visits",
+    "pages": [
+     {
+      "key": "new-visit",
+      "title": "New Visit"
+     },
+     {
+      "key": "visit-history",
+      "title": "Visit History"
+     }
+    ]
+   },
+   {
+    "key": "first-aid",
+    "label": "First Aid",
+    "pages": [
+     {
+      "key": "first-aid-register",
+      "title": "First Aid Register"
+     },
+     {
+      "key": "incident-details",
+      "title": "Incident Details"
+     }
+    ]
+   },
+   {
+    "key": "health-screening",
+    "label": "Health Screening",
+    "pages": [
+     {
+      "key": "height",
+      "title": "Height"
+     },
+     {
+      "key": "weight",
+      "title": "Weight"
+     },
+     {
+      "key": "vision",
+      "title": "Vision"
+     },
+     {
+      "key": "health-checkups",
+      "title": "Health Checkups"
+     }
+    ]
+   },
+   {
+    "key": "medication-register",
+    "label": "Medication Register",
+    "pages": [
+     {
+      "key": "medication-records",
+      "title": "Medication Records"
+     },
+     {
+      "key": "administration-logs",
+      "title": "Administration Logs"
+     }
+    ]
+   },
+   {
+    "key": "counselling",
+    "label": "Counselling",
+    "pages": [
+     {
+      "key": "appointment",
+      "title": "Appointment"
+     },
+     {
+      "key": "session-records",
+      "title": "Session Records"
+     },
+     {
+      "key": "follow-up",
+      "title": "Follow-up"
+     }
+    ]
+   },
+   {
+    "key": "student-welfare",
+    "label": "Student Welfare",
+    "pages": [
+     {
+      "key": "welfare-cases",
+      "title": "Welfare Cases"
+     },
+     {
+      "key": "support-actions",
+      "title": "Support Actions"
+     }
+    ]
+   },
+   {
+    "key": "health-reports",
+    "label": "Health Reports",
+    "pages": [
+     {
+      "key": "medical-visits",
+      "title": "Medical Visits"
+     },
+     {
+      "key": "incidents",
+      "title": "Incidents"
+     },
+     {
+      "key": "screening",
+      "title": "Screening"
+     }
+    ]
+   }
+  ]
+ },
+ "certificates": {
+  "label": "Certificates & Documents",
+  "sections": [
+   {
+    "key": "certificate-templates",
+    "label": "Certificate Templates",
+    "pages": [
+     {
+      "key": "add-template",
+      "title": "Add Template"
+     },
+     {
+      "key": "edit-template",
+      "title": "Edit Template"
+     }
+    ]
+   },
+   {
+    "key": "bonafide-certificate",
+    "label": "Bonafide Certificate",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "preview",
+      "title": "Preview"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     }
+    ]
+   },
+   {
+    "key": "study-certificate",
+    "label": "Study Certificate",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "issue-register",
+      "title": "Issue Register"
+     }
+    ]
+   },
+   {
+    "key": "transfer-certificate",
+    "label": "Transfer Certificate",
+    "pages": [
+     {
+      "key": "application",
+      "title": "Application"
+     },
+     {
+      "key": "approval",
+      "title": "Approval"
+     },
+     {
+      "key": "generate",
+      "title": "Generate"
+     }
+    ]
+   },
+   {
+    "key": "conduct-certificate",
+    "label": "Conduct Certificate",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "issue-register",
+      "title": "Issue Register"
+     }
+    ]
+   },
+   {
+    "key": "character-certificate",
+    "label": "Character Certificate",
+    "pages": [
+     {
+      "key": "generate",
+      "title": "Generate"
+     },
+     {
+      "key": "issue-register",
+      "title": "Issue Register"
+     }
+    ]
+   },
+   {
+    "key": "custom-certificates",
+    "label": "Custom Certificates",
+    "pages": [
+     {
+      "key": "design-template",
+      "title": "Design Template"
+     },
+     {
+      "key": "generate",
+      "title": "Generate"
+     }
+    ]
+   },
+   {
+    "key": "document-repository",
+    "label": "Document Repository",
+    "pages": [
+     {
+      "key": "student-documents",
+      "title": "Student Documents"
+     },
+     {
+      "key": "staff-documents",
+      "title": "Staff Documents"
+     }
+    ]
+   },
+   {
+    "key": "verification",
+    "label": "Verification",
+    "pages": [
+     {
+      "key": "certificate-number",
+      "title": "Certificate Number"
+     },
+     {
+      "key": "verification-status",
+      "title": "Verification Status"
+     }
+    ]
+   },
+   {
+    "key": "reports",
+    "label": "Reports",
+    "pages": [
+     {
+      "key": "issued-certificates",
+      "title": "Issued Certificates"
+     },
+     {
+      "key": "pending-applications",
+      "title": "Pending Applications"
+     }
+    ]
+   }
+  ]
+ },
+ "activities": {
+  "label": "Activities & Events",
+  "sections": [
+   {
+    "key": "school-events",
+    "label": "School Events",
+    "pages": [
+     {
+      "key": "add-event",
+      "title": "Add Event"
+     },
+     {
+      "key": "event-calendar",
+      "title": "Event Calendar"
+     }
+    ]
+   },
+   {
+    "key": "sports",
+    "label": "Sports",
+    "pages": [
+     {
+      "key": "sports-list",
+      "title": "Sports List"
+     },
+     {
+      "key": "team-allocation",
+      "title": "Team Allocation"
+     }
+    ]
+   },
+   {
+    "key": "competitions",
+    "label": "Competitions",
+    "pages": [
+     {
+      "key": "competition-setup",
+      "title": "Competition Setup"
+     },
+     {
+      "key": "registration",
+      "title": "Registration"
+     },
+     {
+      "key": "results",
+      "title": "Results"
+     }
+    ]
+   },
+   {
+    "key": "clubs",
+    "label": "Clubs",
+    "pages": [
+     {
+      "key": "club-list",
+      "title": "Club List"
+     },
+     {
+      "key": "membership",
+      "title": "Membership"
+     }
+    ]
+   },
+   {
+    "key": "cultural-activities",
+    "label": "Cultural Activities",
+    "pages": [
+     {
+      "key": "activities",
+      "title": "Activities"
+     },
+     {
+      "key": "participation",
+      "title": "Participation"
+     }
+    ]
+   },
+   {
+    "key": "achievements",
+    "label": "Achievements",
+    "pages": [
+     {
+      "key": "student-awards",
+      "title": "Student Awards"
+     },
+     {
+      "key": "staff-awards",
+      "title": "Staff Awards"
+     }
+    ]
+   },
+   {
+    "key": "event-communication",
+    "label": "Event Communication",
+    "pages": [
+     {
+      "key": "invitations",
+      "title": "Invitations"
+     },
+     {
+      "key": "notices",
+      "title": "Notices"
+     }
+    ]
+   },
+   {
+    "key": "reports",
+    "label": "Reports",
+    "pages": [
+     {
+      "key": "participation",
+      "title": "Participation"
+     },
+     {
+      "key": "achievements",
+      "title": "Achievements"
+     }
+    ]
+   }
+  ]
+ },
+ "reports": {
+  "label": "Reports & Analytics",
+  "sections": [
+   {
+    "key": "student-reports",
+    "label": "Student Reports",
+    "pages": [
+     {
+      "key": "admission",
+      "title": "Admission"
+     },
+     {
+      "key": "student-strength",
+      "title": "Student Strength"
+     },
+     {
+      "key": "transfer",
+      "title": "Transfer"
+     }
+    ]
+   },
+   {
+    "key": "academic-reports",
+    "label": "Academic Reports",
+    "pages": [
+     {
+      "key": "class",
+      "title": "Class"
+     },
+     {
+      "key": "subject",
+      "title": "Subject"
+     },
+     {
+      "key": "syllabus-progress",
+      "title": "Syllabus Progress"
+     }
+    ]
+   },
+   {
+    "key": "attendance-reports",
+    "label": "Attendance Reports",
+    "pages": [
+     {
+      "key": "student",
+      "title": "Student"
+     },
+     {
+      "key": "staff",
+      "title": "Staff"
+     },
+     {
+      "key": "class-wise",
+      "title": "Class-wise"
+     }
+    ]
+   },
+   {
+    "key": "examination-reports",
+    "label": "Examination Reports",
+    "pages": [
+     {
+      "key": "results",
+      "title": "Results"
+     },
+     {
+      "key": "ranks",
+      "title": "Ranks"
+     },
+     {
+      "key": "grade-analysis",
+      "title": "Grade Analysis"
+     }
+    ]
+   },
+   {
+    "key": "fee-reports",
+    "label": "Fee Reports",
+    "pages": [
+     {
+      "key": "collection",
+      "title": "Collection"
+     },
+     {
+      "key": "dues",
+      "title": "Dues"
+     },
+     {
+      "key": "concessions",
+      "title": "Concessions"
+     }
+    ]
+   },
+   {
+    "key": "hr-reports",
+    "label": "HR Reports",
+    "pages": [
+     {
+      "key": "staff-strength",
+      "title": "Staff Strength"
+     },
+     {
+      "key": "attendance",
+      "title": "Attendance"
+     },
+     {
+      "key": "leave",
+      "title": "Leave"
+     }
+    ]
+   },
+   {
+    "key": "payroll-reports",
+    "label": "Payroll Reports",
+    "pages": [
+     {
+      "key": "salary",
+      "title": "Salary"
+     },
+     {
+      "key": "deductions",
+      "title": "Deductions"
+     },
+     {
+      "key": "payment",
+      "title": "Payment"
+     }
+    ]
+   },
+   {
+    "key": "transport-reports",
+    "label": "Transport Reports",
+    "pages": [
+     {
+      "key": "routes",
+      "title": "Routes"
+     },
+     {
+      "key": "vehicles",
+      "title": "Vehicles"
+     },
+     {
+      "key": "allocation",
+      "title": "Allocation"
+     }
+    ]
+   },
+   {
+    "key": "library-reports",
+    "label": "Library Reports",
+    "pages": [
+     {
+      "key": "books",
+      "title": "Books"
+     },
+     {
+      "key": "issues",
+      "title": "Issues"
+     },
+     {
+      "key": "returns",
+      "title": "Returns"
+     }
+    ]
+   },
+   {
+    "key": "inventory-reports",
+    "label": "Inventory Reports",
+    "pages": [
+     {
+      "key": "stock",
+      "title": "Stock"
+     },
+     {
+      "key": "purchases",
+      "title": "Purchases"
+     },
+     {
+      "key": "assets",
+      "title": "Assets"
+     }
+    ]
+   },
+   {
+    "key": "custom-reports",
+    "label": "Custom Reports",
+    "pages": [
+     {
+      "key": "report-builder",
+      "title": "Report Builder"
+     },
+     {
+      "key": "saved-reports",
+      "title": "Saved Reports"
+     }
+    ]
+   },
+   {
+    "key": "export-center",
+    "label": "Export Center",
+    "pages": [
+     {
+      "key": "excel",
+      "title": "Excel"
+     },
+     {
+      "key": "pdf",
+      "title": "PDF"
+     },
+     {
+      "key": "csv",
+      "title": "CSV"
+     },
+     {
+      "key": "print",
+      "title": "Print"
+     }
+    ]
+   }
+  ]
+ },
+ "settings": {
+  "label": "School Settings",
+  "sections": [
+   {
+    "key": "school-profile",
+    "label": "School Profile",
+    "pages": [
+     {
+      "key": "general-details",
+      "title": "General Details"
+     },
+     {
+      "key": "address",
+      "title": "Address"
+     },
+     {
+      "key": "logo",
+      "title": "Logo"
+     }
+    ]
+   },
+   {
+    "key": "academic-settings",
+    "label": "Academic Settings",
+    "pages": [
+     {
+      "key": "academic-year",
+      "title": "Academic Year"
+     },
+     {
+      "key": "board",
+      "title": "Board"
+     },
+     {
+      "key": "medium",
+      "title": "Medium"
+     }
+    ]
+   },
+   {
+    "key": "school-timings",
+    "label": "School Timings",
+    "pages": [
+     {
+      "key": "working-days",
+      "title": "Working Days"
+     },
+     {
+      "key": "periods",
+      "title": "Periods"
+     },
+     {
+      "key": "breaks",
+      "title": "Breaks"
+     }
+    ]
+   },
+   {
+    "key": "class-configuration",
+    "label": "Class Configuration",
+    "pages": [
+     {
+      "key": "class",
+      "title": "Class"
+     },
+     {
+      "key": "section",
+      "title": "Section"
+     },
+     {
+      "key": "subject",
+      "title": "Subject"
+     }
+    ]
+   },
+   {
+    "key": "fee-settings",
+    "label": "Fee Settings",
+    "pages": [
+     {
+      "key": "fee-rules",
+      "title": "Fee Rules"
+     },
+     {
+      "key": "application-fee",
+      "title": "Application Fee"
+     },
+     {
+      "key": "installments",
+      "title": "Installments"
+     },
+     {
+      "key": "payment-options",
+      "title": "Payment Options"
+     }
+    ]
+   },
+   {
+    "key": "attendance-settings",
+    "label": "Attendance Settings",
+    "pages": [
+     {
+      "key": "attendance-rules",
+      "title": "Attendance Rules"
+     },
+     {
+      "key": "notifications",
+      "title": "Notifications"
+     }
+    ]
+   },
+   {
+    "key": "examination-settings",
+    "label": "Examination Settings",
+    "pages": [
+     {
+      "key": "grading",
+      "title": "Grading"
+     },
+     {
+      "key": "marks",
+      "title": "Marks"
+     },
+     {
+      "key": "result-rules",
+      "title": "Result Rules"
+     }
+    ]
+   },
+   {
+    "key": "communication-settings",
+    "label": "Communication Settings",
+    "pages": [
+     {
+      "key": "sms",
+      "title": "SMS"
+     },
+     {
+      "key": "email",
+      "title": "Email"
+     },
+     {
+      "key": "whatsapp",
+      "title": "WhatsApp"
+     }
+    ]
+   },
+   {
+    "key": "integrations",
+    "label": "Integrations",
+    "pages": [
+     {
+      "key": "connected-services",
+      "title": "Connected Services"
+     }
+    ]
+   },
+   {
+    "key": "user-management",
+    "label": "User Management",
+    "pages": [
+     {
+      "key": "create-user",
+      "title": "Create User"
+     },
+     {
+      "key": "activate",
+      "title": "Activate"
+     },
+     {
+      "key": "deactivate",
+      "title": "Deactivate"
+     }
+    ]
+   },
+   {
+    "key": "roles-and-permissions",
+    "label": "Roles & Permissions",
+    "pages": [
+     {
+      "key": "role-setup",
+      "title": "Role Setup"
+     },
+     {
+      "key": "permission-assignment",
+      "title": "Permission Assignment"
+     }
+    ]
+   },
+   {
+    "key": "approval-workflow",
+    "label": "Approval Workflow",
+    "pages": [
+     {
+      "key": "approval-levels",
+      "title": "Approval Levels"
+     },
+     {
+      "key": "approval-routing",
+      "title": "Approval Routing"
+     }
+    ]
+   },
+   {
+    "key": "notification-settings",
+    "label": "Notification Settings",
+    "pages": [
+     {
+      "key": "templates",
+      "title": "Templates"
+     },
+     {
+      "key": "trigger-rules",
+      "title": "Trigger Rules"
+     }
+    ]
+   },
+   {
+    "key": "document-settings",
+    "label": "Document Settings",
+    "pages": [
+     {
+      "key": "certificate-templates",
+      "title": "Certificate Templates"
+     },
+     {
+      "key": "numbering",
+      "title": "Numbering"
+     }
+    ]
+   },
+   {
+    "key": "audit-and-activity",
+    "label": "Audit & Activity",
+    "pages": [
+     {
+      "key": "audit-logs",
+      "title": "Audit Logs"
+     },
+     {
+      "key": "change-history",
+      "title": "Change History"
+     }
+    ]
+   }
+  ]
+ }
+}

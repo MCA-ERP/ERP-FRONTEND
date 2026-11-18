@@ -52,7 +52,7 @@ export default function CommunicationPage({ initialTab, embedded }: { initialTab
   const [tab, setTab] = useState<Tab>(initialTab ?? "announcements");
   return (
     <>
-      {!embedded && <PageHeader title="Communication" subtitle="Announcements, email, SMS and WhatsApp to schools, with templates, campaigns and delivery logs for each channel." />}
+      <PageHeader title="Communication" subtitle="Announcements, email, SMS and WhatsApp to schools, with templates, campaigns and delivery logs for each channel." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={[["announcements", "Announcements"], ["email", "Email"], ["sms", "SMS"], ["whatsapp", "WhatsApp"], ["notifications", "Notifications"], ["history", "History"]]} />)}
       {tab === "announcements" && <AnnouncementsTab />}
       {tab === "email" && <ChannelTab channel="email" />}
@@ -334,7 +334,7 @@ function Announcements({ alerts = false, view = "all" }: { alerts?: boolean; vie
   );
 }
 
-function Campaigns({ channel }: { channel: Chan }) {
+export function Campaigns({ channel }: { channel: Chan }) {
   const { data, error, loading } = useLoad(() => adminFetch<{ campaigns: Campaign[] }>("/communication/campaigns"), []);
   const cell = (c: Campaign, ch: Chan) => {
     if (!c.channels.includes(ch)) return <span className="text-slate-300">—</span>;
@@ -471,7 +471,7 @@ function Templates({ channel }: { channel: Chan }) {
   );
 }
 
-function DeliveryLog({ channel: fixed, all = false }: { channel?: Chan; all?: boolean }) {
+export function DeliveryLog({ channel: fixed, all = false }: { channel?: Chan; all?: boolean }) {
   const [pickedChannel, setChannel] = useState("");
   const channel = fixed ?? pickedChannel;
   const [status, setStatus] = useState("");

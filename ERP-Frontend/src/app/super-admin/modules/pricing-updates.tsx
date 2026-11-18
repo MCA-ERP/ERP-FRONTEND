@@ -107,8 +107,8 @@ interface ModRow { code: string; name: string; category: string; build_status: B
 const statusTone = { planned: "gray", rolling_out: "blue", live: "green", rolled_back: "red" } as const;
 const statusLabel = { planned: "Planned", rolling_out: "Rolling out", live: "Live", rolled_back: "Rolled back" } as const;
 
-export function Updates() {
-  const [part, setPart] = useState<"version" | "notes" | "status">("version");
+export function Updates({ only }: { only?: "notes" | "status" } = {}) {
+  const [part, setPart] = useState<"version" | "notes" | "status">(only ?? "version");
   const rel = useLoad(() => adminFetch<{ releases: Release[] }>("/module-config/releases"), []);
   const mods = useLoad(() => adminFetch<{ modules: ModRow[] }>("/modules"), []);
   const act = useAction(() => { rel.reload(); mods.reload(); });
@@ -124,7 +124,7 @@ export function Updates() {
 
   return (
     <>
-      <TabBar value={part} onChange={setPart} tabs={[["version", "Version"], ["notes", "Release notes"], ["status", "Deployment status"]]} />
+      {!only && <TabBar value={part} onChange={setPart} tabs={[["version", "Version"], ["notes", "Release notes"], ["status", "Deployment status"]]} />}
       <ErrorBanner message={rel.error || act.error} />
       <p className="mb-4 text-sm text-slate-500">Releases are recorded here by your team to keep everyone informed. The platform does not deploy code itself, and a module&apos;s version changes when a release is marked live.</p>
       {part === "version" && (

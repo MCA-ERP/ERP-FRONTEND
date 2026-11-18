@@ -17,7 +17,7 @@ export default function SecurityPage({ initialTab, embedded }: { initialTab?: Ta
   const [tab, setTab] = useState<Tab>(initialTab ?? "login");
   return (
     <>
-      {!embedded && <PageHeader title="Security & audit" subtitle="Who signed in, who did what, who may get in, and how long records are kept." />}
+      <PageHeader title="Security & audit" subtitle="Who signed in, who did what, who may get in, and how long records are kept." />
       {!embedded && (<TabBar value={tab} onChange={setTab} tabs={[["login", "Login security"], ["audit", "Audit logs"], ["access", "Access control"], ["settings", "Security settings"], ["retention", "Data retention"], ["incidents", "Incidents"], ["backups", "Backups"]]} />)}
       {tab === "login" && <LoginSecurity />}
       {tab === "audit" && <AuditSection />}

@@ -572,9 +572,39 @@
     "label": "Academic Modules",
     "pages": [
      {
-      "key": "academic",
-      "title": "Academic Modules",
-      "description": ""
+      "key": "admissions",
+      "title": "Admission",
+      "description": "Online enquiries, applications, entrance tests and admission confirmation."
+     },
+     {
+      "key": "student_information",
+      "title": "Students",
+      "description": "Student profiles, documents, promotions, transfer certificates and ID cards."
+     },
+     {
+      "key": "academics",
+      "title": "Academics",
+      "description": "Classes, sections, subjects, timetable, lesson plans and homework."
+     },
+     {
+      "key": "exams",
+      "title": "Exams",
+      "description": "Exam schedules, marks entry, grading scales and report cards."
+     },
+     {
+      "key": "attendance",
+      "title": "Attendance",
+      "description": "Student and staff attendance, corrections, biometric, RFID and QR attendance, and alerts."
+     },
+     {
+      "key": "timetable",
+      "title": "Timetable",
+      "description": "Class and teacher timetables, substitutions and room allocation."
+     },
+     {
+      "key": "activities_events",
+      "title": "Activities & Events",
+      "description": "School events, sports, clubs, competitions and achievements."
      }
     ]
    },
@@ -583,9 +613,44 @@
     "label": "Administrative Modules",
     "pages": [
      {
-      "key": "administrative",
-      "title": "Administrative Modules",
-      "description": ""
+      "key": "hr_payroll",
+      "title": "HR",
+      "description": "Staff records, leave, staff attendance and appraisals."
+     },
+     {
+      "key": "payroll",
+      "title": "Payroll",
+      "description": "Salary structures, payslips, PF, ESI and TDS."
+     },
+     {
+      "key": "fees",
+      "title": "Finance",
+      "description": "Fee structures, collection, concessions, receipts and accounting."
+     },
+     {
+      "key": "transport",
+      "title": "Transport",
+      "description": "Routes, stops, vehicles, live GPS and transport fees."
+     },
+     {
+      "key": "library",
+      "title": "Library",
+      "description": "Catalogue, issue, return, renewals, reservations and fines."
+     },
+     {
+      "key": "visitors",
+      "title": "Front Office & Visitors",
+      "description": "Enquiries, visitors, gate passes, calls, post and complaints."
+     },
+     {
+      "key": "certificates",
+      "title": "Certificates",
+      "description": "Bonafide, study, conduct and transfer certificates with templates."
+     },
+     {
+      "key": "employee_self_service",
+      "title": "Employee Self-Service",
+      "description": "My Profile and My Payslips for every staff member."
      }
     ]
    },
@@ -594,9 +659,34 @@
     "label": "Communication Modules",
     "pages": [
      {
-      "key": "communication",
-      "title": "Communication Modules",
-      "description": ""
+      "key": "sms_whatsapp",
+      "title": "SMS",
+      "description": "DLT-registered SMS alerts to parents and staff."
+     },
+     {
+      "key": "email",
+      "title": "Email",
+      "description": "Transactional and bulk email from the school."
+     },
+     {
+      "key": "whatsapp",
+      "title": "WhatsApp",
+      "description": "Approved template messages on WhatsApp Business."
+     },
+     {
+      "key": "notifications",
+      "title": "Notifications",
+      "description": "Push and in-app notifications in the parent, teacher and student apps."
+     },
+     {
+      "key": "school_diary",
+      "title": "School Diary & Parent Messages",
+      "description": "Class diary, teacher remarks and two-way parent-teacher messages."
+     },
+     {
+      "key": "parent_app",
+      "title": "Parent Portal",
+      "description": "The parent app in English, Hindi and Telugu: progress, attendance, fees, homework, bus, health, library and mess."
      }
     ]
    },
@@ -605,9 +695,34 @@
     "label": "Advanced Modules",
     "pages": [
      {
-      "key": "advanced",
-      "title": "Advanced Modules",
-      "description": ""
+      "key": "online_classes",
+      "title": "LMS",
+      "description": "Online classes, recorded lessons, quizzes and assignments."
+     },
+     {
+      "key": "hostel",
+      "title": "Hostel",
+      "description": "Rooms, allotment, mess, hostel attendance and hostel fees."
+     },
+     {
+      "key": "inventory",
+      "title": "Inventory",
+      "description": "Stock, purchase orders, vendors and asset tracking."
+     },
+     {
+      "key": "custom_reports_api",
+      "title": "Analytics",
+      "description": "Cross-campus dashboards, custom reports and a data export API."
+     },
+     {
+      "key": "health_welfare",
+      "title": "Health & Welfare",
+      "description": "Health records, screening, vaccinations, medical visits and parent health updates."
+     },
+     {
+      "key": "cafeteria",
+      "title": "Day Scholar Mess",
+      "description": "Canteen menu, wallets and orders"
      }
     ]
    },
@@ -1000,9 +1115,24 @@
     "label": "Data Permissions",
     "pages": [
      {
-      "key": "data",
-      "title": "Data Permissions",
-      "description": ""
+      "key": "own",
+      "title": "Own Records",
+      "description": "Only records about themselves or their own children. For parents and students."
+     },
+     {
+      "key": "class",
+      "title": "Assigned Class",
+      "description": "Only the classes and subjects they are assigned to."
+     },
+     {
+      "key": "campus",
+      "title": "Campus",
+      "description": "Every record on their campus, not other campuses."
+     },
+     {
+      "key": "school",
+      "title": "School",
+      "description": "Every record in the school, across all campuses."
      }
     ]
    },
@@ -1493,9 +1623,19 @@
     "label": "Email",
     "pages": [
      {
-      "key": "email",
-      "title": "Email",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "Email message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Emails sent to many schools at once."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every email and whether it arrived."
      }
     ]
    },
@@ -1504,9 +1644,19 @@
     "label": "SMS",
     "pages": [
      {
-      "key": "sms",
-      "title": "SMS",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "SMS message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Bulk sms sent to many schools."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every sms sent and whether it arrived."
      }
     ]
    },
@@ -1515,9 +1665,19 @@
     "label": "WhatsApp",
     "pages": [
      {
-      "key": "whatsapp",
-      "title": "WhatsApp",
-      "description": ""
+      "key": "templates",
+      "title": "Templates",
+      "description": "WhatsApp message templates."
+     },
+     {
+      "key": "campaigns",
+      "title": "Campaigns",
+      "description": "Bulk whatsapp sent to many schools."
+     },
+     {
+      "key": "logs",
+      "title": "Delivery Logs",
+      "description": "Every whatsapp sent and whether it arrived."
      }
     ]
    },
@@ -1542,9 +1702,19 @@
     "label": "Communication History",
     "pages": [
      {
-      "key": "history",
-      "title": "Communication History",
-      "description": ""
+      "key": "sent",
+      "title": "Sent",
+      "description": "Messages delivered on every channel."
+     },
+     {
+      "key": "failed",
+      "title": "Failed",
+      "description": "Messages that couldn't be delivered."
+     },
+     {
+      "key": "pending",
+      "title": "Pending",
+      "description": "Messages queued or scheduled."
      }
     ]
    }
@@ -1559,9 +1729,24 @@
     "label": "Website Pages",
     "pages": [
      {
-      "key": "pages",
-      "title": "Website Pages",
-      "description": ""
+      "key": "home",
+      "title": "Home",
+      "description": "Sections on the home page."
+     },
+     {
+      "key": "about",
+      "title": "About",
+      "description": "Sections on the about page."
+     },
+     {
+      "key": "features",
+      "title": "Features",
+      "description": "Sections on the features page."
+     },
+     {
+      "key": "contact",
+      "title": "Contact",
+      "description": "Sections on the contact page."
      }
     ]
    },
@@ -1687,7 +1872,7 @@
      {
       "key": "sitemap",
       "title": "Sitemap",
-      "description": "The list of pages search engines should crawl."
+      "description": "Pages search engines should crawl."
      }
     ]
    }
@@ -1719,8 +1904,8 @@
     "pages": [
      {
       "key": "sms",
-      "title": "SMS Integration",
-      "description": ""
+      "title": "SMS Provider Configuration",
+      "description": "The service that sends SMS for the platform and schools."
      }
     ]
    },
@@ -1730,8 +1915,8 @@
     "pages": [
      {
       "key": "whatsapp",
-      "title": "WhatsApp Integration",
-      "description": ""
+      "title": "Business API Configuration",
+      "description": "WhatsApp Business account used for template messages."
      }
     ]
    },
@@ -1773,8 +1958,8 @@
     "pages": [
      {
       "key": "biometric",
-      "title": "Biometric",
-      "description": ""
+      "title": "Device Configuration",
+      "description": "Fingerprint and face devices for staff and student attendance."
      }
     ]
    },
@@ -2024,8 +2209,8 @@
     "pages": [
      {
       "key": "email",
-      "title": "Email Configuration",
-      "description": ""
+      "title": "SMTP Settings",
+      "description": "The mail server the platform sends from."
      }
     ]
    },

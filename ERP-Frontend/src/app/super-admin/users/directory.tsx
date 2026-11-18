@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { adminFetch, json, qs, type AdminUser, type Paged, type Role, type SchoolRow } from "@/lib/admin-api";
-import { TabBar, useAction } from "@/components/admin/dash";
+import { Panel, SimpleTable, TabBar, useAction } from "@/components/admin/dash";
+import { Chip, Tag, Tiles } from "@/components/admin/dash-ui";
+import { ExportPrint } from "@/components/admin/export-print";
 import { Badge, Card, EmptyRow, ErrorBanner, Field, Modal, Pagination, Th, btnGhost, btnPrimary, fmtDate, inputCls, useDebounced, useLoad } from "@/components/admin/ui";
 import { small } from "./shared";
 
-type Row = AdminUser & { failed_login_count?: number; locked_until?: string | null; must_change_password?: boolean; last_login_at?: string | null };
+type Row = AdminUser & { classes?: string | null; failed_login_count?: number; locked_until?: string | null; must_change_password?: boolean; last_login_at?: string | null };
+export type Layout = "super" | "support" | "admins" | "principals" | "teachers" | "accountants" | "otherstaff" | "directory";
 interface Counts { groups: Record<string, number>; all: number; active: number; inactive: number; locked: number }
 
 const GROUPS: [string, string][] = [
@@ -17,6 +20,12 @@ const GROUPS: [string, string][] = [
 const STATES: [string, string][] = [["", "All"], ["active", "Active"], ["inactive", "Inactive"], ["locked", "Locked"]];
 const isLocked = (u: Row) => !!u.locked_until && new Date(u.locked_until).getTime() > Date.now();
 
+const hm = (d: Date) => d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false });
+const dayWord = (iso: string) => { const d = new Date(iso); const t = new Date(); const y = new Date(Date.now() - 86_400_000); return d.toDateString() === t.toDateString() ? "Today" : d.toDateString() === y.toDateString() ? "Yesterday" : d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }); };
+const lastIn = (iso: string | null | undefined, time: boolean, never: string) => (iso ? `${dayWord(iso)}${time ? ", " + hm(new Date(iso)) : ""}` : never);
+const INVITE_ROLES: [string, string][] = [["PlatformManager", "Platform Manager"], ["Finance", "Finance"], ["SupportAgent", "Support Agent"], ["ContentEditor", "Content Editor"]];
+const tempPassword = () => { const c = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"; const b = new Uint32Array(12); crypto.getRandomValues(b); return Array.from(b, (n) => c[n % c.length]).join("") + "7!"; };
+
 interface FormState { email: string; password: string; first_name: string; last_name: string; phone: string; role: string; institution_id: string; status: string }
 const emptyForm: FormState = { email: "", password: "", first_name: "", last_name: "", phone: "", role: "", institution_id: "", status: "active" };
 
@@ -24,7 +33,7 @@ const emptyForm: FormState = { email: "", password: "", first_name: "", last_nam
  * The people list. `fixedGroup` (a role group like "super_admin" or "teachers") and `fixedState` ("active", "inactive", "locked")
  * pin the list to one page of the User Management menu and hide the matching filter.
  */
-export function Directory({ fixedGroup, fixedState }: { fixedGroup?: string; fixedState?: string } = {}) {
+export function Directory({ fixedGroup, fixedState, layout }: { fixedGroup?: string; fixedState?: string; layout?: Layout } = {}) {
   const [group, setGroup] = useState(fixedGroup ?? "");
   const [state, setState] = useState(fixedState ?? "");
   const [school, setSchool] = useState("");
@@ -44,6 +53,29 @@ export function Directory({ fixedGroup, fixedState }: { fixedGroup?: string; fix
   const [resetMode, setResetMode] = useState<"temporary" | "link">("temporary");
   const [resetPw, setResetPw] = useState("");
   const [resetResult, setResetResult] = useState("");
+  const [invite, setInvite] = useState<{ name: string; email: string; role: string } | null>(null);
+  const [inviteResult, setInviteResult] = useState("");
+  const settings = useLoad(() => (layout === "support" ? adminFetch<{ settings: Record<string, unknown> }>("/settings") : Promise.resolve(null)), [layout]);
+  const lockedTeachers = useLoad(() => (layout === "teachers" ? adminFetch<Paged<Row>>("/user-directory?group=teachers&state=locked&pageSize=1") : Promise.resolve(null)), [layout]);
+  const primaries = useLoad(() => (layout === "admins" ? adminFetch<{ items: { id: string; is_primary: boolean }[] }>("/school-admins?pageSize=500") : Promise.resolve(null)), [layout]);
+  useEffect(() => {
+    if (layout !== "admins" && layout !== "super" && layout !== "support") return;
+    const key = layout === "admins" ? "users/school/admins" : layout === "super" ? "users/platform/super" : "users/platform/support";
+    const h = (e: Event) => {
+      if ((e as CustomEvent).detail !== key) return;
+      if (layout === "admins") { setForm({ ...emptyForm, role: "InstitutionAdmin" }); setFormError(""); setEditing("new"); }
+      else { setInvite({ name: "", email: "", role: layout === "super" ? "SuperAdmin" : "SupportAgent" }); setInviteResult(""); }
+    };
+    window.addEventListener("mca-cta", h);
+    return () => window.removeEventListener("mca-cta", h);
+  }, [layout]);
+  const sendInvite = async () => {
+    if (!invite) return;
+    const [first, ...rest] = invite.name.trim().split(/\s+/);
+    const pw = tempPassword();
+    const ok = await act.run(() => adminFetch("/users", json("POST", { email: invite.email, password: pw, first_name: first || "", last_name: rest.join(" ") || "-", role: invite.role, institution_id: null })));
+    if (ok) setInviteResult(pw);
+  };
   const set = (k: keyof FormState) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const openNew = () => { setForm({ ...emptyForm, role: roles.data?.roles.find((r) => r.name !== "SuperAdmin")?.name || "", institution_id: school }); setFormError(""); setEditing("new"); };
@@ -78,6 +110,55 @@ export function Directory({ fixedGroup, fixedState }: { fixedGroup?: string; fix
   return (
     <>
       <ErrorBanner message={error || act.error} />
+      {layout ? (() => {
+        const items = data?.items ?? [];
+        const twoFactor = settings.data?.settings["security.require_2fa_staff"] === true;
+        const primary = new Map((primaries.data?.items ?? []).map((p) => [p.id, p.is_primary]));
+        const status = (u: Row) => (isLocked(u) ? <Chip tone="bad">Locked</Chip> : u.status === "active" ? <Chip tone="good">Active</Chip> : <Chip tone="mute">Inactive</Chip>);
+        const person = (u: Row, light: boolean) => <div><p className="font-semibold text-slate-900">{u.first_name} {u.last_name}</p><p className={light ? "text-xs text-slate-500" : "text-xs text-slate-400"}>{u.email}</p></div>;
+        const resetBtn = (u: Row) => <button type="button" className={small} onClick={() => { setReset(u); setResetMode("temporary"); setResetPw(""); setResetResult(""); }}>Reset password</button>;
+        const details = (u: Row) => <button type="button" className={small} onClick={() => openEdit(u)}>View details</button>;
+        const unlock = (u: Row) => <button type="button" className="rounded-full bg-[#026f9b] px-3 py-1 text-xs font-semibold text-white hover:bg-[#014a67]" disabled={act.busy} onClick={() => stateAct(u, "unlock")}>Unlock</button>;
+        const typeOf = (u: Row) => { const n = u.roles?.name ?? ""; return n === "SuperAdmin" ? "Super Admin" : !u.institution_id ? "Support staff" : n === "InstitutionAdmin" ? "School admin" : n === "Principal" ? "Principal" : n === "Faculty" ? "Teacher" : u.roles?.display_name ?? "—"; };
+        const acts = (u: Row, extra?: boolean) => <span key="a" className="flex gap-1.5">{isLocked(u) ? unlock(u) : extra ? (u.status === "active" ? resetBtn(u) : <button type="button" className={small} disabled={act.busy} onClick={() => stateAct(u, "enable")}>Enable</button>) : resetBtn(u)}{details(u)}</span>;
+        const L = {
+          super: { t: ["Super Admins", "super-admins", "Search super admins"], head: ["Name", "Status", "Last sign-in"], row: (u: Row) => [person(u, true), status(u), lastIn(u.last_login_at, true, "—"), acts(u)], csv: (u: Row) => [u.status] },
+          support: { t: ["Platform team", "platform-team", "Search platform team"], head: ["Name", "Role", "Two-factor", "Status", "Last sign-in"], row: (u: Row) => [person(u, true), <Tag key="r">{u.roles?.display_name || "—"}</Tag>, <Chip key="t" tone={twoFactor ? "good" : "mute"}>{twoFactor ? "On" : "Off"}</Chip>, status(u), lastIn(u.last_login_at, true, "—"), acts(u)], csv: (u: Row) => [u.roles?.display_name, twoFactor ? "On" : "Off", u.status] },
+          admins: { t: ["School admins", "school-admins", "Search school admins"], head: ["Name", "School", "Type", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="p">{primary.get(u.id) ? "Primary admin" : "Admin"}</Tag>, status(u), lastIn(u.last_login_at, false, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, primary.get(u.id) ? "Primary admin" : "Admin", u.status] },
+          principals: { t: ["Principals", "principals", "Search principals"], head: ["Name", "School", "Principal since", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", u.created_at ? new Date(u.created_at).getFullYear() : "—", status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.created_at?.slice(0, 4), u.status] },
+          teachers: { t: ["Teachers", "teachers", "Search teachers"], head: ["Name", "School", "Subject", "Classes", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", "—", u.classes ?? "—", status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, "", u.classes, u.status] },
+          accountants: { t: ["Accountants", "accountants", "Search accountants"], head: ["Name", "School", "Role", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="r">{u.roles?.display_name ?? "—"}</Tag>, status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.roles?.display_name, u.status] },
+          otherstaff: { t: ["Other staff", "other-staff", "Search other staff"], head: ["Name", "School", "Role", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), u.institutions?.name ?? "—", <Tag key="r">{u.roles?.display_name ?? "—"}</Tag>, status(u), lastIn(u.last_login_at, true, "Never"), acts(u)], csv: (u: Row) => [u.institutions?.name, u.roles?.display_name, u.status] },
+          directory: { t: [({ "": "All users", active: "Active users", inactive: "Inactive users", locked: "Locked users" } as Record<string, string>)[fixedState ?? ""] ?? "All users", "users", `Search ${fixedState ? fixedState + " " : "all "}users`], head: ["Name", "Type", "School", "Status", "Last sign-in"], row: (u: Row) => [person(u, false), <Tag key="ty">{typeOf(u)}</Tag>, u.institutions?.name ?? "Platform team", status(u), lastIn(u.last_login_at, true, "—"), acts(u, true)], csv: (u: Row) => [typeOf(u), u.institutions?.name ?? "Platform team", u.status] },
+        }[layout];
+        const head = [...L.head.map((h) => ({ h })), { h: "" }];
+        const ft = layout === "directory" ? GROUPS.filter(([k]) => k) : null;
+        const tiles = layout === "teachers" ? [
+          { label: "Teachers", value: c ? (c.groups.teachers ?? 0).toLocaleString("en-IN") : "…", sub: "On the platform" },
+          { label: "Shown here", value: String(data?.total ?? "…"), sub: "Sample accounts" },
+          { label: "Locked", value: lockedTeachers.data ? String(lockedTeachers.data.total) : "…", sub: "Too many wrong passwords" },
+        ] : layout === "directory" && !fixedState ? [
+          { label: "Accounts", value: c ? c.all.toLocaleString("en-IN") : "…", sub: "Across the platform" },
+          { label: "Active", value: c ? c.active.toLocaleString("en-IN") : "…" },
+          { label: "Inactive", value: c ? c.inactive.toLocaleString("en-IN") : "…" },
+          { label: "Locked", value: c ? c.locked.toLocaleString("en-IN") : "…" },
+        ] : null;
+        return (
+          <div className="space-y-5">
+            {tiles && <Tiles items={tiles} />}
+            <Panel title={L.t[0]} sub={`${data?.total ?? 0} account${data?.total === 1 ? "" : "s"}`} right={<ExportPrint name={L.t[1]} head={L.head} rows={items.map((u) => [`${u.first_name} ${u.last_name}`, ...L.csv(u), lastIn(u.last_login_at, true, "")])} />}>
+              <div className="flex flex-wrap gap-2.5 border-b border-slate-100 p-4">
+                <input className={`${inputCls} max-w-xs`} placeholder={L.t[2]} aria-label={L.t[2]} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+                {ft && <select className={`${inputCls} max-w-[10rem]`} aria-label="Type" value={group} onChange={(e) => { setGroup(e.target.value); setPage(1); }}><option value="">All types</option>{ft.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>}
+                {["teachers", "accountants", "otherstaff", "directory"].includes(layout) && fixedState === undefined && <select className={`${inputCls} max-w-[10rem]`} aria-label="Status" value={state} onChange={(e) => { setState(e.target.value); setPage(1); }}><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="locked">Locked</option></select>}
+              </div>
+              <SimpleTable head={head} rows={items.map((u) => L.row(u))} empty={loading ? "Loading…" : "No users found."} />
+              {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={setPage} />}
+            </Panel>
+          </div>
+        );
+      })() : (
+        <>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         {fixedState === undefined ? (
           <TabBar value={state} onChange={(s) => { setState(s); setPage(1); }} tabs={STATES.map(([k, l]) => [k, l, k === "" ? c?.all : k === "active" ? c?.active : k === "inactive" ? c?.inactive : c?.locked] as [string, string, number | undefined])} />
@@ -128,6 +209,31 @@ export function Directory({ fixedGroup, fixedState }: { fixedGroup?: string; fix
         </div>
         {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={setPage} />}
       </Card>
+        </>
+      )}
+
+      <Modal open={!!invite} title="Invite team member" onClose={() => setInvite(null)}>
+        {invite && (inviteResult ? (
+          <div className="space-y-3">
+            <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 font-mono text-sm text-emerald-900">Temporary password: {inviteResult}</p>
+            <p className="text-xs text-slate-500">Shown once. Give it to {invite.name} securely; they must change it when they first sign in.</p>
+            <div className="flex justify-end"><button type="button" className={btnPrimary} onClick={() => setInvite(null)}>Done</button></div>
+          </div>
+        ) : (
+          <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); void sendInvite(); }}>
+            <ErrorBanner message={act.error} />
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Full name"><input className={inputCls} required value={invite.name} onChange={(e) => setInvite({ ...invite, name: e.target.value })} /></Field>
+              <Field label="Work email"><input type="email" className={inputCls} required value={invite.email} onChange={(e) => setInvite({ ...invite, email: e.target.value })} /></Field>
+            </div>
+            <Field label="Role">
+              {layout === "super" ? <select className={inputCls} disabled value="SuperAdmin"><option value="SuperAdmin">Super Admin</option></select>
+                : <select className={inputCls} value={invite.role} onChange={(e) => setInvite({ ...invite, role: e.target.value })}>{INVITE_ROLES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>}
+            </Field>
+            <div className="flex justify-end gap-2 pt-1"><button type="button" className={btnGhost} onClick={() => setInvite(null)}>Cancel</button><button type="submit" className={btnPrimary} disabled={act.busy}>Send invite</button></div>
+          </form>
+        ))}
+      </Modal>
 
       <Modal open={editing !== null} title={editing === "new" ? "Create user" : "Edit user"} onClose={() => setEditing(null)}>
         <form onSubmit={submit} className="space-y-3">

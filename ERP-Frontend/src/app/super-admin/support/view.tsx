@@ -18,7 +18,7 @@ export default function SupportPage({ initialTab, embedded }: { initialTab?: Tab
 
   return (
     <>
-      {!embedded && <PageHeader title="Support" subtitle="Tickets from schools, the help centre, feedback and response targets." />}
+      <PageHeader title="Support" subtitle="Tickets from schools, the help centre, feedback and response targets." />
       <ErrorBanner message={stats.error || esc.error} />
       <StatGrid
         items={[

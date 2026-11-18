@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, homePathFor } from "@/lib/api";
+import { hostKindOf, portalFor, siblingHost } from "@/lib/hosts";
 
 const DEVICE_KEY = "mca_trusted_device";
 const readDeviceToken = (): string | undefined => {
@@ -57,8 +58,6 @@ export function useLoginLogic() {
   const [feedbackType, setFeedbackType] = useState<"error" | "success">("error");
 
   // Domain configurations
-  const adminDashboardUrl = process.env.NEXT_PUBLIC_ADMIN_DASHBOARD_URL || "https://erp.myclassassist.in";
-  const schoolDashboardUrl = process.env.NEXT_PUBLIC_SCHOOL_DASHBOARD_URL || "https://erp.myclassassist.in";
 
   // ── 1. Check existing verified session on mount ────────────────────────
   useEffect(() => {
@@ -174,19 +173,22 @@ export function useLoginLogic() {
       window.sessionStorage.setItem("erp_school_code", profile.schoolCode);
       window.sessionStorage.setItem("erp_school_name", profile.schoolName);
 
-      const hostname = window.location.hostname;
-      const isLocalhost = hostname === "localhost" || hostname === "127.0.0.1";
-
-      // Production Subdomain Dispatch
-      if (!isLocalhost && process.env.NEXT_PUBLIC_APP_DOMAIN) {
-        if (profile.role === "SuperAdmin" && adminDashboardUrl && !window.location.href.startsWith(adminDashboardUrl)) {
-          window.location.href = `${adminDashboardUrl}/super-admin`;
+      // Each portal has its own address: the platform team on admin.<domain>, schools on erp.<domain>.
+      const here = hostKindOf(window.location.host);
+      const staff = profile.home === "/super-admin";
+      const want = portalFor(staff);
+      if ((here === "admin" || here === "erp") && here !== want) {
+        const there = `${window.location.protocol}//${siblingHost(window.location.host, want)}`;
+        if (process.env.NEXT_PUBLIC_COOKIE_DOMAIN) {
+          // the sign-in is shared across the addresses, so carry on there
+          window.location.href = `${there}${profile.home}`;
           return;
         }
-        if (profile.role !== "SuperAdmin" && schoolDashboardUrl && !window.location.href.startsWith(schoolDashboardUrl)) {
-          window.location.href = `${schoolDashboardUrl}/school`;
-          return;
-        }
+        // separate sign-ins per address: end this one and point to the right place
+        void supabase.auth.signOut();
+        setFeedback(staff ? `This is the school sign-in. Platform team members sign in at ${there}/login.` : `This address is for the platform team. Schools sign in at ${there}/login.`);
+        setFeedbackType("error");
+        return;
       }
     }
 

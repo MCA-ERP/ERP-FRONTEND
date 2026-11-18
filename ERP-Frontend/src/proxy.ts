@@ -1,5 +1,43 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { hostKindOf, siblingHost, type PortalKind } from "@/lib/hosts";
+
+/**
+ * Keeps each portal on its own address: the platform team on admin.<domain>, schools on erp.<domain>, and the public
+ * website on the main domain. Wrong-address requests are sent to the right one. Returns null when no rule applies.
+ */
+function hostRule(request: NextRequest): NextResponse | null {
+  const host = request.headers.get("host") ?? request.nextUrl.host;
+  const kind = hostKindOf(host);
+  if (kind === "other") return null;
+  const path = request.nextUrl.pathname;
+  const under = (p: string) => path === p || path.startsWith(p + "/");
+  const to = (target: PortalKind) => {
+    const url = request.nextUrl.clone();
+    url.host = siblingHost(host, target);
+    return NextResponse.redirect(url);
+  };
+  const here = (pathname: string) => {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname;
+    url.search = "";
+    return NextResponse.redirect(url);
+  };
+
+  if (kind === "admin") {
+    if (under("/school")) return to("erp");
+    if (path === "/") return here("/super-admin");
+  } else if (kind === "erp") {
+    if (under("/super-admin")) return to("admin");
+    if (path === "/") return here("/school");
+  } else {
+    // the public website: the portals and their sign-in pages live on their own addresses
+    if (under("/super-admin")) return to("admin");
+    if (under("/school")) return to("erp");
+    if (under("/login") || under("/reset-password") || under("/change-password")) return to("erp");
+  }
+  return null;
+}
 
 /**
  * Server-side gate for the signed-in areas. It verifies the session with Supabase (not just that a
@@ -7,6 +45,10 @@ import { NextResponse, type NextRequest } from "next/server";
  * Which portal a user belongs in, and what they may do, is still decided by the backend API.
  */
 export async function proxy(request: NextRequest) {
+  const moved = hostRule(request);
+  if (moved) return moved;
+  if (!/^\/(super-admin|school|change-password)(\/|$)/.test(request.nextUrl.pathname)) return NextResponse.next();
+
   const toLogin = () => {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
@@ -43,5 +85,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/super-admin/:path*", "/school/:path*", "/change-password"],
+  // every page (the address rules need to see "/" and "/login"), but not files, images or the API
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml|json)$).*)"],
 };

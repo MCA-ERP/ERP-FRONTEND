@@ -4,18 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { ChevronDown, GraduationCap, UserRound, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
+import { Briefcase, ChevronDown, FileText, Users, GraduationCap, Landmark, UserRound, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
 import { ReportHost } from "@/components/admin/report-host";
 import { Assist } from "@/components/admin/assist";
-import { BUILT, MENU, sectionHref } from "./s/menu";
+import { BUILT, GROUP, MENU, sectionHref } from "./s/menu-config";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
 import LogoutButton from "@/components/logout";
 import { SchoolContext } from "./context";
 
-const nav = [
+const nav: { href: string; label: string; icon: typeof BookOpen; permission?: string; module?: string }[] = [
   { href: "/school/setup", label: "Academic setup", icon: Settings2, permission: "academics.setup.manage" },
-  { href: "/school/students", label: "Students", icon: GraduationCap, module: "student_information" },
   { href: "/school/billing", label: "Billing", icon: ReceiptText, permission: "admin.settings.manage" },
   { href: "/school/support", label: "Support", icon: LifeBuoy, permission: "academics.setup.manage" },
   { href: "/school/help", label: "Help centre", icon: BookOpen },
@@ -93,13 +92,14 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
             <p className="text-[11px] font-medium uppercase tracking-wide text-[#026f9b]">{ctx.user.roleDisplayName ?? ctx.user.role}</p>
           </div>
           <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4">
-            <p className="px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">Overview</p>
-            {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod]) => {
+            {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod], idx, all) => {
               const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
-              const ModIcon = key === "profile" ? UserRound : LayoutDashboard;
+              const ModIcon = key === "profile" ? UserRound : key === "mywork" ? Briefcase : key === "front-office" ? Landmark : key === "admission" ? FileText : key === "students" ? Users : LayoutDashboard;
               const open = shut[key] === undefined ? inside : !shut[key];
+              const heading = idx === 0 || GROUP[all[idx - 1][0]] !== GROUP[key] ? GROUP[key] : "";
               return (
                 <div key={key}>
+                  {heading && <p className="px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">{heading}</p>}
                   <button type="button" aria-expanded={open} onClick={() => setShut({ ...shut, [key]: open })}
                     className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
                     <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />

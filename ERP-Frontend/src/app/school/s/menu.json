@@ -200,6 +200,33 @@
       "title": "Documents"
      }
     ]
+   }
+  ]
+ },
+ "mywork": {
+  "label": "My Work",
+  "sections": [
+   {
+    "key": "my-leave",
+    "label": "My Leave",
+    "pages": [
+     {
+      "key": "apply",
+      "title": "Apply"
+     },
+     {
+      "key": "my-requests",
+      "title": "My Requests"
+     },
+     {
+      "key": "balance-and-policy",
+      "title": "Balance and Policy"
+     },
+     {
+      "key": "comp-off",
+      "title": "Comp-off"
+     }
+    ]
    },
    {
     "key": "my-payslips",
@@ -360,6 +387,24 @@
       "title": "Complaint Report"
      }
     ]
+   },
+   {
+    "key": "help-desk",
+    "label": "Help Desk",
+    "pages": [
+     {
+      "key": "all-tickets",
+      "title": "All Tickets"
+     },
+     {
+      "key": "categories-and-reply-times",
+      "title": "Categories and Reply Times"
+     },
+     {
+      "key": "help-desk-reports",
+      "title": "Help Desk Reports"
+     }
+    ]
    }
   ]
  },
@@ -466,8 +511,8 @@
     "label": "Admission Approval",
     "pages": [
      {
-      "key": "pending-approval",
-      "title": "Pending Approval"
+      "key": "approval-chain",
+      "title": "Approval Chain"
      },
      {
       "key": "approved",
@@ -480,6 +525,10 @@
      {
       "key": "waitlisted",
       "title": "Waitlisted"
+     },
+     {
+      "key": "approval-levels",
+      "title": "Approval Levels"
      }
     ]
    },
@@ -516,6 +565,10 @@
      {
       "key": "registration",
       "title": "Registration"
+     },
+     {
+      "key": "auto-registration",
+      "title": "Auto Registration"
      }
     ]
    },
@@ -606,6 +659,76 @@
       "title": "Rejection Report"
      }
     ]
+   },
+   {
+    "key": "online-application",
+    "label": "Online Application",
+    "pages": [
+     {
+      "key": "eligibility-check",
+      "title": "Eligibility Check"
+     },
+     {
+      "key": "new-application",
+      "title": "New Application"
+     },
+     {
+      "key": "tracker",
+      "title": "Tracker"
+     },
+     {
+      "key": "online-applications",
+      "title": "Online Applications"
+     },
+     {
+      "key": "programme-rules",
+      "title": "Programme Rules"
+     },
+     {
+      "key": "by-programme",
+      "title": "By Programme"
+     }
+    ]
+   },
+   {
+    "key": "merit-and-seats",
+    "label": "Merit and Seats",
+    "pages": [
+     {
+      "key": "merit-list",
+      "title": "Merit List"
+     },
+     {
+      "key": "ranking-rules",
+      "title": "Ranking Rules"
+     },
+     {
+      "key": "seat-matrix",
+      "title": "Seat Matrix"
+     },
+     {
+      "key": "seat-tracking",
+      "title": "Seat Tracking"
+     }
+    ]
+   },
+   {
+    "key": "offers",
+    "label": "Offers",
+    "pages": [
+     {
+      "key": "offer-letters",
+      "title": "Offer Letters"
+     },
+     {
+      "key": "letter-template",
+      "title": "Letter Template"
+     },
+     {
+      "key": "automatic-messages",
+      "title": "Automatic Messages"
+     }
+    ]
    }
   ]
  },
@@ -627,6 +750,10 @@
      {
       "key": "inactive-students",
       "title": "Inactive Students"
+     },
+     {
+      "key": "new-admissions",
+      "title": "New Admissions 2027–28"
      }
     ]
    },
@@ -885,6 +1012,20 @@
       "title": "Status Reports"
      }
     ]
+   },
+   {
+    "key": "alumni",
+    "label": "Alumni",
+    "pages": [
+     {
+      "key": "alumni-directory",
+      "title": "Alumni Directory"
+     },
+     {
+      "key": "add-and-events",
+      "title": "Add and Events"
+     }
+    ]
    }
   ]
  },
@@ -1014,6 +1155,10 @@
      {
       "key": "other-requests",
       "title": "Other Requests"
+     },
+     {
+      "key": "from-the-apps",
+      "title": "From the Apps"
      }
     ]
    },
@@ -1221,6 +1366,14 @@
      {
       "key": "academic-events",
       "title": "Academic Events"
+     },
+     {
+      "key": "school-calendar",
+      "title": "School Calendar"
+     },
+     {
+      "key": "add-to-calendar",
+      "title": "Add to Calendar"
      }
     ]
    },
@@ -1356,6 +1509,10 @@
      {
       "key": "department-wise",
       "title": "Department-wise"
+     },
+     {
+      "key": "geo-check-ins",
+      "title": "Geo Check-ins"
      }
     ]
    },
@@ -1396,6 +1553,10 @@
      {
       "key": "sync-and-exceptions",
       "title": "Sync & Exceptions"
+     },
+     {
+      "key": "parent-alerts",
+      "title": "Parent Alerts"
      }
     ]
    },
@@ -1499,6 +1660,18 @@
      {
       "key": "publish",
       "title": "Publish"
+     },
+     {
+      "key": "ask-in-plain-words",
+      "title": "Ask in Plain Words"
+     },
+     {
+      "key": "auto-generate",
+      "title": "Auto Generate"
+     },
+     {
+      "key": "generation-rules",
+      "title": "Generation Rules"
      }
     ]
    },

@@ -18,24 +18,7 @@ export function PageBar({ years, year, onYear, name }: { years: YearOpt[]; year:
     scope()?.querySelectorAll<HTMLTableRowElement>("tbody tr").forEach((row) => { row.hidden = !!needle && !(row.textContent ?? "").toLowerCase().includes(needle); });
   };
 
-  const print = () => {
-    const tables = Array.from(scope()?.querySelectorAll("table") ?? []);
-    const cells = (t: Element) => Array.from(t.querySelectorAll("tr")).filter((r) => !(r as HTMLElement).hidden)
-      .map((row) => Array.from(row.querySelectorAll("th,td")).filter((c) => !c.querySelector("button, a[href]") || (c.textContent ?? "").trim().length > 12).map((c) => (c.textContent ?? "").replace(/\s+/g, " ").trim())).filter((r) => r.length);
-    const header: string[] = [];
-    const rows: string[][] = [];
-    tables.forEach((t, i) => {
-      const all = cells(t);
-      if (!all.length) return;
-      const title = t.closest("section")?.querySelector("h2")?.textContent?.trim();
-      if (i && rows.length) rows.push([]);
-      if (title && tables.length > 1) rows.push([title]);
-      if (!header.length) { header.push(...all[0]); rows.push(...all.slice(1)); } else rows.push(...all);
-    });
-    if (!rows.length) { window.alert("There is no table on this page to print."); return; }
-    armPrint();
-    downloadCsv(name, header, rows);
-  };
+  const print = () => printScope(scope(), name);
 
   return (
     <div ref={ref} className="mb-5 flex flex-wrap items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-3 py-2.5 print:hidden">
@@ -55,4 +38,24 @@ export function PageBar({ years, year, onYear, name }: { years: YearOpt[]; year:
       </div>
     </div>
   );
+}
+
+/** Prints every table inside the element as one report: the Export / Print window shows a preview first. */
+export function printScope(el: HTMLElement | null, name: string) {
+  const tables = Array.from(el?.querySelectorAll("table") ?? []);
+  const cells = (t: Element) => Array.from(t.querySelectorAll("tr")).filter((r) => !(r as HTMLElement).hidden)
+    .map((row) => Array.from(row.querySelectorAll("th,td")).filter((c) => !c.querySelector("button, a[href]") || (c.textContent ?? "").trim().length > 12).map((c) => (c.textContent ?? "").split(/\s+/).join(" ").trim())).filter((r) => r.length);
+  const header: string[] = [];
+  const rows: string[][] = [];
+  tables.forEach((t, i) => {
+    const all = cells(t);
+    if (!all.length) return;
+    const title = t.closest("section")?.querySelector("h2")?.textContent?.trim();
+    if (i && rows.length) rows.push([]);
+    if (title && tables.length > 1) rows.push([title]);
+    if (!header.length) { header.push(...all[0]); rows.push(...all.slice(1)); } else rows.push(...all);
+  });
+  if (!rows.length) { window.alert("There is no table on this page to print."); return; }
+  armPrint();
+  downloadCsv(name, header, rows);
 }

@@ -10,7 +10,7 @@ import { schoolFetch } from "@/lib/school-api";
 import { downloadCsv } from "./csv";
 import { useDictation } from "./voice";
 import { findNavigation, type NavConfig } from "@/app/super-admin/s/navigate";
-import { MENU as SCHOOL_MENU, BUILT as SCHOOL_BUILT, sectionHref as schoolHref } from "@/app/school/s/menu";
+import { MENU as SCHOOL_MENU, BUILT as SCHOOL_BUILT, sectionHref as schoolHref } from "@/app/school/s/menu-config";
 
 type Cell = string | number | null;
 type Action = { kind: "export"; label: string; name: string; head: string[]; rows: Cell[][]; auto?: boolean } | { kind: "link"; label: string; href: string; go?: boolean };

@@ -9,6 +9,43 @@ import { ComplaintPages, GatePassPages, HelpDeskPages, ReportPages } from "./fo-
 import { AdmissionEnquiryPages, ApplicationPages } from "./adm-pages";
 import { MeritPages, OfferPages, OnlineApplicationPages as OnlinePages } from "./adm-pages4";
 import { AcademicReportPages, ClassPromotionPages, RulesPages } from "./academic-pages4";
+import { AllocationListPage, RoomPages, SubstitutionPages, TeacherTimetablePages, TimetableReportPages, TimetableViewPages } from "./timetable-pages2";
+import { ExamConfigPages } from "./exam-pages";
+import { ExamRegistrationPages, ExamSchedulePages, ExamSetupPages } from "./exam-pages2";
+import { MarksEntryPages, QuestionPages } from "./exam-pages3";
+import { MarksVerificationPages, ReportCardPages, ResultsPages, StudentCard } from "./exam-pages4";
+import { CompetitivePages } from "./exam-pages5";
+import { AssignmentPages, HomeworkPages, LmsReportPages, MaterialPages, OnlineClassPages, OnlineTestPages, SubmissionPages, SyllabusPages } from "./lms-pages";
+import { FeeCollectionPages, FeeConfigPages, FeeStructurePages, StudentFeePages } from "./fee-pages";
+import { BudgetPages, ClaimPages, ReconPages, ReminderRunPages } from "./fee-pages4";
+import { HrFlow, StaffDirectoryPages } from "./hr-pages";
+import { DepartmentPages, DesignationPages, EmployeeRegistrationPages, ProfilePages } from "./hr-pages2";
+import { RecruitmentPages } from "./hr-pages3";
+import { AnalyticsPages, ExitPages, Profile360Pages, VacancyPages } from "./hr-pages5";
+import { BankFilePages, PayrollApprovalPages, PayReportPages, PaySettingsPages, PayslipPages, SalaryPaymentPages } from "./pay-pages2";
+import { VehiclePages } from "./transport-pages";
+import { BusAttendancePages, DriverAppPage, GpsPages, MaintenancePages, RoutePlannerPage, TransportReportPages, TransportSettingsPages } from "./transport-pages3";
+import { BookPages } from "./library-pages";
+import { CopyPages, LibraryMasterPages } from "./library-pages2";
+import { CanteenPage, ChargesPage, HostelComplaintPages, DayMenuPage, HostelFeePages, HostelReportPages, OptInPage } from "./hostel-pages2";
+import { EmergencyPages, EntryExitPages, CampusGatePassPages, PassPages, VisitorRegistrationPages, SecurityReportPages, VerificationPages } from "./visitor-pages";
+import { CertTemplatePages, IssueCertificatePages } from "./cert-pages";
+import { CounsellingPages, HealthRecordsPage, HealthReportPages, MedicationPages, ScreeningPages, WelfarePages } from "./health-pages2";
+import { FirstAidPages, HealthProfilePages, MedicalVisitPages } from "./health-pages";
+import { SurveyPages } from "./survey-pages";
+import { AllocationPages, BedPages, BuildingPages, HostelAttendancePages, HostelRoomPages, MessPages, SetupPages } from "./hostel-pages";
+import { ChatActivityPage, ChatbotPages, CommReportPages, DiaryPages, GalleryPages, ModerationPages, ParentConvPages } from "./comm-pages2";
+import { AnnouncementPages, CircularPages, ComposeForm, MessageLog, NoticePages, TemplateList } from "./comm-pages";
+import { MatchPages, RfqPages, VendorPages } from "./inv-pages2";
+import { AssetPages, GrnPages, InventoryReportPages, OrderPages, RequestPages, StockIssuePages, StockPages, SupplierPages, UpkeepPages } from "./inv-pages";
+import { AvailableReport, IssuePages, ItemPages, LibraryFinePage, LibrarySettingsPages, MembershipPages, ReservationPages } from "./library-pages3";
+import { PendingList } from "./fee-pages2";
+import { AttendantPages, DriverPages, RoutePages, StopPages, StudentAllocationPages, TransportFeePages, VehicleAllocationPages } from "./transport-pages2";
+import { OnboardingPages, ProbationPages } from "./hr-pages6";
+import { AttendanceCalcPages, PayDeductionPages, PayrollProcessingPages, SalaryConfigPages, SalaryStructurePages } from "./pay-pages";
+import { DocumentPages, LeaveHrPages, PerformancePages } from "./hr-pages4";
+import { AccountingPages, CanteenPages, DashboardPages, ExpensePages, ReminderPages, FinReportPages, TallyPages } from "./fee-pages3";
+import { ConcessionPages, FinePages, InstallmentPages, PendingPages, ReceiptPages, RefundPages } from "./fee-pages2";
 import { AttendanceSettingsPages, ClassTimetablePages, TimetableSetupPages } from "./timetable-pages";
 import { AttendanceReportPages, BiometricPages, LeavePages, RfidPages, StaffAttendancePages } from "./attendance-pages2";
 import { AttendanceEntryPages, CorrectionPages, StudentAttendancePages } from "./attendance-pages";
@@ -112,10 +149,171 @@ const table: Record<string, Render> = {
   "attendance/attendance-settings": (p) => <AttendanceSettingsPages tab={p === "late-rules" ? "late-rules" : p === "notification-settings" ? "notification-settings" : "attendance-rules"} key={p} />,
   "timetable/timetable-setup": (p) => <TimetableSetupPages tab={p === "working-days" ? "working-days" : p === "break-times" ? "break-times" : "academic-periods"} key={p} />,
   "timetable/class-timetable": (p) => <ClassTimetablePages tab={(["edit", "view", "publish", "ask-in-plain-words", "auto-generate", "generation-rules"].includes(p) ? p : "create") as "create"} key={p} />,
+  "timetable/teacher-timetable": (p) => <TeacherTimetablePages tab={p === "availability" ? "availability" : "teacher-allocation"} key={p} />,
+  "timetable/room-management": (p) => <RoomPages tab={p === "room-allocation" ? "room-allocation" : "classroom-list"} key={p} />,
+  "timetable/subject-allocation": (p) => <AllocationListPage tab={p === "teacher" ? "teacher" : p === "period-mapping" ? "period-mapping" : "subject"} key={p} />,
+  "timetable/substitution": (p) => <SubstitutionPages tab={p === "free-periods" ? "free-periods" : p === "substitution-history" ? "substitution-history" : p === "smart-assign" ? "smart-assign" : "substitute-teacher"} key={p} />,
+  "timetable/timetable-view": (p) => <TimetableViewPages tab={p === "teacher-wise" ? "teacher-wise" : p === "room-wise" ? "room-wise" : "class-wise"} key={p} />,
+  "timetable/timetable-reports": (p) => <TimetableReportPages tab={p === "period-allocation" ? "period-allocation" : p === "conflicts" ? "conflicts" : "workload"} key={p} />,
+  "examinations/exam-configuration": (p) => <ExamConfigPages tab={p === "grading-system" ? "grading-system" : p === "marks-settings" ? "marks-settings" : "exam-types"} key={p} />,
+  "examinations/exam-setup": (p) => <ExamSetupPages tab={p === "exam-list" ? "exam-list" : p === "edit-exam" ? "edit-exam" : "create-exam"} key={p} />,
+  "examinations/exam-schedule": (p) => <ExamSchedulePages tab={(["date-sheet", "hall-allocation", "generate-date-sheet", "seating-plan"].includes(p) ? p : "subject-schedule") as "subject-schedule"} key={p} />,
+  "examinations/exam-registration": (p) => <ExamRegistrationPages tab={p === "hall-tickets" ? "hall-tickets" : "student-eligibility"} key={p} />,
+  "examinations/question-papers": (p) => <QuestionPages tab={p === "paper-creation" ? "paper-creation" : p === "upload" ? "upload" : "question-bank"} key={p} />,
+  "examinations/marks-entry": (p) => <MarksEntryPages tab={(["bulk-entry", "practical-marks", "internal-assessment", "co-scholastic-grades"].includes(p) ? p : "subject-wise-marks") as "subject-wise-marks"} key={p} />,
+  "examinations/marks-verification": (p) => <MarksVerificationPages tab={p === "correction" ? "correction" : p === "approval" ? "approval" : "verification"} key={p} />,
+  "examinations/results-processing": (p) => <ResultsPages tab={p === "rank-calculation" ? "rank-calculation" : p === "result-analysis" ? "result-analysis" : "grade-calculation"} key={p} />,
+  "examinations/report-cards": (p) => <ReportCardPages tab={(["generate", "preview", "print", "publish", "holistic-progress-card"].includes(p) ? p : "templates") as "templates"} key={p} />,
+  "examinations/examination-reports": (p) => p === "class-results" ? <ResultsPages tab="class-results" key={p} /> : p === "subject-analysis" ? <ResultsPages tab="subject-analysis" key={p} /> : <StudentCard key={p} />,
+  "examinations/competitive-exams": (p) => <CompetitivePages tab={(["test-series", "readiness-analysis", "question-bank", "exam-registrations"].includes(p) ? p : "programmes") as "programmes"} key={p} />,
+  "lms/homework": (p) => <HomeworkPages tab={p === "homework-list" ? "homework-list" : p === "edit" ? "edit" : "create-homework"} key={p} />,
+  "lms/assignment": (p) => <AssignmentPages tab={p === "assign-to-class" ? "assign-to-class" : p === "due-dates" ? "due-dates" : "create-assignment"} key={p} />,
+  "lms/study-materials": (p) => <MaterialPages tab={p === "pdfs" ? "pdfs" : p === "videos" ? "videos" : p === "links" ? "links" : "upload-notes"} key={p} />,
+  "lms/online-classes": (p) => <OnlineClassPages tab={p === "schedule" ? "schedule" : p === "meeting-links" ? "meeting-links" : "create-session"} key={p} />,
+  "lms/online-tests": (p) => <OnlineTestPages tab={p === "question-bank" ? "question-bank" : p === "test-results" ? "test-results" : "create-test"} key={p} />,
+  "lms/student-submissions": (p) => <SubmissionPages tab={p === "pending" ? "pending" : p === "late-submissions" ? "late-submissions" : "submitted"} key={p} />,
+  "lms/evaluation": (p) => <SubmissionPages tab={p === "feedback" ? "feedback" : p === "reassessment" ? "reassessment" : "marks"} key={p} />,
+  "lms/syllabus-tracking": (p) => <SyllabusPages tab={p === "subject-progress" ? "subject-progress" : "chapter-completion"} key={p} />,
+  "lms/lms-reports": (p) => <LmsReportPages tab={p === "student-performance" ? "student-performance" : "assignment-completion"} key={p} />,
+  "fees/fee-configuration": (p) => <FeeConfigPages tab={p === "fee-heads" ? "fee-heads" : p === "fee-groups" ? "fee-groups" : "fee-categories"} key={p} />,
+  "fees/fee-structure": (p) => <FeeStructurePages tab={p === "section-wise" ? "section-wise" : p === "optional-fees" ? "optional-fees" : "class-wise"} key={p} />,
+  "fees/student-fee-assignment": (p) => <StudentFeePages tab={(["bulk", "scholarship", "fee-changes", "new-admissions"].includes(p) ? p : "individual") as "individual"} key={p} />,
+  "fees/fee-collection": (p) => <FeeCollectionPages tab={p === "counter-collection" ? "counter-collection" : p === "online-collection" ? "online-collection" : "collect-fee"} key={p} />,
+  "fees/fee-installments": (p) => <InstallmentPages tab={p === "due-dates" ? "due-dates" : p === "payment-schedule" ? "payment-schedule" : "installment-setup"} key={p} />,
+  "fees/fee-concessions": (p) => <ConcessionPages tab={p === "scholarship" ? "scholarship" : p === "fee-waiver" ? "fee-waiver" : p === "parent-requests" ? "parent-requests" : "discount"} key={p} />,
+  "fees/fine-management": (p) => <FinePages tab={p === "fine-rules" ? "fine-rules" : p === "fine-collection" ? "fine-collection" : "late-fee"} key={p} />,
+  "fees/fee-receipts": (p) => <ReceiptPages tab={p === "print" ? "print" : p === "cancel" ? "cancel" : p === "duplicate" ? "duplicate" : "generate"} key={p} />,
+  "fees/pending-fees": (p) => <PendingPages tab={p === "overdue" ? "overdue" : p === "defaulter-list" ? "defaulter-list" : "outstanding"} key={p} />,
+  "fees/refund-management": (p) => <RefundPages tab={p === "approval" ? "approval" : p === "refund-history" ? "refund-history" : "refund-request"} key={p} />,
+  "fees/expenses": (p) => <ExpensePages tab={p === "add-expense" ? "add-expense" : p === "approval" ? "approval" : "expense-categories"} key={p} />,
+  "fees/accounting": (p) => <AccountingPages tab={p === "vouchers" ? "vouchers" : p === "cash-book" ? "cash-book" : p === "bank-book" ? "bank-book" : "ledger"} key={p} />,
+  "fees/financial-reports": (p) => <FinReportPages tab={p === "outstanding" ? "outstanding" : p === "daily-cash" ? "daily-cash" : p === "monthly-summary" ? "monthly-summary" : "collection"} key={p} />,
+  "fees/tally-export": (p) => <TallyPages tab={p === "ledger-mapping" ? "ledger-mapping" : "export-vouchers"} key={p} />,
+  "fees/canteen-wallet": () => <CanteenPages />,
+  "fees/finance-dashboards": (p) => <DashboardPages tab={p === "ai-insights" ? "ai-insights" : p === "alert-rules" ? "alert-rules" : "leadership-live"} key={p} />,
+  "fees/auto-reminders": (p) => (p === "todays-queue" || p === "reminder-log" || p === "results" ? <ReminderRunPages tab={p} key={p} /> : <ReminderPages tab="reminder-schedule" key={p} />),
+  "fees/reconciliation": (p) => <ReconPages tab={(["gateway-settlements", "payment-matching", "exceptions", "bank-statements", "matching-rules", "audit-log"].includes(p) ? p : "live-status") as "live-status"} key={p} />,
+  "fees/budgets-and-forecasts": (p) => <BudgetPages tab={(["budget-vs-actual", "cash-flow", "fee-income"].includes(p) ? p : "budget-by-head") as "budget-by-head"} key={p} />,
+  "fees/claims-and-advances": (p) => <ClaimPages tab={p === "advances" ? "advances" : p === "claim-rules" ? "claim-rules" : "staff-claims"} key={p} />,
+  "hr/employee-directory": (p) => <HrWrap><StaffDirectoryPages tab={p === "teaching-staff" ? "teaching-staff" : p === "non-teaching-staff" ? "non-teaching-staff" : "all-staff"} key={p} /></HrWrap>,
+  "hr/employee-registration": (p) => <HrWrap><EmployeeRegistrationPages tab={p === "bulk-import" ? "bulk-import" : "add-employee"} key={p} /></HrWrap>,
+  "hr/employee-profile": (p) => <HrWrap><ProfilePages tab={(["contact", "qualification", "experience"].includes(p) ? p : "personal") as "personal"} key={p} /></HrWrap>,
+  "hr/department": (p) => <HrWrap><DepartmentPages tab={p === "add-department" ? "add-department" : "department-list"} key={p} /></HrWrap>,
+  "hr/designation": (p) => <HrWrap><DesignationPages tab={p === "add-designation" ? "add-designation" : "designation-list"} key={p} /></HrWrap>,
+  "hr/recruitment": (p) => <HrWrap><RecruitmentPages tab={(["applications", "interviews", "resume-database", "shortlisting", "background-checks", "offer-letters", "create-offer"].includes(p) ? p : "job-openings") as "job-openings"} key={p} /></HrWrap>,
+  "hr/staff-attendance": (p) => <HrWrap>{p === "biometric" ? <BiometricPages tab="attendance-sync" key={p} /> : <StaffAttendancePages tab={p === "monthly" ? "department-wise" : p === "geo-check-ins" ? "geo-check-ins" : "daily-staff-attendance"} key={p} />}</HrWrap>,
+  "hr/leave-management": (p) => <HrWrap>{p === "applications" ? <LeavePages tab="staff-leave" key={p} /> : <LeaveHrPages tab={(["approvals", "leave-balance", "policy-rules", "comp-off"].includes(p) ? p : "leave-types") as "approvals"} key={p} />}</HrWrap>,
+  "hr/staff-exit": (p) => <HrWrap><ExitPages tab={(["exit-approval", "relieving", "clearance", "full-and-final"].includes(p) ? p : "resignation") as "resignation"} key={p} /></HrWrap>,
+  "hr/hr-reports": (p) => <HrWrap>{p === "attendance" ? <StaffAttendancePages tab="department-wise" key={p} /> : p === "leave" ? <LeavePages tab="staff-leave" key={p} /> : p === "recruitment" ? <RecruitmentPages tab="applications" key={p} /> : <StaffDirectoryPages tab="all-staff" key={p} />}</HrWrap>,
+  "hr/employee-360": () => <HrWrap><Profile360Pages /></HrWrap>,
+  "hr/hr-analytics-and-compliance": (p) => <HrWrap><AnalyticsPages tab={p === "compliance-calendar" ? "compliance-calendar" : p === "scheduled-reports" ? "scheduled-reports" : "hr-analytics"} key={p} /></HrWrap>,
+  "hr/vacancies": (p) => <HrWrap><VacancyPages tab={p === "sanctioned-posts" ? "sanctioned-posts" : p === "request-a-vacancy" ? "request-a-vacancy" : "vacancy-requests"} key={p} /></HrWrap>,
+  "hr/onboarding": (p) => <HrWrap><OnboardingPages tab={p === "joining-checklist" ? "joining-checklist" : "new-joiners"} key={p} /></HrWrap>,
+  "hr/probation": (p) => <HrWrap>{p === "probation-review" ? <PerformancePages tab="reviews" key={p} /> : <ProbationPages key={p} />}</HrWrap>,
+  "payroll/salary-configuration": (p) => <HrWrap><SalaryConfigPages tab={p === "allowances" ? "allowances" : p === "deductions" ? "deductions" : "salary-heads"} key={p} /></HrWrap>,
+  "payroll/salary-structure": (p) => <HrWrap>{p === "designation-wise" ? <DesignationPages tab="designation-list" key={p} /> : <SalaryStructurePages tab={p === "employee-wise" ? "employee-wise" : "assign-structure"} key={p} />}</HrWrap>,
+  "payroll/payroll-processing": (p) => <HrWrap><PayrollProcessingPages tab={p === "generate-payroll" ? "generate-payroll" : "monthly-payroll"} key={p} /></HrWrap>,
+  "payroll/attendance-calculation": (p) => <HrWrap><AttendanceCalcPages tab={p === "paid-leave" ? "paid-leave" : p === "loss-of-pay" ? "loss-of-pay" : "working-days"} key={p} /></HrWrap>,
+  "payroll/payroll-approval": (p) => <HrWrap><PayrollApprovalPages tab={p === "finance-approval" ? "finance-approval" : p === "approval-history" ? "approval-history" : "hr-verification"} key={p} /></HrWrap>,
+  "payroll/payslips": (p) => <HrWrap><PayslipPages tab={p === "preview" ? "preview" : p === "print" ? "print" : p === "download" ? "download" : "generate"} key={p} /></HrWrap>,
+  "payroll/salary-payments": (p) => <HrWrap><SalaryPaymentPages tab={p === "payment-status" ? "payment-status" : "payment-register"} key={p} /></HrWrap>,
+  "payroll/payroll-reports": (p) => <HrWrap>{p === "annual-payroll" || p === "deduction-report" ? <PayReportPages tab={p} key={p} /> : <PayrollProcessingPages tab="monthly-payroll" key={p} />}</HrWrap>,
+  "payroll/payroll-settings": (p) => <HrWrap><PaySettingsPages tab={p === "tax-rules" ? "tax-rules" : p === "payroll-policies" ? "payroll-policies" : "salary-cycle"} key={p} /></HrWrap>,
+  "payroll/bank-and-statutory-files": (p) => <HrWrap><BankFilePages tab={p === "pf-ecr" ? "pf-ecr" : p === "esi" ? "esi" : p === "pt-and-tds" ? "pt-and-tds" : "bank-transfer-file"} key={p} /></HrWrap>,
+  "transport/driver-management": (p) => <DriverPages tab={p === "license" ? "license" : p === "documents" ? "documents" : "driver-registration"} key={p} />,
+  "transport/attendant-management": (p) => <AttendantPages tab={p === "staff-allocation" ? "staff-allocation" : "add-attendant"} key={p} />,
+  "transport/route-management": (p) => <RoutePages tab={p === "route-list" ? "route-list" : p === "route-details" ? "route-details" : "add-route"} key={p} />,
+  "transport/stop-management": (p) => <StopPages tab={p === "stop-sequence" ? "stop-sequence" : p === "stop-timings" ? "stop-timings" : "add-stop"} key={p} />,
+  "transport/student-allocation": (p) => <StudentAllocationPages tab={p === "assign-stop" ? "assign-stop" : p === "transfer-route" ? "transfer-route" : "assign-route"} key={p} />,
+  "transport/vehicle-allocation": (p) => <VehicleAllocationPages tab={p === "driver-to-vehicle" ? "driver-to-vehicle" : "vehicle-to-route"} key={p} />,
+  "transport/transport-fees": (p) => p === "pending-fees" ? <PendingList kind="outstanding" key={p} /> : <TransportFeePages tab={p === "collection" ? "collection" : "fee-structure"} key={p} />,
+  "transport/gps-tracking": (p) => <GpsPages tab={p === "trip-history" ? "trip-history" : p === "device-status" ? "device-status" : "live-tracking"} key={p} />,
+  "transport/maintenance": (p) => <MaintenancePages tab={p === "repairs" ? "repairs" : p === "insurance" ? "insurance" : "service-schedule"} key={p} />,
+  "transport/transport-reports": (p) => <TransportReportPages tab={p === "vehicle-wise" ? "vehicle-wise" : p === "student-wise" ? "student-wise" : "route-wise"} key={p} />,
+  "transport/transport-settings": (p) => <TransportSettingsPages tab={p === "notifications" ? "notifications" : p === "route-rules" ? "route-rules" : "capacity"} key={p} />,
+  "transport/driver-app": () => <DriverAppPage />,
+  "transport/route-planner": () => <RoutePlannerPage />,
+  "transport/bus-attendance": (p) => <BusAttendancePages tab={p === "missed-boardings" ? "missed-boardings" : "trip-roster"} key={p} />,
+  "library/book-categories": (p) => <LibraryMasterPages kind="categories" tab={p === "add-category" ? "add" : "list"} key={p} />,
+  "library/publishers": (p) => <LibraryMasterPages kind="publishers" tab={p === "add-publisher" ? "add" : "list"} key={p} />,
+  "library/authors": (p) => <LibraryMasterPages kind="authors" tab={p === "add-author" ? "add" : "list"} key={p} />,
+  "library/book-copies": (p) => <CopyPages tab={p === "barcode" ? "barcode" : "accession-number"} key={p} />,
+  "library/membership": (p) => <MembershipPages tab={p === "staff-membership" ? "staff-membership" : "student-membership"} key={p} />,
+  "library/book-issue": (p) => <IssuePages tab={p === "issue-history" ? "issue-history" : "issue-book"} key={p} />,
+  "library/book-return": (p) => <IssuePages tab={p === "renewal" ? "renewal" : "return-book"} key={p} />,
+  "library/reservation": (p) => <ReservationPages tab={p === "reservation-queue" ? "reservation-queue" : "book-reservation"} key={p} />,
+  "library/fine-management": (p) => (p === "fine-collection" ? <LibraryFinePage key={p} /> : <LibrarySettingsPages tab="fine-rules" key={p} />),
+  "library/library-reports": (p) => (p === "issued" || p === "overdue" || p === "lost" ? <IssuePages tab={p} key={p} /> : <AvailableReport key={p} />),
+  "library/library-settings": (p) => <LibrarySettingsPages tab={p === "return-period" ? "return-period" : p === "fine-rules" ? "fine-rules" : "issue-limits"} key={p} />,
+  "inventory/supplier-management": (p) => <SupplierPages tab={p === "add-supplier" ? "add-supplier" : "supplier-list"} key={p} />,
+  "inventory/purchase-requests": (p) => <RequestPages tab={p === "pending-requests" ? "pending-requests" : "new-request"} key={p} />,
+  "inventory/purchase-orders": (p) => <OrderPages tab={p === "po-list" ? "po-list" : p === "approval" ? "approval" : "create-po"} key={p} />,
+  "inventory/goods-receipt": (p) => <GrnPages tab={p === "grn" ? "grn" : "receive-stock"} key={p} />,
+  "inventory/stock-management": (p) => <StockPages tab={p === "stock-adjustment" ? "stock-adjustment" : "available-stock"} key={p} />,
+  "inventory/stock-issue": (p) => <StockIssuePages tab={p === "issue-to-staff" ? "issue-to-staff" : "issue-to-department"} key={p} />,
+  "inventory/asset-management": (p) => <AssetPages tab={p === "asset-allocation" ? "asset-allocation" : "asset-register"} key={p} />,
+  "inventory/maintenance": (p) => <UpkeepPages tab={p === "service-schedule" ? "service-schedule" : "repairs"} key={p} />,
+  "inventory/reports": (p) => <InventoryReportPages tab={(["purchase", "asset", "consumption", "store-sales"].includes(p) ? p : "stock") as "stock"} key={p} />,
+  "inventory/vendor-management": (p) => <VendorPages tab={p === "scorecards" ? "scorecards" : "onboarding-and-checks"} key={p} />,
+  "inventory/quotations": (p) => <RfqPages tab={p === "comparison-sheet" ? "comparison-sheet" : "requests-for-quotation"} key={p} />,
+  "inventory/invoice-matching": () => <MatchPages />,
+  "communication/circulars": (p) => <CircularPages tab={(["publish", "archive", "templates"].includes(p) ? p : "create-circular") as "publish"} key={p} />,
+  "communication/announcements": (p) => <AnnouncementPages tab={p === "schedule" ? "schedule" : p === "publish" ? "publish" : "create"} key={p} />,
+  "communication/notice-board": (p) => <NoticePages tab={p === "staff-notices" ? "Staff" : p === "parent-notices" ? "Parent" : "Student"} key={p} />,
+  "communication/email": (p) => (p === "templates" ? <TemplateList key={p} /> : p === "sent-history" ? <MessageLog channel="Email" key={p} /> : <ComposeForm channel="Email" title="New Email" send="Send email" key={p} />),
+  "communication/sms": (p) => (p === "templates" ? <TemplateList key={p} /> : p === "delivery-reports" ? <MessageLog channel="SMS" key={p} /> : <ComposeForm channel="SMS" title="New SMS" send="Send sms" key={p} />),
+  "communication/whatsapp": (p) => (p === "campaigns" || p === "delivery-status" ? <MessageLog channel="WhatsApp" key={p} /> : <TemplateList key={p} />),
+  "communication/in-app-notifications": (p) => (p === "notification-history" ? <MessageLog channel="In-App" key={p} /> : <ComposeForm channel="In-App" title="New notification" send="Send notification" key={p} />),
+  "communication/school-diary": (p) => <DiaryPages tab={(["teacher-remarks", "parent-acknowledgement", "templates"].includes(p) ? p : "class-diary") as "templates"} key={p} />,
+  "communication/parent-communication": (p) => <ParentConvPages tab={p === "teacher-replies" ? "teacher-replies" : "parent-messages"} key={p} />,
+  "communication/communication-reports": (p) => <CommReportPages tab={p === "delivered" ? "delivered" : p === "failed" ? "failed" : "sent"} key={p} />,
+  "communication/chatbot": (p) => <ChatbotPages tab={(["unanswered-questions", "faqs", "ratings-and-topics"].includes(p) ? p : "conversations") as "faqs"} key={p} />,
+  "communication/photo-gallery": (p) => <GalleryPages tab={(["create-album", "pending-approval", "photo-consent"].includes(p) ? p : "albums") as "albums"} key={p} />,
+  "communication/chat-moderation": (p) => (p === "chat-activity" ? <ChatActivityPage key={p} /> : <ModerationPages tab={p === "chat-rules" ? "chat-rules" : "reported-messages"} key={p} />),
+  "communication/surveys-and-feedback": (p) => <SurveyPages tab={(["create-survey", "survey-results", "teacher-feedback"].includes(p) ? p : "surveys") as "surveys"} key={p} />,
+  "hostel/hostel-setup": (p) => <SetupPages tab={p === "add-hostel" ? "add-hostel" : "hostel-list"} key={p} />,
+  "hostel/building-management": (p) => <BuildingPages tab={p === "floors" ? "floors" : "buildings"} key={p} />,
+  "hostel/room-management": (p) => <HostelRoomPages tab={p === "room-types" ? "room-types" : "room-list"} key={p} />,
+  "hostel/bed-management": (p) => <BedPages tab={p === "availability" ? "availability" : "bed-list"} key={p} />,
+  "hostel/student-allocation": (p) => <AllocationPages tab={p === "room-transfer" ? "room-transfer" : "room-allocation"} key={p} />,
+  "hostel/hostel-attendance": (p) => <HostelAttendancePages tab={p === "outing-register" ? "outing-register" : "daily-attendance"} key={p} />,
+  "hostel/mess-management": (p) => (p === "daily-menu" ? <DayMenuPage key={p} /> : p === "opt-in-requests" ? <OptInPage key={p} /> : p === "mess-charges" ? <ChargesPage key={p} /> : <MessPages tab={(["hostel-menu", "day-scholar-mess", "meal-plans"].includes(p) ? p : "meal-plans") as "meal-plans"} key={p} />),
+  "hostel/hostel-complaints": (p) => <HostelComplaintPages tab={p === "assignment" ? "assignment" : p === "resolution" ? "resolution" : "new-complaint"} key={p} />,
+  "hostel/hostel-fees": (p) => <HostelFeePages tab={p === "collection" ? "collection" : "fee-structure"} key={p} />,
+  "hostel/hostel-reports": (p) => <HostelReportPages tab={p === "attendance" ? "attendance" : p === "fee-reports" ? "fee-reports" : "occupancy"} key={p} />,
+  "hostel/canteen-counter": () => <CanteenPage />,
+  "visitors/visitor-registration": (p) => <VisitorRegistrationPages tab={p === "visitor-list" ? "visitor-list" : "new-visitor"} key={p} />,
+  "visitors/visitor-verification": (p) => <VerificationPages tab={p === "approval" ? "approval" : "identity-verification"} key={p} />,
+  "visitors/visitor-pass": (p) => <PassPages tab={p === "print" ? "print" : p === "cancel" ? "cancel" : "generate"} key={p} />,
+  "visitors/entry-exit": (p) => <EntryExitPages tab={p === "exit-register" ? "exit-register" : "entry-register"} key={p} />,
+  "visitors/student-gate-pass": (p) => <CampusGatePassPages kind="Student" tab={p === "approval" ? "approval" : p === "issue" ? "issue" : "request"} key={p} />,
+  "visitors/staff-gate-pass": (p) => <CampusGatePassPages kind="Staff" tab={p === "approval" ? "approval" : "request"} key={p} />,
+  "visitors/emergency-register": (p) => <EmergencyPages tab={p === "incident-register" ? "incident-register" : "emergency-contacts"} key={p} />,
+  "visitors/security-reports": (p) => <SecurityReportPages tab={p === "gate-pass" ? "gate-pass" : p === "incident-reports" ? "incident-reports" : "visitor"} key={p} />,
+  "health/student-health-profiles": (p) => <HealthProfilePages tab={(["emergency-contacts", "vaccination-records", "parent-updates"].includes(p) ? p : "medical-information") as "parent-updates"} key={p} />,
+  "health/medical-visits": (p) => <MedicalVisitPages tab={p === "visit-history" ? "visit-history" : "new-visit"} key={p} />,
+  "health/first-aid": (p) => (p === "incident-details" ? <HealthRecordsPage key={p} /> : <FirstAidPages tab="first-aid-register" key={p} />),
+  "health/health-screening": (p) => <ScreeningPages tab={(["weight", "vision", "health-checkups"].includes(p) ? p : "height") as "height"} key={p} />,
+  "health/medication-register": (p) => <MedicationPages tab={p === "administration-logs" ? "administration-logs" : "medication-records"} key={p} />,
+  "health/counselling": (p) => <CounsellingPages tab={p === "session-records" ? "session-records" : p === "follow-up" ? "follow-up" : "appointment"} key={p} />,
+  "health/student-welfare": (p) => <WelfarePages tab={p === "support-actions" ? "support-actions" : "welfare-cases"} key={p} />,
+  "health/health-reports": (p) => <HealthReportPages tab={p === "incidents" ? "incidents" : p === "screening" ? "screening" : "medical-visits"} key={p} />,
+  "certificates/certificate-templates": (p) => <CertTemplatePages tab={p === "edit-template" ? "edit-template" : "add-template"} key={p} />,
+  "certificates/bonafide-certificate": (p) => <IssueCertificatePages kind="Bonafide" tab={p === "preview" ? "preview" : p === "print" ? "print" : "generate"} key={p} />,
+  "certificates/study-certificate": (p) => <IssueCertificatePages kind="Study" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
+  "certificates/conduct-certificate": (p) => <IssueCertificatePages kind="Conduct" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
+  "certificates/character-certificate": (p) => <IssueCertificatePages kind="Character" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
+  "inventory/item-management": (p) => <ItemPages tab={p === "add-item" ? "add-item" : p === "item-categories" ? "item-categories" : "item-list"} key={p} />,
+  "library/book-management": (p) => <BookPages tab={p === "book-list" ? "book-list" : p === "edit-book" ? "edit-book" : "add-book"} key={p} />,
+  "transport/vehicle-management": (p) => <VehiclePages tab={p === "vehicle-list" ? "vehicle-list" : p === "vehicle-documents" ? "vehicle-documents" : "add-vehicle"} key={p} />,
+  "payroll/deductions": (p) => <HrWrap><PayDeductionPages tab={p === "esi" ? "esi" : p === "professional-tax" ? "professional-tax" : p === "other-applicable-deductions" ? "other-applicable-deductions" : "pf"} key={p} /></HrWrap>,
+  "hr/staff-documents": (p) => <HrWrap><DocumentPages tab={p === "id-proof" ? "id-proof" : p === "contracts" ? "contracts" : "certificates"} key={p} /></HrWrap>,
+  "hr/staff-performance": (p) => <HrWrap><PerformancePages tab={(["reviews", "ratings", "360-feedback", "competency-matrix", "increment-recommendation", "kpis-and-kras", "appraisal-cycle"].includes(p) ? p : "appraisals") as "appraisals"} key={p} /></HrWrap>,
   "admission/student-registration": (p) => <RegistrationPages tab={p === "student-id" ? "student-id" : p === "registration" ? "registration" : p === "auto-registration" ? "auto-registration" : "generate-admission-number"} key={p} />,
   "front-office/postal-management": (p) => <PostPages tab={p === "outgoing-post" ? "outgoing-post" : p === "post-register" ? "post-register" : "incoming-post"} key={p} />,
 };
 
+const HrWrap = ({ children }: { children: ReactNode }) => <><HrFlow />{children}</>;
 export function renderPage(module: string, section: string, page: string): ReactNode {
   const render = table[`${module}/${section}`];
   return render ? render(page) : null;

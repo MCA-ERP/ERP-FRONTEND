@@ -4,21 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Briefcase, ChevronDown, FileText, Users, GraduationCap, Landmark, UserRound, LayoutDashboard, LifeBuoy, ReceiptText, Settings2, BookOpen } from "lucide-react";
+import { Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { ReportHost } from "@/components/admin/report-host";
 import { Assist } from "@/components/admin/assist";
 import { BUILT, GROUP, MENU, sectionHref } from "./s/menu-config";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
-import LogoutButton from "@/components/logout";
+import { UserMenu } from "./user-menu";
 import { SchoolContext } from "./context";
 
-const nav: { href: string; label: string; icon: typeof BookOpen; permission?: string; module?: string }[] = [
-  { href: "/school/setup", label: "Academic setup", icon: Settings2, permission: "academics.setup.manage" },
-  { href: "/school/billing", label: "Billing", icon: ReceiptText, permission: "admin.settings.manage" },
-  { href: "/school/support", label: "Support", icon: LifeBuoy, permission: "academics.setup.manage" },
-  { href: "/school/help", label: "Help centre", icon: BookOpen },
-];
+const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, profile: UserRound, mywork: Briefcase, "front-office": Landmark, admission: FileText, students: Users, parents: UsersRound, academics: GraduationCap, attendance: CalendarCheck, timetable: Clock, examinations: ClipboardCheck, lms: Monitor, fees: IndianRupee, hr: Briefcase, payroll: Wallet, transport: Bus, library: Library, inventory: Package, communication: MessageSquare, hostel: BedDouble, visitors: ShieldCheck, health: HeartPulse, certificates: Award, activities: Trophy, reports: BarChart3, settings: Settings };
 
 export default function SchoolLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -79,8 +75,6 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   }
   if (!ctx) return <div className="flex min-h-screen items-center justify-center text-sm text-slate-400">Loading your school…</div>;
 
-  const items = nav.filter((n) => (!n.permission || ctx.can(n.permission)) && (!n.module || ctx.hasModule(n.module)));
-
   return (
     <SchoolContext.Provider value={ctx}>
       <div className="min-h-screen bg-mca-cloud lg:flex">
@@ -94,7 +88,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
           <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4">
             {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod], idx, all) => {
               const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
-              const ModIcon = key === "profile" ? UserRound : key === "mywork" ? Briefcase : key === "front-office" ? Landmark : key === "admission" ? FileText : key === "students" ? Users : LayoutDashboard;
+              const ModIcon = ICONS[key] ?? LayoutDashboard;
               const open = shut[key] === undefined ? inside : !shut[key];
               const heading = idx === 0 || GROUP[all[idx - 1][0]] !== GROUP[key] ? GROUP[key] : "";
               return (
@@ -118,26 +112,10 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
                 </div>
               );
             })}
-            <p className="px-2 pb-1 pt-4 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">More</p>
-            {items.map(({ href, label, icon: Icon }) => {
-              const active = pathname.startsWith(href);
-              return (
-                <Link key={href} href={href} aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-3 rounded-full px-3 py-2 text-[13.5px] ${active ? "bg-white font-semibold text-slate-900 shadow-sm" : "font-medium text-slate-800 hover:bg-white/50"}`}>
-                  <Icon className="size-[18px]" aria-hidden="true" />
-                  {label}
-                </Link>
-              );
-            })}
           </nav>
+          <UserMenu name={ctx.user.fullName ?? ctx.user.email} email={ctx.user.email} role={ctx.user.roleDisplayName ?? ctx.user.role} />
         </aside>
         <div className="min-w-0 flex-1">
-          <header className="flex items-center justify-between gap-3 border-b border-slate-200 bg-white px-6 py-3">
-            <p className="text-sm text-slate-500">
-              Signed in as <span className="font-semibold text-slate-800">{ctx.user.email}</span>
-            </p>
-            <LogoutButton />
-          </header>
           <main className="mx-auto max-w-6xl p-6">{children}</main>
         </div>
       </div>

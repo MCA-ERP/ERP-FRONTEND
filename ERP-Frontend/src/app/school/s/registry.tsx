@@ -30,6 +30,13 @@ import { CopyPages, LibraryMasterPages } from "./library-pages2";
 import { CanteenPage, ChargesPage, HostelComplaintPages, DayMenuPage, HostelFeePages, HostelReportPages, OptInPage } from "./hostel-pages2";
 import { EmergencyPages, EntryExitPages, CampusGatePassPages, PassPages, VisitorRegistrationPages, SecurityReportPages, VerificationPages } from "./visitor-pages";
 import { CertTemplatePages, IssueCertificatePages } from "./cert-pages";
+import { SettingsApprovalPages, AuditPages, CommSettingsPages, DocumentSettingsPages, DpdpPages, IntegrationPage, NotificationPages, RolePages, UserPages } from "./settings-pages2";
+import { AcademicPages, SchoolAttendanceSettings, CampusPages, ClassConfigPages, ExamSettingsPages, FeeSettingsPages, TimingPages } from "./settings-pages";
+import { CustomReportPages, ExportCenterPages, LibraryBooksReport, SchoolProfilePages } from "./report-pages2";
+import { AcademicReports, AttendanceReports, ExamReports, FeeReports, HrReports, StudentReports } from "./report-pages";
+import { ActReportPages, AwardPages, ClubPages, CompetitionPages, CulturalPages, EventCommPages, EventMgmtPages, HousePages, SportsPages } from "./act-pages";
+import { AddEventPage, CertRegisterPage, RepoDocumentPages, ReportsPage as CertReportsPage, CertVerificationPages } from "./cert-pages2";
+import { OnlineApplicationPages as ProgrammeRulesView } from "./adm-pages3";
 import { CounsellingPages, HealthRecordsPage, HealthReportPages, MedicationPages, ScreeningPages, WelfarePages } from "./health-pages2";
 import { FirstAidPages, HealthProfilePages, MedicalVisitPages } from "./health-pages";
 import { SurveyPages } from "./survey-pages";
@@ -300,9 +307,53 @@ const table: Record<string, Render> = {
   "health/health-reports": (p) => <HealthReportPages tab={p === "incidents" ? "incidents" : p === "screening" ? "screening" : "medical-visits"} key={p} />,
   "certificates/certificate-templates": (p) => <CertTemplatePages tab={p === "edit-template" ? "edit-template" : "add-template"} key={p} />,
   "certificates/bonafide-certificate": (p) => <IssueCertificatePages kind="Bonafide" tab={p === "preview" ? "preview" : p === "print" ? "print" : "generate"} key={p} />,
-  "certificates/study-certificate": (p) => <IssueCertificatePages kind="Study" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
-  "certificates/conduct-certificate": (p) => <IssueCertificatePages kind="Conduct" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
-  "certificates/character-certificate": (p) => <IssueCertificatePages kind="Character" tab={p === "issue-register" ? "issue-register" : "generate"} key={p} />,
+  "certificates/study-certificate": (p) => (p === "issue-register" ? <CertRegisterPage kind="Study" exportName="study-certificates" key={p} /> : <IssueCertificatePages kind="Study" tab="generate" key={p} />),
+  "certificates/conduct-certificate": (p) => (p === "issue-register" ? <CertRegisterPage kind="Conduct" exportName="conduct-certificates" key={p} /> : <IssueCertificatePages kind="Conduct" tab="generate" key={p} />),
+  "certificates/character-certificate": (p) => (p === "issue-register" ? <CertRegisterPage kind="Character" exportName="character-certificates" key={p} /> : <IssueCertificatePages kind="Character" tab="generate" key={p} />),
+  "certificates/transfer-certificate": (p) => (p === "approval" ? <CertRegisterPage status="Pending" approve exportName="approvals" key={p} /> : p === "generate" ? <IssueCertificatePages kind="Transfer" tab="generate" key={p} /> : <CertRegisterPage kind="Transfer" apply="Transfer" exportName="transfer-applications" key={p} />),
+  "certificates/custom-certificates": (p) => (p === "generate" ? <IssueCertificatePages kind="Custom" tab="generate" key={p} /> : <CertTemplatePages tab="add-template" title="Design Template" key={p} />),
+  "certificates/document-repository": (p) => <RepoDocumentPages tab={p === "staff-documents" ? "staff-documents" : "student-documents"} key={p} />,
+  "certificates/verification": (p) => (p === "programme-rules" ? <ProgrammeRulesView tab="programme-rules" key={p} /> : <CertVerificationPages tab={p === "verification-status" ? "verification-status" : "certificate-number"} key={p} />),
+  "certificates/reports": (p) => <CertReportsPage tab={p === "pending-applications" ? "pending-applications" : "issued-certificates"} key={p} />,
+  "activities/school-events": (p) => (p === "event-calendar" ? <CalendarPages tab="school-calendar" key={p} /> : <AddEventPage key={p} />),
+  "activities/sports": (p) => <SportsPages tab={p === "team-allocation" ? "team-allocation" : "sports-list"} key={p} />,
+  "activities/competitions": (p) => <CompetitionPages tab={p === "registration" ? "registration" : p === "results" ? "results" : "competition-setup"} key={p} />,
+  "activities/clubs": (p) => <ClubPages tab={p === "membership" ? "membership" : "club-list"} key={p} />,
+  "activities/cultural-activities": (p) => <CulturalPages tab={p === "participation" ? "participation" : "activities"} key={p} />,
+  "activities/achievements": (p) => <AwardPages tab={p === "staff-awards" ? "staff-awards" : "student-awards"} key={p} />,
+  "activities/event-communication": (p) => <EventCommPages tab={p === "notices" ? "notices" : "invitations"} key={p} />,
+  "activities/reports": (p) => <ActReportPages tab={p === "achievements" ? "achievements" : "participation"} key={p} />,
+  "activities/houses": (p) => <HousePages tab={p === "award-points" ? "award-points" : "standings"} key={p} />,
+  "activities/event-management": (p) => <EventMgmtPages tab={(["volunteers-and-duties", "event-budget", "event-attendance"].includes(p) ? p : "registrations-and-rsvp") as "event-budget"} key={p} />,
+  "reports/student-reports": (p) => <StudentReports tab={p === "student-strength" ? "student-strength" : p === "transfer" ? "transfer" : "admission"} key={p} />,
+  "reports/academic-reports": (p) => <AcademicReports tab={p === "subject" ? "subject" : p === "syllabus-progress" ? "syllabus-progress" : "class"} key={p} />,
+  "reports/attendance-reports": (p) => <AttendanceReports tab={p === "staff" ? "staff" : p === "class-wise" ? "class-wise" : "student"} key={p} />,
+  "reports/examination-reports": (p) => <ExamReports tab={p === "ranks" ? "ranks" : p === "grade-analysis" ? "grade-analysis" : "results"} key={p} />,
+  "reports/fee-reports": (p) => <FeeReports tab={p === "dues" ? "dues" : p === "concessions" ? "concessions" : "collection"} key={p} />,
+  "reports/hr-reports": (p) => <HrReports tab={p === "attendance" ? "attendance" : p === "leave" ? "leave" : "staff-strength"} key={p} />,
+  "reports/payroll-reports": (p) => <HrWrap>{p === "deductions" ? <PayReportPages tab="deduction-report" key={p} /> : p === "payment" ? <SalaryPaymentPages tab="payment-register" key={p} /> : <><SalaryStructurePages tab="assign-structure" key="a" /><SalaryStructurePages tab="employee-wise" key="b" /></>}</HrWrap>,
+  "reports/transport-reports": (p) => <TransportReportPages tab={p === "vehicles" ? "vehicle-wise" : p === "allocation" ? "student-wise" : "route-wise"} key={p} />,
+  "reports/library-reports": (p) => (p === "issues" || p === "returns" ? <IssuePages tab="issue-history" key={p} /> : <LibraryBooksReport key={p} />),
+  "reports/inventory-reports": (p) => <InventoryReportPages tab={p === "purchases" ? "purchase" : p === "assets" ? "asset" : "stock"} key={p} />,
+  "reports/custom-reports": (p) => <CustomReportPages tab={p === "saved-reports" ? "saved-reports" : "report-builder"} key={p} />,
+  "reports/export-center": (p) => <ExportCenterPages tab={p === "pdf" ? "pdf" : p === "csv" ? "csv" : p === "print" ? "print" : "excel"} key={p} />,
+  "settings/school-profile": (p) => <SchoolProfilePages tab={p === "address" ? "address" : p === "logo" ? "logo" : "general-details"} key={p} />,
+  "settings/campuses": (p) => <CampusPages tab={p === "campus-settings" ? "campus-settings" : "campus-details"} key={p} />,
+  "settings/academic-settings": (p) => <AcademicPages tab={p === "board" ? "board" : p === "medium" ? "medium" : "academic-year"} key={p} />,
+  "settings/school-timings": (p) => <TimingPages tab={p === "periods" ? "periods" : p === "breaks" ? "breaks" : "working-days"} key={p} />,
+  "settings/class-configuration": (p) => <ClassConfigPages tab={p === "section" ? "section" : p === "subject" ? "subject" : "class"} key={p} />,
+  "settings/fee-settings": (p) => <FeeSettingsPages tab={(["application-fee", "installments", "payment-options"].includes(p) ? p : "fee-rules") as "installments"} key={p} />,
+  "settings/attendance-settings": (p) => <SchoolAttendanceSettings tab={p === "notifications" ? "notifications" : "attendance-rules"} key={p} />,
+  "settings/examination-settings": (p) => <ExamSettingsPages tab={p === "marks" ? "marks" : p === "result-rules" ? "result-rules" : "grading"} key={p} />,
+  "settings/communication-settings": (p) => <CommSettingsPages tab={p === "email" ? "email" : p === "whatsapp" ? "whatsapp" : "sms"} key={p} />,
+  "settings/integrations": () => <IntegrationPage />,
+  "settings/user-management": (p) => <UserPages tab={p === "activate" ? "activate" : p === "deactivate" ? "deactivate" : "create-user"} key={p} />,
+  "settings/roles-and-permissions": (p) => <RolePages tab={p === "permission-assignment" ? "permission-assignment" : "role-setup"} key={p} />,
+  "settings/approval-workflow": (p) => <SettingsApprovalPages tab={p === "approval-routing" ? "approval-routing" : "approval-levels"} key={p} />,
+  "settings/notification-settings": (p) => <NotificationPages tab={p === "trigger-rules" ? "trigger-rules" : "templates"} key={p} />,
+  "settings/document-settings": (p) => <DocumentSettingsPages tab={p === "numbering" ? "numbering" : "certificate-templates"} key={p} />,
+  "settings/audit-and-activity": (p) => <AuditPages tab={p === "change-history" ? "change-history" : "audit-logs"} key={p} />,
+  "settings/data-protection-dpdp": (p) => <DpdpPages tab={p === "data-requests" ? "data-requests" : "consent-register"} key={p} />,
   "inventory/item-management": (p) => <ItemPages tab={p === "add-item" ? "add-item" : p === "item-categories" ? "item-categories" : "item-list"} key={p} />,
   "library/book-management": (p) => <BookPages tab={p === "book-list" ? "book-list" : p === "edit-book" ? "edit-book" : "add-book"} key={p} />,
   "transport/vehicle-management": (p) => <VehiclePages tab={p === "vehicle-list" ? "vehicle-list" : p === "vehicle-documents" ? "vehicle-documents" : "add-vehicle"} key={p} />,

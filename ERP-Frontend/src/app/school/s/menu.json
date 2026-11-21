@@ -4770,6 +4770,42 @@
             "title": "Achievements"
           }
         ]
+      },
+      {
+        "key": "houses",
+        "label": "Houses",
+        "pages": [
+          {
+            "key": "standings",
+            "title": "Standings"
+          },
+          {
+            "key": "award-points",
+            "title": "Award Points"
+          }
+        ]
+      },
+      {
+        "key": "event-management",
+        "label": "Event Management",
+        "pages": [
+          {
+            "key": "registrations-and-rsvp",
+            "title": "Registrations and RSVP"
+          },
+          {
+            "key": "volunteers-and-duties",
+            "title": "Volunteers and Duties"
+          },
+          {
+            "key": "event-budget",
+            "title": "Event Budget"
+          },
+          {
+            "key": "event-attendance",
+            "title": "Event Attendance"
+          }
+        ]
       }
     ]
   },
@@ -5016,6 +5052,20 @@
         ]
       },
       {
+        "key": "campuses",
+        "label": "Campuses",
+        "pages": [
+          {
+            "key": "campus-details",
+            "title": "Campus Details"
+          },
+          {
+            "key": "campus-settings",
+            "title": "Campus Settings"
+          }
+        ]
+      },
+      {
         "key": "academic-settings",
         "label": "Academic Settings",
         "pages": [
@@ -5236,6 +5286,20 @@
           {
             "key": "change-history",
             "title": "Change History"
+          }
+        ]
+      },
+      {
+        "key": "data-protection-dpdp",
+        "label": "Data Protection (DPDP)",
+        "pages": [
+          {
+            "key": "consent-register",
+            "title": "Consent Register"
+          },
+          {
+            "key": "data-requests",
+            "title": "Data Requests"
           }
         ]
       }

@@ -31,7 +31,7 @@ export const useStaff = () => useLoad(() => schoolFetch<Items<StaffChoice>>("/sc
 export const Field = ({ label, children }: { label: string; children: ReactNode }) => <label className="block min-w-0"><span className="mb-1 block text-[12.5px] font-medium text-slate-900">{label}</span>{children}</label>;
 
 /** A form card: heading, fields in a grid, Discard / Save at the bottom. */
-export function FormCard({ title, onSubmit, onDiscard, busy, error, children, cols = "lg:grid-cols-5" }: { title: string; onSubmit: (e: FormEvent) => void; onDiscard: () => void; busy: boolean; error: string; children: ReactNode; cols?: string }) {
+export function FormCard({ title, onSubmit, onDiscard, busy, error, children, cols = "lg:grid-cols-5", submitLabel = "Save" }: { submitLabel?: string; title: string; onSubmit: (e: FormEvent) => void; onDiscard: () => void; busy: boolean; error: string; children: ReactNode; cols?: string }) {
   return (
     <form onSubmit={onSubmit} className="rounded-2xl border border-slate-200 bg-white">
       <div className="border-b border-slate-100 px-5 py-3.5"><h2 className="text-base font-semibold text-slate-900">{title}</h2></div>
@@ -39,7 +39,7 @@ export function FormCard({ title, onSubmit, onDiscard, busy, error, children, co
       <div className={`grid gap-4 p-5 sm:grid-cols-2 ${cols}`}>{children}</div>
       <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 px-5 py-3">
         <button type="button" className={`${btnGhost} !px-4 !py-1.5 text-[13px]`} onClick={onDiscard}>Discard</button>
-        <button type="submit" className={`${btnPrimary} !px-4 !py-1.5 text-[13px]`} disabled={busy}>{busy ? "Saving…" : "Save"}</button>
+        <button type="submit" className={`${btnPrimary} !px-4 !py-1.5 text-[13px]`} disabled={busy}>{busy ? "Saving…" : submitLabel}</button>
       </div>
     </form>
   );

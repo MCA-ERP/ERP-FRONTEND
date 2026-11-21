@@ -31,7 +31,7 @@ function Body({ module, moduleLabel, flow, sectionKey, sectionLabel, pages }: { 
   return (
     <>
       <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#026f9b]">{moduleLabel} · {sectionLabel}</p>
-      <PageHeader title={text?.[0] ?? page.title} subtitle={(text?.[1] ?? "").replace("{today}", today())} action={cta ? <button type="button" onClick={() => (cta.href ? router.push(cta.href) : cta.print ? window.dispatchEvent(new CustomEvent("school-print")) : setTab(cta.tab))} className="rounded-full bg-[#e53a35] px-6 py-2.5 text-[15px] font-bold text-white shadow-sm hover:bg-[#ac2c28]">{cta.label}</button> : undefined} />
+      <PageHeader title={text?.[0] ?? page.title} subtitle={(text?.[1] ?? "").replace("{today}", today())} action={cta ? <button type="button" onClick={() => (cta.href ? router.push(cta.href) : cta.event ? window.dispatchEvent(new CustomEvent(cta.event)) : cta.print ? window.dispatchEvent(new CustomEvent("school-print")) : setTab(cta.tab))} className="rounded-full bg-[#e53a35] px-6 py-2.5 text-[15px] font-bold text-white shadow-sm hover:bg-[#ac2c28]">{cta.label}</button> : undefined} />
       {pages.length > 1 && <TabBar value={tab} onChange={setTab} tabs={pages.map((p) => [p.key, p.title] as [string, string])} />}
       {flow && <p className="mb-5 text-xs text-slate-500">{flow}</p>}
       <TabContext.Provider value={setTab}>{body ?? <p className="py-10 text-center text-sm text-slate-400">This page is not available yet.</p>}</TabContext.Provider>

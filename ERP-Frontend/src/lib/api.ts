@@ -99,10 +99,14 @@ export async function fetchServerUser(accessToken: string): Promise<ServerUser> 
   return data.user as ServerUser;
 }
 
-/** Where a signed-in user belongs: platform staff use the admin portal, everyone else the school portal. */
+/** The roles that sign in to the Teacher portal. */
+export const TEACHER_ROLES = ["Faculty", "ClassTeacher", "HOD"];
+
+/** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
   const staff = user.role === "SuperAdmin" || (!user.institutionId && (user.permissions ?? []).some((p) => p.startsWith("platform.")));
-  return staff ? "/super-admin" : "/school";
+  if (staff) return "/super-admin";
+  return TEACHER_ROLES.includes(user.role) ? "/teacher" : "/school";
 }
 
 export async function checkBackendHealth(): Promise<BackendHealth> {

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { useDragWidth } from "@/components/admin/use-drag-width";
-import { PanelLeftClose, PanelLeftOpen, Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
+import { Menu, X, PanelLeftClose, PanelLeftOpen, Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ReportHost } from "@/components/admin/report-host";
 import { Assist } from "@/components/admin/assist";
@@ -25,6 +25,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState("");
   const [shut, setShut] = useState<Record<string, boolean>>({});
+  const [navOpen, setNavOpen] = useState(false);
   const [slim, setSlim] = useState(() => { try { return typeof window !== "undefined" && localStorage.getItem("school-sidebar") === "slim"; } catch { return false; } });
   const [assistOpen, setAssistOpen] = useState(false);
   const [fly, setFly] = useState<{ key: string; top: number } | null>(null);
@@ -48,7 +49,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
         const me = await fetchServerUser(data.session.access_token);
         if (!live) return;
         if (me.mustChangePassword) return router.replace("/change-password");
-        if (homePathFor(me) === "/super-admin") return router.replace("/super-admin");
+        if (homePathFor(me) !== "/school") return router.replace(homePathFor(me));
 
         const res = await fetch(`${API_BASE}/institution`, { headers: await getAuthHeaders(), cache: "no-store" });
         const body = await res.json().catch(() => ({}));
@@ -93,7 +94,8 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   return (
     <SchoolContext.Provider value={ctx}>
       <div className="min-h-screen bg-mca-cloud lg:flex">
-        <aside style={{ "--sbw": `${sbW}px` } as CSSProperties} className={`relative z-40 border-b border-sky-100 bg-[#dceff9] lg:sticky lg:top-0 lg:flex lg:h-screen lg:shrink-0 lg:flex-col ${slim ? "lg:w-[68px]" : "lg:w-[var(--sbw)]"} lg:border-b-0`}>
+        <aside id="portal-sidebar" aria-label="Main" onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setNavOpen(false); }} style={{ "--sbw": `${sbW}px` } as CSSProperties} className={`fixed inset-y-0 left-0 z-50 flex w-[min(280px,86vw)] flex-col bg-[#dceff9] transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0 ${slim ? "lg:w-[68px]" : "lg:w-[var(--sbw)]"} ${navOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}`}>
+          <button type="button" aria-label="Close menu" className="absolute right-3 top-4 rounded-lg p-1.5 text-slate-600 hover:bg-white/60 lg:hidden" onClick={() => setNavOpen(false)}><X className="size-5" aria-hidden="true" /></button>
           <div role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize" onPointerDown={beginSb} onDoubleClick={resetSb} className="absolute inset-y-0 -right-1 z-20 hidden w-2 cursor-col-resize hover:bg-[#0294CE]/30 lg:block" />
           <div className={`px-5 pb-3 pt-5 ${slim ? "lg:px-4" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -137,8 +139,10 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
           )}
           <UserMenu name={ctx.user.fullName ?? ctx.user.email} email={ctx.user.email} role={ctx.user.roleDisplayName ?? ctx.user.role} compact={slim} />
         </aside>
+        {navOpen && <div className="fixed inset-0 z-40 bg-black/35 lg:hidden" onClick={() => setNavOpen(false)} aria-hidden="true" />}
         <div className={`min-w-0 flex-1 ${assistOpen ? "lg:pr-[var(--assist-w,460px)]" : ""}`}>
           <header className="sticky top-0 z-30 flex items-center justify-end gap-3 border-b border-slate-200 bg-[#f3f5f7]/90 px-4 py-3 backdrop-blur sm:px-6">
+            <button type="button" aria-label="Open menu" aria-controls="portal-sidebar" aria-expanded={navOpen} className="mr-auto rounded-lg border border-slate-200 bg-white p-2 text-slate-700 sm:mr-0 lg:hidden" onClick={() => setNavOpen(true)}><Menu className="size-4" aria-hidden="true" /></button>
             <SchoolSearch hasModule={ctx.hasModule} />
             <SchoolBell />
           </header>

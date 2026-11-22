@@ -1,0 +1,134 @@
+import type { ReactNode } from "react";
+import { Notifications, CheckIn, EventDuties, PendingTasks, TodaysClasses } from "./dash-pages";
+import { MyRequests, RaiseRequest } from "./help-pages";
+import { ComingUp, MonthView } from "./cal-pages";
+import { Appraisal, Claims, Competencies, Contact, Documents, Feedback360, PeerFeedback, Payslips, Qualification } from "./profile-pages";
+
+import { ClassList, HealthAlerts, HousePoints, SectionList, StudentList, StudentProfile } from "./class-pages";
+import { EditRequest, HistoryDaily, HistoryMonthly, HistoryYearly, LeaveHistory, LeaveRequests, MarkAttendance } from "./att-pages";
+import { AssignedSubstitution, FreePeriods, TimetableDaily, TimetableWeekly, TodaysCovers } from "./tt-pages";
+import { SubjectList, Syllabus } from "./subj-pages";
+
+import { ChapterProgress, LessonPlans } from "./lesson-pages";
+import { AssignmentAssign, AssignmentCreate, AssignmentDueDates, EvaluationFeedback, EvaluationMarks, HomeworkCreate, HomeworkEdit, HomeworkPublish, SubmissionsLate, SubmissionsPending, SubmissionsSubmitted } from "./hw-pages";
+import { MyMaterials, SharedMaterials, UploadMaterial } from "./mat-pages";
+
+import { CreateTest, Recordings, ScheduleClass, TestsResults, UpcomingClasses } from "./online-pages";
+import { CoScholastic, CompAnalysis, CompBatches, CompMock, ExamCompleted, ExamUpcoming, GradebookClasses, GradebookStudents, HolisticCard, MarksEntry, MyInvigilation } from "./exam-pages";
+import { Inbox, Replies, SentMessages } from "./msg-pages";
+
+import { Announcements, Albums, Chats, Circulars, MeetingBookings, MeetingSlots, SharedFiles, UploadPhotos } from "./notice-pages";
+import { ClassDiary, CompOff, DiaryRemarks, LeaveApply, MyLeaveHistory, LeavePolicy, LeaveStatus, TeamLeave } from "./diary-leave-pages";
+import { ReportAcademic, ReportAttendance, ReportStudent } from "./report-pages";
+
+import { StaffSurvey, StudentFeedback } from "./feedback-pages";
+
+type Go = (tab: string) => void;
+
+/** The screen for one page (tab) of one submenu. */
+export function renderPage(module: string, section: string, page: string, go: Go): ReactNode {
+  const k = `${module}/${section}/${page}`;
+  switch (k) {
+    case "dashboard/my-dashboard/todays-classes": return <TodaysClasses key={k} go={go} />;
+    case "dashboard/my-dashboard/pending-tasks": return <PendingTasks key={k} />;
+    case "dashboard/my-dashboard/notifications": return <Notifications key={k} />;
+    case "dashboard/my-dashboard/check-in": return <CheckIn key={k} />;
+    case "dashboard/my-dashboard/event-duties": return <EventDuties key={k} />;
+    case "dashboard/help-desk/raise-a-request": return <RaiseRequest key={k} />;
+    case "dashboard/help-desk/my-requests": return <MyRequests key={k} go={go} />;
+    case "dashboard/school-calendar/month-view": return <MonthView key={k} />;
+    case "dashboard/school-calendar/coming-up": return <ComingUp key={k} />;
+    case "profile/personal-details/contact": return <Contact key={k} />;
+    case "profile/personal-details/qualification": return <Qualification key={k} />;
+    case "profile/personal-details/documents": return <Documents key={k} />;
+    case "profile/my-payslips/payslips": return <Payslips key={k} />;
+    case "profile/my-360-feedback/peer-feedback": return <PeerFeedback key={k} />;
+    case "profile/my-360-feedback/my-360-results": return <Feedback360 key={k} />;
+    case "profile/my-360-feedback/my-competencies": return <Competencies key={k} />;
+    case "profile/my-claims/submit-a-claim": return <Claims key={k} view="submit" go={go} />;
+    case "profile/my-claims/my-claims": return <Claims key={k} view="list" go={go} />;
+    case "profile/my-appraisal/self-appraisal": return <Appraisal key={k} view="self" go={go} />;
+    case "profile/my-appraisal/my-kras": return <Appraisal key={k} view="kras" go={go} />;
+    case "classes/assigned-classes/class-list": return <ClassList key={k} go={go} />;
+    case "classes/assigned-classes/section-list": return <SectionList key={k} />;
+    case "classes/student-directory/student-list": return <StudentList key={k} />;
+    case "classes/student-directory/student-profile": return <StudentProfile key={k} />;
+    case "classes/student-directory/health-alerts": return <HealthAlerts key={k} />;
+    case "classes/house-points/award-points": return <HousePoints key={k} />;
+    case "attendance/daily-attendance/mark-attendance": return <MarkAttendance key={k} />;
+    case "attendance/daily-attendance/edit-request": return <EditRequest key={k} />;
+    case "attendance/attendance-history/daily": return <HistoryDaily key={k} />;
+    case "attendance/attendance-history/monthly": return <HistoryMonthly key={k} />;
+    case "attendance/attendance-history/yearly": return <HistoryYearly key={k} />;
+    case "attendance/student-leave/requests": return <LeaveRequests key={k} />;
+    case "attendance/student-leave/history": return <LeaveHistory key={k} />;
+    case "timetable/my-timetable/daily": return <TimetableDaily key={k} />;
+    case "timetable/my-timetable/weekly": return <TimetableWeekly key={k} />;
+    case "timetable/substitution/assigned-substitution": return <AssignedSubstitution key={k} />;
+    case "timetable/substitution/free-periods": return <FreePeriods key={k} />;
+    case "timetable/substitution/todays-covers": return <TodaysCovers key={k} />;
+    case "subjects/my-subjects/subject-list": return <SubjectList key={k} go={go} />;
+    case "subjects/my-subjects/syllabus": return <Syllabus key={k} />;
+    case "subjects/lesson-planning/lesson-plans": return <LessonPlans key={k} />;
+    case "subjects/lesson-planning/chapter-progress": return <ChapterProgress key={k} />;
+    case "homework/homework-management/create": return <HomeworkCreate key={k} />;
+    case "homework/homework-management/edit": return <HomeworkEdit key={k} />;
+    case "homework/homework-management/publish": return <HomeworkPublish key={k} go={go} />;
+    case "homework/submissions/pending": return <SubmissionsPending key={k} />;
+    case "homework/submissions/submitted": return <SubmissionsSubmitted key={k} />;
+    case "homework/submissions/late": return <SubmissionsLate key={k} />;
+    case "assignments/assignment-creation/create": return <AssignmentCreate key={k} />;
+    case "assignments/assignment-creation/assign": return <AssignmentAssign key={k} go={go} />;
+    case "assignments/assignment-creation/due-dates": return <AssignmentDueDates key={k} />;
+    case "assignments/evaluation/marks": return <EvaluationMarks key={k} />;
+    case "assignments/evaluation/feedback": return <EvaluationFeedback key={k} />;
+    case "study-materials/upload-materials/pdf": return <UploadMaterial key={k} kind="PDF" />;
+    case "study-materials/upload-materials/documents": return <UploadMaterial key={k} kind="Document" />;
+    case "study-materials/upload-materials/videos": return <UploadMaterial key={k} kind="Video" />;
+    case "study-materials/material-library/my-materials": return <MyMaterials key={k} />;
+    case "study-materials/material-library/shared-materials": return <SharedMaterials key={k} />;
+    case "online-learning/online-classes/schedule": return <ScheduleClass key={k} go={go} />;
+    case "online-learning/online-classes/upcoming": return <UpcomingClasses key={k} go={go} />;
+    case "online-learning/online-classes/recordings": return <Recordings key={k} />;
+    case "online-learning/online-tests/create-test": return <CreateTest key={k} go={go} />;
+    case "online-learning/online-tests/tests-results": return <TestsResults key={k} go={go} />;
+    case "examinations/exam-schedule/upcoming": return <ExamUpcoming key={k} />;
+    case "examinations/exam-schedule/completed": return <ExamCompleted key={k} />;
+    case "examinations/exam-schedule/my-invigilation": return <MyInvigilation key={k} />;
+    case "examinations/marks-entry/internal": return <MarksEntry key={k} component="Internal" />;
+    case "examinations/marks-entry/theory": return <MarksEntry key={k} component="Theory" />;
+    case "examinations/marks-entry/practical": return <MarksEntry key={k} component="Practical" />;
+    case "examinations/marks-entry/co-scholastic": return <CoScholastic key={k} />;
+    case "examinations/gradebook/student-wise": return <GradebookStudents key={k} />;
+    case "examinations/gradebook/class-wise": return <GradebookClasses key={k} go={go} />;
+    case "examinations/holistic-progress-card/enter-card": return <HolisticCard key={k} />;
+    case "examinations/competitive-prep/my-batches": return <CompBatches key={k} />;
+    case "examinations/competitive-prep/mock-test-analysis": return <CompAnalysis key={k} />;
+    case "examinations/competitive-prep/create-mock-test": return <CompMock key={k} go={go} />;
+    case "communication/parent-messages/inbox": return <Inbox key={k} />;
+    case "communication/parent-messages/sent": return <SentMessages key={k} />;
+    case "communication/parent-messages/replies": return <Replies key={k} />;
+    case "communication/school-notices/circulars": return <Circulars key={k} />;
+    case "communication/school-notices/announcements": return <Announcements key={k} />;
+    case "communication/parent-teacher-meeting/my-slots": return <MeetingSlots key={k} />;
+    case "communication/parent-teacher-meeting/bookings": return <MeetingBookings key={k} />;
+    case "communication/chat/chats": return <Chats key={k} />;
+    case "communication/chat/shared-files": return <SharedFiles key={k} />;
+    case "communication/photo-gallery/albums": return <Albums key={k} go={go} />;
+    case "communication/photo-gallery/upload-photos": return <UploadPhotos key={k} go={go} />;
+    case "school-diary/daily-diary/class-diary": return <ClassDiary key={k} />;
+    case "school-diary/daily-diary/remarks": return <DiaryRemarks key={k} />;
+    case "leave/leave-application/apply": return <LeaveApply key={k} go={go} />;
+    case "leave/leave-application/history": return <MyLeaveHistory key={k} />;
+    case "leave/leave-application/status": return <LeaveStatus key={k} />;
+    case "leave/leave-application/balance-and-policy": return <LeavePolicy key={k} />;
+    case "leave/leave-application/comp-off": return <CompOff key={k} />;
+    case "leave/leave-application/team-leave-hod": return <TeamLeave key={k} />;
+    case "reports/class-reports/attendance": return <ReportAttendance key={k} />;
+    case "reports/class-reports/academic-performance": return <ReportAcademic key={k} />;
+    case "reports/student-reports/individual-performance": return <ReportStudent key={k} />;
+    case "reports/my-feedback/student-feedback": return <StudentFeedback key={k} />;
+    case "reports/my-feedback/staff-survey": return <StaffSurvey key={k} />;
+    default: return null;
+  }
+}

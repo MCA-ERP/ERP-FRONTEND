@@ -33,6 +33,7 @@ const SCHOOL_IDEAS = [
   "Open student statistics",
   "How do I add a qualification?",
 ];
+const TEACHER_IDEAS = ["What are my classes today?", "Which class do I teach next?", "List the classes I teach", "Open daily attendance", "Where do I apply for leave?", "What needs my attention?"];
 const IDEAS = [
   "Export all schools list",
   "Which schools need attention?",
@@ -47,8 +48,9 @@ const IDEAS = [
 ];
 
 /** The "Ask AI" button in the corner of the Super Admin portal, with its chat panel. */
-export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?: "admin" | "school"; push?: boolean; onOpenChange?: (open: boolean) => void }) {
-  const school = scope === "school";
+export function Assist({ scope = "admin", push = false, onOpenChange, nav, guide }: { scope?: "admin" | "school" | "teacher"; push?: boolean; onOpenChange?: (open: boolean) => void; nav?: NavConfig; guide?: string }) {
+  const teacher = scope === "teacher";
+  const school = scope === "school" || teacher;
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -73,7 +75,7 @@ export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?
     setText("");
     setError("");
     // "open payment gateway", "go to schools": take the person there
-    const dest = findNavigation(content, school ? SCHOOL_NAV : undefined);
+    const dest = findNavigation(content, teacher ? nav : school ? SCHOOL_NAV : undefined);
     if (dest?.how) {
       // "how can I open the roles page": the path in bold, and a button, nothing more
       const reply = `Open **${dest.label.replaceAll("›", "→")}**.`;
@@ -89,8 +91,10 @@ export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?
     setMsgs(next);
     setBusy(true);
     try {
-      const payload = { messages: next.slice(-12).map((m) => ({ role: m.role, content: m.content })), page: pathname };
-      const r = school
+      const payload = { messages: next.slice(-12).map((m) => ({ role: m.role, content: m.content })), page: pathname, ...(teacher ? { guide } : {}) };
+      const r = teacher
+        ? await schoolFetch<{ reply: string; actions?: Action[] }>("/teacher/assist/chat", json("POST", payload))
+        : school
         ? await schoolFetch<{ reply: string; actions?: Action[] }>("/school/assist/chat", json("POST", payload))
         : await adminFetch<{ reply: string; actions?: Action[] }>("/assist/chat", json("POST", payload));
       setMsgs([...next, { role: "assistant", content: r.reply, actions: r.actions }]);
@@ -112,7 +116,7 @@ export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?
 
 
   // asking by voice, like dictation in a chat app: the recording is turned into text and sent when you stop talking
-  const voice = useDictation({ onText: (t) => { setText(t); void send(t); }, onError: (m) => setError(m), endpoint: school ? "/school/assist/transcribe" : "/admin/assist/transcribe" });
+  const voice = useDictation({ onText: (t) => { setText(t); void send(t); }, onError: (m) => setError(m), endpoint: teacher ? "/teacher/assist/transcribe" : school ? "/school/assist/transcribe" : "/admin/assist/transcribe" });
   useEffect(() => { if (!open) voice.cancel(); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const makeDraft = async (e: FormEvent) => {
@@ -151,7 +155,7 @@ export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 bg-gradient-to-br from-[#dceff9] to-white px-5 py-4">
               <div className="flex min-w-0 items-start gap-2.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#026f9b] text-white"><Sparkles className="size-[18px]" aria-hidden="true" /></span>
-                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">{school ? "Ask about your school. I answer from your school's live data and can export lists, but never change anything." : "Ask about your platform. I answer from live data and can export lists, but never change anything."}</p></div>
+                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">{teacher ? "Ask about your day, classes and students. I answer from your own records and never change anything." : school ? "Ask about your school. I answer from your school's live data and can export lists, but never change anything." : "Ask about your platform. I answer from live data and can export lists, but never change anything."}</p></div>
               </div>
               <div className="flex shrink-0 items-center gap-1">
                 <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>
@@ -197,7 +201,7 @@ export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?
               {!msgs.length && (
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500">Try one of these, or type your own question.</p>
-                  {(school ? SCHOOL_IDEAS : IDEAS).map((q) => (
+                  {(teacher ? TEACHER_IDEAS : school ? SCHOOL_IDEAS : IDEAS).map((q) => (
                     <button key={q} type="button" onClick={() => void send(q)} className="block w-full rounded-full border border-slate-200 px-4 py-2 text-left text-sm text-slate-700 transition hover:border-[#026f9b] hover:bg-[#f3f9fd]">{q}</button>
                   ))}
                 </div>

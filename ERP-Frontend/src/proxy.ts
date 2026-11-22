@@ -25,7 +25,7 @@ function hostRule(request: NextRequest): NextResponse | null {
   };
 
   if (kind === "admin") {
-    if (under("/school")) return to("erp");
+    if (under("/school") || under("/teacher")) return to("erp");
     if (path === "/") return here("/super-admin");
   } else if (kind === "erp") {
     if (under("/super-admin")) return to("admin");
@@ -33,7 +33,7 @@ function hostRule(request: NextRequest): NextResponse | null {
   } else {
     // the public website: the portals and their sign-in pages live on their own addresses
     if (under("/super-admin")) return to("admin");
-    if (under("/school")) return to("erp");
+    if (under("/school") || under("/teacher")) return to("erp");
     if (under("/login") || under("/reset-password") || under("/change-password")) return to("erp");
   }
   return null;
@@ -47,7 +47,7 @@ function hostRule(request: NextRequest): NextResponse | null {
 export async function proxy(request: NextRequest) {
   const moved = hostRule(request);
   if (moved) return moved;
-  if (!/^\/(super-admin|school|change-password)(\/|$)/.test(request.nextUrl.pathname)) return NextResponse.next();
+  if (!/^\/(super-admin|school|teacher|change-password)(\/|$)/.test(request.nextUrl.pathname)) return NextResponse.next();
 
   const toLogin = () => {
     const url = request.nextUrl.clone();

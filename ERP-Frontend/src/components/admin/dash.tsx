@@ -110,7 +110,7 @@ export function TabBar<T extends string>({
   onChange: (t: T) => void;
 }) {
   return (
-    <div role="tablist" className="mb-5 flex gap-1 overflow-x-auto border-b border-slate-200">
+    <div role="tablist" className="mb-5 flex gap-1 overflow-x-auto border-b border-slate-200 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {tabs.map(([key, label, n]) => (
         <button
           key={key}

@@ -449,3 +449,10 @@ export const PAGE_TEXT: Record<string, Record<string, [string, string]>> = {
     approved: ["Approved", "Applications approved for admission."], rejected: ["Rejected", "Applications that were not approved."],
   },
 };
+
+/** Which Super Admin modules a school needs for each sidebar item (any one is enough). Items not listed are always shown.
+ *  Keep in step with MENU_MODULES in the backend (src/lib/portal-modules.ts). */
+export const MENU_MODULES: Record<string, string[]> = {
+  "front-office": ["admissions", "online_admissions", "visitors"], admission: ["admissions", "online_admissions"], students: ["student_information"], parents: ["parent_app"], academics: ["academics", "student_information"], attendance: ["attendance"], timetable: ["timetable"], examinations: ["exams"], lms: ["homework", "online_classes"],
+  fees: ["fees"], hr: ["hr_payroll"], payroll: ["payroll", "hr_payroll"], transport: ["transport"], library: ["library"], inventory: ["inventory"], communication: ["sms_whatsapp", "email", "notifications", "whatsapp", "school_diary", "helpdesk", "surveys", "photo_gallery", "chat", "ai_chatbot"], hostel: ["hostel", "cafeteria"], visitors: ["visitors"], health: ["health_welfare"], certificates: ["certificates"], activities: ["activities_events", "house_points"],
+};

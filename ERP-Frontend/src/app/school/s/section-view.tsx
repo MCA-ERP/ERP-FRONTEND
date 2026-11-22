@@ -5,7 +5,8 @@ import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabBar } from "@/components/admin/dash";
 import { PageHeader } from "@/components/admin/ui";
-import { BUILT, MENU, PAGE_CTA, PAGE_TEXT } from "./menu-config";
+import { BUILT, MENU, MENU_MODULES, PAGE_CTA, PAGE_TEXT } from "./menu-config";
+import { useSchool } from "../context";
 import { renderPage } from "./registry";
 import { TabContext } from "./tab-context";
 
@@ -15,7 +16,9 @@ const today = () => new Date().toLocaleDateString("en-IN", { day: "numeric", mon
 export function SectionView({ module, section }: { module: string; section: string }) {
   const mod = MENU[module];
   const sec = mod?.sections.find((s) => s.key === section);
+  const school = useSchool();
   if (!mod || !sec || !BUILT.has(module)) notFound();
+  if (MENU_MODULES[module] && !MENU_MODULES[module].some((m) => school.hasModule(m))) return <p className="rounded-2xl border border-[#f1d9a6] bg-[#fff8e6] px-4 py-3 text-[13px] text-slate-800">{mod.label} is not part of your school&apos;s plan. Ask your administrator to upgrade or add this module.</p>;
   return <Suspense fallback={null}><Body key={`${module}/${section}`} module={module} moduleLabel={mod.label} flow={mod.flow} sectionKey={sec.key} sectionLabel={sec.label} pages={sec.pages} /></Suspense>;
 }
 

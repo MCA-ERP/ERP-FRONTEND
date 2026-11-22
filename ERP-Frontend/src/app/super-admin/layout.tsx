@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useDragWidth } from "@/components/admin/use-drag-width";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import {
   BarChart3, Building2, ChevronDown, ChevronUp, Clock, FileBarChart, Headphones, HelpCircle, KeyRound, LayoutDashboard, LayoutTemplate, Landmark, Lock, LogOut, Menu,
   MessageSquare, Plug, Puzzle, Repeat, ShieldCheck, SlidersHorizontal, User as UserIcon, Users, X,
@@ -71,6 +73,19 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ServerUser | null>(null);
   const [error, setError] = useState("");
   const [navOpen, setNavOpen] = useState(false);
+  const [slim, setSlim] = useState(() => { try { return typeof window !== "undefined" && localStorage.getItem("admin-sidebar") === "slim"; } catch { return false; } });
+  const [assistOpen, setAssistOpen] = useState(false);
+  const [fly, setFly] = useState<{ href: string; top: number } | null>(null);
+  const setSlimTo = (n: boolean) => { setSlim(n); setFly(null); try { localStorage.setItem("admin-sidebar", n ? "slim" : "wide"); } catch { /* storage unavailable */ } };
+  const toggleSlim = () => setSlimTo(!slim);
+  const { w: sbW, begin: beginSb, reset: resetSb } = useDragWidth("admin-sidebar-w", 288, 220, 420, "right", (raw) => { if ((raw < 150) !== slim) setSlimTo(raw < 150); });
+  useEffect(() => {
+    if (!fly) return;
+    const away = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest("[data-fly]")) setFly(null); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setFly(null); };
+    document.addEventListener("mousedown", away); document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", away); document.removeEventListener("keydown", esc); };
+  }, [fly]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [badges, setBadges] = useState<{ schools: number; support: number; alerts: number }>({ schools: 0, support: 0, alerts: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -146,19 +161,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     [user]
   );
 
-  // breadcrumb: where the current address sits in the menu
-  const crumbs = useMemo(() => {
-    for (const i of items) {
-      const kids = i.children ?? [];
-      const hit = bestOf(pathname, [i.href, ...kids.map((k) => k.href)]);
-      if (!hit) continue;
-      const kid = kids.find((k) => k.href === hit);
-      return kid && kid.label !== i.label ? [i.label, kid.label] : [i.label];
-    }
-    if (pathname.startsWith("/super-admin/account")) return ["My account"];
-    return [];
-  }, [items, pathname]);
-
   // Clicking the open module again hides its submenu; clicking once more shows it. Moving to another module starts fresh.
   const [shut, setShut] = useState<Record<string, boolean>>({});
   const openGroup = useMemo(() => {
@@ -188,19 +190,25 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <aside
       id="admin-sidebar"
       aria-label="Main"
-      className={`fixed inset-y-0 left-0 z-50 flex w-[min(280px,86vw)] flex-col bg-[#dceff9] text-slate-900 transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:translate-x-0 ${navOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}`}
+      style={{ "--sbw": `${sbW}px` } as CSSProperties}
+      className={`fixed inset-y-0 left-0 z-50 flex w-[min(280px,86vw)] flex-col bg-[#dceff9] text-slate-900 transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:shrink-0 ${slim ? "lg:w-[68px]" : "lg:w-[var(--sbw)]"} lg:translate-x-0 ${navOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}`}
     >
+      <div role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize" onPointerDown={beginSb} onDoubleClick={resetSb} className="absolute inset-y-0 -right-1 z-20 hidden w-2 cursor-col-resize hover:bg-[#0294CE]/30 lg:block" />
       <div className="flex items-start justify-between px-[18px] pb-3.5 pt-5">
         <div className="flex flex-col gap-2.5">
-          <Link href="/super-admin" aria-label="My Class Assist, Super Admin home" className="inline-block leading-[0]">
-            <Image src="/mca-logo.svg" alt="My Class Assist" width={132} height={74} priority style={{ width: "132px", height: "auto" }} />
-          </Link>
-          <p className="text-xs font-semibold text-slate-900">Super Admin · Portal 01</p>
+          <div className="flex items-start justify-between gap-2">
+            <Link href="/super-admin" aria-label="My Class Assist, Super Admin home" className="inline-block leading-[0]">
+              <Image src="/mca-logo.svg" alt="My Class Assist" width={112} height={63} priority style={{ width: "112px", height: "auto" }} className={slim ? "lg:hidden" : ""} />
+              <Image src="/mca-mark.svg" alt="" width={32} height={32} priority className={`hidden size-8 ${slim ? "lg:block" : ""}`} />
+            </Link>
+            <button type="button" onClick={toggleSlim} aria-label={slim ? "Open sidebar" : "Close sidebar"} title={slim ? "Open sidebar" : "Close sidebar"} className="absolute -right-3.5 top-7 z-30 hidden size-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-[#0294CE] lg:flex">{slim ? <PanelLeftOpen className="size-4" aria-hidden="true" /> : <PanelLeftClose className="size-4" aria-hidden="true" />}</button>
+          </div>
+          <p className={`text-xs font-semibold text-slate-900 ${slim ? "lg:hidden" : ""}`}>Super Admin · Portal 01</p>
         </div>
         <button type="button" aria-label="Close menu" className="rounded-lg p-1.5 text-slate-600 hover:bg-white/60 lg:hidden" onClick={() => setNavOpen(false)}><X className="size-5" aria-hidden="true" /></button>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-4 pt-1">
+      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-4 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item) => {
           const kids = item.children;
           const Icon = item.icon;
@@ -211,21 +219,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           const count = item.badge ? badges[item.badge] : 0;
           return (
             <div key={item.href} className="flex flex-col gap-0.5">
-              {item.group && <p className="px-2.5 pb-1.5 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">{item.group}</p>}
+              {item.group && <p className={`px-2.5 pb-1.5 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{item.group}</p>}
               <Link
                 href={item.href}
                 aria-current={onParent ? "page" : undefined}
                 aria-expanded={kids?.length ? showKids : undefined}
-                title={kids?.length && inGroup ? `${showKids ? "Hide" : "Show"} ${item.label} menu` : undefined}
-                onClick={(e) => { if (kids?.length && inGroup) { e.preventDefault(); setShut((s) => ({ ...s, [item.href]: !s[item.href] })); } }}
-                className={`flex items-center gap-[11px] rounded-full px-2.5 py-2 text-[13.5px] transition ${onParent ? "bg-white font-semibold shadow-[0_1px_2px_rgba(2,111,155,0.12)]" : "font-medium hover:bg-[#0294ce]/10"} ${inGroup ? "font-bold" : ""}`}
+                title={slim ? item.label : kids?.length && inGroup ? `${showKids ? "Hide" : "Show"} ${item.label} menu` : undefined}
+                onClick={(e) => { if (slim && kids?.length && window.matchMedia("(min-width: 1024px)").matches) { e.preventDefault(); const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.href === item.href ? null : { href: item.href, top: r.top }); return; } if (kids?.length && inGroup) { e.preventDefault(); setShut((s) => ({ ...s, [item.href]: !s[item.href] })); } }}
+                className={`flex items-center gap-[11px] rounded-full px-2.5 py-2 text-[13.5px] transition ${slim ? "lg:justify-center lg:px-0" : ""} ${onParent ? "bg-white font-semibold shadow-[0_1px_2px_rgba(2,111,155,0.12)]" : "font-medium hover:bg-[#0294ce]/10"} ${inGroup ? "font-bold" : ""}`}
               >
                 <Icon className={`size-[18px] shrink-0 ${onParent ? "text-[#026f9b]" : ""}`} strokeWidth={2} aria-hidden="true" />
-                <span className="min-w-0 flex-1 leading-snug">{item.label}</span>
-                {count > 0 && <span className="rounded-full bg-white px-[7px] text-[11px] font-bold leading-[18px] text-[#ac2c28]" aria-label={`${count} waiting`}>{count}</span>}
-                {kids?.length ? <ChevronDown className={`size-3.5 shrink-0 opacity-70 transition-transform ${showKids ? "rotate-180" : ""}`} strokeWidth={2} aria-hidden="true" /> : null}
+                <span className={`min-w-0 flex-1 leading-snug ${slim ? "lg:hidden" : ""}`}>{item.label}</span>
+                {count > 0 && <span className={`rounded-full bg-white px-[7px] text-[11px] font-bold leading-[18px] text-[#ac2c28] ${slim ? "lg:hidden" : ""}`} aria-label={`${count} waiting`}>{count}</span>}
+                {kids?.length ? <ChevronDown className={`size-3.5 shrink-0 opacity-70 transition-transform ${slim ? "lg:hidden" : ""} ${showKids ? "rotate-180" : ""}`} strokeWidth={2} aria-hidden="true" /> : null}
               </Link>
-              {kids?.length && showKids ? (
+              {kids?.length && showKids && !slim ? (
                 <div className="my-0.5 ml-[19px] flex flex-col gap-px border-l-2 border-[#026f9b]/25 pl-2.5">
                   {kids.map((k) => {
                     const on = current === k.href;
@@ -245,10 +253,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           );
         })}
       </nav>
+      {slim && fly && (() => {
+        const it = items.find((i) => i.href === fly.href);
+        if (!it?.children) return null;
+        return (
+          <div data-fly="" role="menu" aria-label={it.label} style={{ top: Math.min(fly.top, (typeof window !== "undefined" ? window.innerHeight : 800) - 60 - it.children.length * 34) }} className="fixed left-[72px] z-40 max-h-[80vh] min-w-[210px] overflow-y-auto rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl">
+            <p className="px-4 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-[#026f9b]">{it.label}</p>
+            {it.children.map((k) => <Link key={k.href} role="menuitem" href={k.href} onClick={() => setFly(null)} aria-current={current === k.href ? "page" : undefined} className={`block px-4 py-1.5 text-[13px] hover:bg-slate-50 ${current === k.href ? "font-semibold text-slate-900" : "text-slate-800"}`}>{k.label}</Link>)}
+          </div>
+        );
+      })()}
 
-      <div ref={menuRef} className="relative border-t border-[#c0e4f3] px-[18px] py-3.5">
+      <div ref={menuRef} className={`relative border-t border-[#c0e4f3] py-3.5 ${slim ? "px-[18px] lg:px-3" : "px-[18px]"}`}>
         {menuOpen && (
-          <div role="menu" aria-label="Your account" className="absolute inset-x-3 bottom-[calc(100%-4px)] max-h-[80vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl">
+          <div role="menu" aria-label="Your account" className={`absolute bottom-[calc(100%-4px)] max-h-[80vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl ${slim ? "left-3 right-3 lg:right-auto lg:w-64" : "inset-x-3"}`}>
             <div className="flex items-center gap-3 px-3 py-2.5">
               <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#dceff9] text-xs font-bold text-[#026f9b]">{initials(user)}</span>
               <span className="min-w-0"><b className="block truncate text-sm font-semibold text-slate-900">{user.fullName?.trim() || user.email.split("@")[0]}</b><span className="block truncate text-xs text-slate-500">{user.email}</span></span>
@@ -276,11 +294,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         )}
         <button type="button" aria-haspopup="menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)} className="flex w-full items-center gap-2.5 rounded-xl text-left text-[12.5px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0294ce]/30">
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#026f9b]">{initials(user)}</span>
-          <span className="min-w-0 flex-1">
+          <span className={`min-w-0 flex-1 ${slim ? "lg:hidden" : ""}`}>
             <b className="block truncate text-sm font-semibold text-slate-900">{user.fullName?.trim() || user.email.split("@")[0]}</b>
             <span className="block truncate text-slate-800">{user.roleDisplayName ?? user.role}</span>
           </span>
-          <ChevronUp className={`size-4 shrink-0 transition-transform ${menuOpen ? "" : "rotate-180"}`} aria-hidden="true" />
+          <ChevronUp className={`size-4 shrink-0 transition-transform ${slim ? "lg:hidden" : ""} ${menuOpen ? "" : "rotate-180"}`} aria-hidden="true" />
         </button>
       </div>
     </aside>
@@ -291,21 +309,19 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {sidebar}
       {navOpen && <div className="fixed inset-0 z-40 bg-black/35 lg:hidden" onClick={() => setNavOpen(false)} aria-hidden="true" />}
 
-      <div className="min-w-0 flex-1">
+      <div className={`min-w-0 flex-1 ${assistOpen ? "lg:pr-[var(--assist-w,460px)]" : ""}`}>
         <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-[#f3f5f7]/90 px-4 py-3 backdrop-blur sm:px-6">
           <button type="button" aria-label="Open menu" aria-controls="admin-sidebar" aria-expanded={navOpen} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-700 lg:hidden" onClick={() => setNavOpen(true)}>
             <Menu className="size-4" aria-hidden="true" />
           </button>
-          <nav aria-label="Breadcrumb" className="min-w-0 flex-1 truncate text-sm text-slate-500">
-            Super Admin{crumbs.map((c, i) => <span key={c}> › {i === crumbs.length - 1 ? <b className="font-semibold text-slate-900">{c}</b> : c}</span>)}
-          </nav>
+          <div className="min-w-0 flex-1" />
           <GlobalSearch />
           <NotificationBell />
         </header>
         <main className="mx-auto max-w-6xl p-4 sm:p-6">{children}</main>
       </div>
       <ReportHost />
-      <Assist />
+      <Assist push onOpenChange={setAssistOpen} />
     </div>
   );
 }

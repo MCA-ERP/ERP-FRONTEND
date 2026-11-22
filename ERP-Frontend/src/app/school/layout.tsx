@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
-import { Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
+import type { CSSProperties, ReactNode } from "react";
+import { useDragWidth } from "@/components/admin/use-drag-width";
+import { PanelLeftClose, PanelLeftOpen, Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ReportHost } from "@/components/admin/report-host";
 import { Assist } from "@/components/admin/assist";
-import { BUILT, GROUP, MENU, sectionHref } from "./s/menu-config";
+import { BUILT, GROUP, MENU, MENU_MODULES, sectionHref } from "./s/menu-config";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
 import { UserMenu } from "./user-menu";
 import { SchoolContext } from "./context";
+import { SchoolSearch, SchoolBell } from "./topbar";
 
 const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, profile: UserRound, mywork: Briefcase, "front-office": Landmark, admission: FileText, students: Users, parents: UsersRound, academics: GraduationCap, attendance: CalendarCheck, timetable: Clock, examinations: ClipboardCheck, lms: Monitor, fees: IndianRupee, hr: Briefcase, payroll: Wallet, transport: Bus, library: Library, inventory: Package, communication: MessageSquare, hostel: BedDouble, visitors: ShieldCheck, health: HeartPulse, certificates: Award, activities: Trophy, reports: BarChart3, settings: Settings };
 
@@ -23,6 +25,19 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState("");
   const [shut, setShut] = useState<Record<string, boolean>>({});
+  const [slim, setSlim] = useState(() => { try { return typeof window !== "undefined" && localStorage.getItem("school-sidebar") === "slim"; } catch { return false; } });
+  const [assistOpen, setAssistOpen] = useState(false);
+  const [fly, setFly] = useState<{ key: string; top: number } | null>(null);
+  useEffect(() => {
+    if (!fly) return;
+    const away = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest("[data-fly]")) setFly(null); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setFly(null); };
+    document.addEventListener("mousedown", away); document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", away); document.removeEventListener("keydown", esc); };
+  }, [fly]);
+  const setSlimTo = (n: boolean) => { setSlim(n); setFly(null); try { localStorage.setItem("school-sidebar", n ? "slim" : "wide"); } catch { /* storage unavailable */ } };
+  const toggleSlim = () => setSlimTo(!slim);
+  const { w: sbW, begin: beginSb, reset: resetSb } = useDragWidth("school-sidebar-w", 256, 220, 420, "right", (raw) => { if ((raw < 150) !== slim) setSlimTo(raw < 150); });
 
   useEffect(() => {
     let live = true;
@@ -78,30 +93,31 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   return (
     <SchoolContext.Provider value={ctx}>
       <div className="min-h-screen bg-mca-cloud lg:flex">
-        <aside className="border-b border-sky-100 bg-[#dceff9] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:shrink-0 lg:flex-col lg:border-b-0">
-          <div className="px-5 pb-3 pt-5">
+        <aside style={{ "--sbw": `${sbW}px` } as CSSProperties} className={`relative z-40 border-b border-sky-100 bg-[#dceff9] lg:sticky lg:top-0 lg:flex lg:h-screen lg:shrink-0 lg:flex-col ${slim ? "lg:w-[68px]" : "lg:w-[var(--sbw)]"} lg:border-b-0`}>
+          <div role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize" onPointerDown={beginSb} onDoubleClick={resetSb} className="absolute inset-y-0 -right-1 z-20 hidden w-2 cursor-col-resize hover:bg-[#0294CE]/30 lg:block" />
+          <div className={`px-5 pb-3 pt-5 ${slim ? "lg:px-4" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/mca-logo.svg" alt="My Class Assist" className="h-14 w-auto" />
-            <p className="mt-2 truncate text-[13px] font-semibold text-slate-900">{ctx.school.name}</p>
-            <p className="text-[11px] font-medium uppercase tracking-wide text-[#026f9b]">{ctx.user.roleDisplayName ?? ctx.user.role}</p>
+            <div className="flex items-start justify-between gap-2"><div className="leading-[0]"><img src="/mca-logo.svg" alt="My Class Assist" style={{ width: 112, height: "auto" }} className={slim ? "lg:hidden" : ""} /><img src="/mca-mark.svg" alt="" className={`hidden size-8 ${slim ? "lg:block" : ""}`} /></div><button type="button" onClick={toggleSlim} aria-label={slim ? "Open sidebar" : "Close sidebar"} title={slim ? "Open sidebar" : "Close sidebar"} className="absolute -right-3.5 top-7 z-30 hidden size-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-[#0294CE] lg:flex">{slim ? <PanelLeftOpen className="size-4" aria-hidden="true" /> : <PanelLeftClose className="size-4" aria-hidden="true" />}</button></div>
+            <p className={`mt-2 truncate text-[13px] font-semibold text-slate-900 ${slim ? "lg:hidden" : ""}`}>{ctx.school.name}</p>
+            <p className={`text-[11px] font-medium uppercase tracking-wide text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{ctx.user.roleDisplayName ?? ctx.user.role}</p>
           </div>
-          <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4">
-            {Object.entries(MENU).filter(([k]) => BUILT.has(k)).map(([key, mod], idx, all) => {
+          <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {Object.entries(MENU).filter(([k]) => BUILT.has(k) && (!MENU_MODULES[k] || MENU_MODULES[k].some((m) => ctx.hasModule(m)))).map(([key, mod], idx, all) => {
               const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
               const ModIcon = ICONS[key] ?? LayoutDashboard;
               const open = shut[key] === undefined ? inside : !shut[key];
               const heading = idx === 0 || GROUP[all[idx - 1][0]] !== GROUP[key] ? GROUP[key] : "";
               return (
                 <div key={key}>
-                  {heading && <p className="px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b]">{heading}</p>}
-                  <button type="button" aria-expanded={open} onClick={() => setShut({ ...shut, [key]: open })}
-                    className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
+                  {heading && <p className={`px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{heading}</p>}
+                  <button type="button" aria-expanded={open} title={mod.label} onClick={(e) => { if (slim && window.matchMedia("(min-width: 1024px)").matches) { const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.key === key ? null : { key, top: r.top }); return; } setShut({ ...shut, [key]: open }); }}
+                    className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${slim ? "lg:justify-center lg:px-0" : ""} ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
                     <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />
-                    <span className="flex-1">{mod.label}</span>
-                    <ChevronDown className={`size-3.5 opacity-70 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+                    <span className={`flex-1 ${slim ? "lg:hidden" : ""}`}>{mod.label}</span>
+                    <ChevronDown className={`size-3.5 opacity-70 transition-transform ${slim ? "lg:hidden" : ""} ${open ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
                   {open && (
-                    <div className="ml-[19px] mt-0.5 flex flex-col gap-px border-l-2 border-[#026f9b]/25 pl-2.5">
+                    <div className={`ml-[19px] mt-0.5 flex flex-col gap-px border-l-2 border-[#026f9b]/25 pl-2.5 ${slim ? "lg:hidden" : ""}`}>
                       {mod.sections.map((sec) => {
                         const href = sectionHref(key, sec.key);
                         const on = pathname === href;
@@ -113,14 +129,24 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
-          <UserMenu name={ctx.user.fullName ?? ctx.user.email} email={ctx.user.email} role={ctx.user.roleDisplayName ?? ctx.user.role} />
+          {slim && fly && MENU[fly.key] && (
+            <div data-fly="" role="menu" aria-label={MENU[fly.key].label} style={{ top: Math.min(fly.top, (typeof window !== "undefined" ? window.innerHeight : 800) - 60 - MENU[fly.key].sections.length * 34) }} className="fixed left-[72px] z-40 max-h-[80vh] min-w-[200px] overflow-y-auto rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl">
+              <p className="px-4 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-[#026f9b]">{MENU[fly.key].label}</p>
+              {MENU[fly.key].sections.map((sec) => { const href = sectionHref(fly.key, sec.key); return <Link key={sec.key} role="menuitem" href={href} onClick={() => setFly(null)} aria-current={pathname === href ? "page" : undefined} className={`block px-4 py-1.5 text-[13px] hover:bg-slate-50 ${pathname === href ? "font-semibold text-slate-900" : "text-slate-800"}`}>{sec.label}</Link>; })}
+            </div>
+          )}
+          <UserMenu name={ctx.user.fullName ?? ctx.user.email} email={ctx.user.email} role={ctx.user.roleDisplayName ?? ctx.user.role} compact={slim} />
         </aside>
-        <div className="min-w-0 flex-1">
+        <div className={`min-w-0 flex-1 ${assistOpen ? "lg:pr-[var(--assist-w,460px)]" : ""}`}>
+          <header className="sticky top-0 z-30 flex items-center justify-end gap-3 border-b border-slate-200 bg-[#f3f5f7]/90 px-4 py-3 backdrop-blur sm:px-6">
+            <SchoolSearch hasModule={ctx.hasModule} />
+            <SchoolBell />
+          </header>
           <main className="mx-auto max-w-6xl p-6">{children}</main>
         </div>
       </div>
       <ReportHost />
-      <Assist scope="school" />
+      {ctx.hasModule("school_assistant") && <Assist scope="school" push onOpenChange={setAssistOpen} />}
     </SchoolContext.Provider>
   );
 }

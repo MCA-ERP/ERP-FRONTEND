@@ -9,6 +9,7 @@ import { adminFetch, json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
 import { downloadCsv } from "./csv";
 import { useDictation } from "./voice";
+import { useDragWidth } from "./use-drag-width";
 import { findNavigation, type NavConfig } from "@/app/super-admin/s/navigate";
 import { MENU as SCHOOL_MENU, BUILT as SCHOOL_BUILT, sectionHref as schoolHref } from "@/app/school/s/menu-config";
 
@@ -46,11 +47,14 @@ const IDEAS = [
 ];
 
 /** The "Ask AI" button in the corner of the Super Admin portal, with its chat panel. */
-export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
+export function Assist({ scope = "admin", push = false, onOpenChange }: { scope?: "admin" | "school"; push?: boolean; onOpenChange?: (open: boolean) => void }) {
   const school = scope === "school";
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  useEffect(() => { onOpenChange?.(open); }, [open, onOpenChange]);
+  const { w: panelW, begin: beginDrag, reset: resetW } = useDragWidth("assist-width", 460, 340, 760, "left");
+  useEffect(() => { document.documentElement.style.setProperty("--assist-w", `${panelW}px`); }, [panelW]);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -133,7 +137,7 @@ export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-[#026f9b] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-900/25 transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#026f9b] print:hidden"
+        className={`fixed bottom-5 right-5 z-40 ${open && push ? "lg:hidden" : ""} inline-flex items-center gap-2 rounded-full bg-[#026f9b] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-900/25 transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#026f9b] print:hidden`}
       >
         <Sparkles className="size-[18px]" strokeWidth={2} aria-hidden="true" />
         Ask AI
@@ -141,8 +145,9 @@ export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
 
       {open && (
         <>
-          <div className="fixed inset-0 z-50 bg-slate-900/30" onClick={() => setOpen(false)} aria-hidden="true" />
-          <aside role="dialog" aria-label="MCA Assist" className="fixed inset-y-0 right-0 z-50 flex w-[min(460px,100vw)] flex-col bg-white shadow-2xl">
+          <div className={`fixed inset-0 z-50 bg-slate-900/30 ${push ? "lg:hidden" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
+          <aside role="dialog" aria-label="MCA Assist" style={{ width: `min(${panelW}px,100vw)` }} className="fixed inset-y-0 right-0 z-50 flex flex-col bg-white shadow-2xl">
+            <div role="separator" aria-orientation="vertical" aria-label="Resize assistant" title="Drag to resize" onPointerDown={beginDrag} onDoubleClick={resetW} className="absolute inset-y-0 -left-1 z-10 hidden w-2 cursor-col-resize hover:bg-[#0294CE]/30 lg:block" />
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 bg-gradient-to-br from-[#dceff9] to-white px-5 py-4">
               <div className="flex min-w-0 items-start gap-2.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#026f9b] text-white"><Sparkles className="size-[18px]" aria-hidden="true" /></span>
@@ -161,7 +166,7 @@ export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
             </div>
 
             {mode === "notice" ? (
-              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <p className="text-sm text-slate-500">Turn a few points into a notice for school administrators. You review it before it goes anywhere.</p>
                 <form onSubmit={makeDraft} className="space-y-3">
                   <label className="block text-sm font-medium text-slate-700">Type
@@ -188,7 +193,7 @@ export function Assist({ scope = "admin" }: { scope?: "admin" | "school" }) {
                 )}
               </div>
             ) : (
-            <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+            <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {!msgs.length && (
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500">Try one of these, or type your own question.</p>

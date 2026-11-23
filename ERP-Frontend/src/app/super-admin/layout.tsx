@@ -16,6 +16,7 @@ import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, type ServerUser } from "@/lib/api";
 import { adminFetch } from "@/lib/admin-api";
 import { ReportHost } from "@/components/admin/report-host";
+import { RecordPage } from "@/components/admin/quick-actions";
 import { setLocaleConfig } from "@/lib/locale-format";
 import { useSignOut } from "@/components/logout";
 import { GlobalSearch, NotificationBell } from "@/components/admin/topbar";
@@ -320,6 +321,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </header>
         <main className="mx-auto max-w-6xl p-4 sm:p-6">{children}</main>
       </div>
+      <RecordPage portal="super-admin" home="/super-admin" />
       <ReportHost />
       <Assist push onOpenChange={setAssistOpen} />
     </div>

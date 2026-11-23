@@ -67,13 +67,14 @@ import { ParentPages, PromotionPages, StudentAssignPages, StudentDocumentPages, 
 import { StudentDirectoryPages, StudentRegistrationPages } from "./student-pages";
 import { AdmissionCommunicationPages, AdmissionDocumentPages, AdmissionReportPages, AutoRegistrationPage, ClassAllocationPages } from "./adm-pages3";
 import { AdmissionFeePages, ApprovalPages, EntrancePages, InterviewPages, ProcessingPages, RegistrationPages } from "./adm-pages2";
+import { SchoolQuickActions } from "./quick";
 import { AdmissionOverview, AttendanceOverview, MainDashboard, StaffStatistics, StudentStatistics } from "./dash-pages";
 
 type Render = (page: string) => ReactNode;
 
 /** The working screen of each submenu, by "module/section". A page is the tab inside it. */
 const table: Record<string, Render> = {
-  "dashboard/main-dashboard": (p) => <MainDashboard tab={p === "kpi-cards" ? "kpi-cards" : "school-overview"} key={p} />,
+  "dashboard/main-dashboard": (p) => <div key={p}>{p === "kpi-cards" ? null : <SchoolQuickActions />}<MainDashboard tab={p === "kpi-cards" ? "kpi-cards" : "school-overview"} /></div>,
   "dashboard/student-statistics": (p) => <StudentStatistics tab={p === "new-admissions" ? "new" : p === "active" ? "active" : p === "inactive" ? "inactive" : "total"} key={p} />,
   "dashboard/staff-statistics": (p) => <StaffStatistics tab={p === "teaching" ? "teaching" : p === "non-teaching" ? "non" : "total"} key={p} />,
   "dashboard/attendance-overview": (p) => <AttendanceOverview tab={p === "class-wise" ? "class-wise" : p === "monthly" ? "monthly" : "today"} key={p} />,

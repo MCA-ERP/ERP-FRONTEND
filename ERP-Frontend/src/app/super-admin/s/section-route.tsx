@@ -7,6 +7,7 @@ import { TabBar } from "@/components/admin/dash";
 import { HeaderHidden, PageHeader } from "@/components/admin/ui";
 import { MENU, sectionHref, type MenuSection } from "./menu";
 import { PageActions } from "./page-actions";
+import { SuperAdminQuickActions } from "./quick";
 import { PAGED, renderPage } from "./registry";
 import { RangeProvider } from "@/components/admin/range";
 
@@ -28,6 +29,7 @@ export function DashboardOverviewRoute() {
   const mod = MENU.dashboard;
   return (
     <RangeProvider>
+      <SuperAdminQuickActions />
       <SectionView module="dashboard" moduleLabel={mod.label} section={mod.sections[0]} />
     </RangeProvider>
   );

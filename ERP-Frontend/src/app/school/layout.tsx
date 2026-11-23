@@ -7,7 +7,9 @@ import type { CSSProperties, ReactNode } from "react";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import { Menu, X, PanelLeftClose, PanelLeftOpen, Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { schoolFetch } from "@/lib/school-api";
 import { ReportHost } from "@/components/admin/report-host";
+import { RecordPage } from "@/components/admin/quick-actions";
 import { Assist } from "@/components/admin/assist";
 import { BUILT, GROUP, MENU, MENU_MODULES, sectionHref } from "./s/menu-config";
 import { supabase } from "@/lib/supabase/client";
@@ -22,6 +24,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<ServerUser | null>(null);
+  const [allowed, setAllowed] = useState<string[] | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState("");
   const [shut, setShut] = useState<Record<string, boolean>>({});
@@ -57,6 +60,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
         if (!live) return;
         setSchool({ name: body.institution.name, code: body.institution.code });
         setUser(me);
+        schoolFetch<{ allowed: string[] | null }>("/school/my-menu").then((r) => live && setAllowed(r.allowed), () => undefined);
       } catch (e) {
         if (live) setError(e instanceof Error ? e.message : "Access check failed.");
       }
@@ -104,7 +108,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
             <p className={`text-[11px] font-medium uppercase tracking-wide text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{ctx.user.roleDisplayName ?? ctx.user.role}</p>
           </div>
           <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {Object.entries(MENU).filter(([k]) => BUILT.has(k) && (!MENU_MODULES[k] || MENU_MODULES[k].some((m) => ctx.hasModule(m)))).map(([key, mod], idx, all) => {
+            {Object.entries(MENU).filter(([k]) => BUILT.has(k) && (!allowed || allowed.includes(k)) && (!MENU_MODULES[k] || MENU_MODULES[k].some((m) => ctx.hasModule(m)))).map(([key, mod], idx, all) => {
               const inside = key === "dashboard" ? pathname === "/school" || pathname.startsWith("/school/dashboard") : pathname.startsWith(`/school/${key}`);
               const ModIcon = ICONS[key] ?? LayoutDashboard;
               const open = shut[key] === undefined ? inside : !shut[key];
@@ -149,6 +153,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
           <main className="mx-auto max-w-6xl p-6">{children}</main>
         </div>
       </div>
+      <RecordPage portal="school" home="/school" />
       <ReportHost />
       {ctx.hasModule("school_assistant") && <Assist scope="school" push onOpenChange={setAssistOpen} />}
     </SchoolContext.Provider>

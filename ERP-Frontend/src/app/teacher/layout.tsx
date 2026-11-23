@@ -9,6 +9,7 @@ import { Menu, X, PanelLeftClose, PanelLeftOpen, BarChart3, BookOpen, CalendarCh
 import type { LucideIcon } from "lucide-react";
 import { Assist } from "@/components/admin/assist";
 import { ReportHost } from "@/components/admin/report-host";
+import { RecordPage } from "@/components/admin/quick-actions";
 import { MENU, MENU_MODULES, sectionHref } from "./t/menu-config";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE, fetchServerUser, getAuthHeaders, homePathFor, type ServerUser } from "@/lib/api";
@@ -150,6 +151,7 @@ export default function TeacherLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
       {ctx.hasModule("school_assistant") && <Assist scope="teacher" push onOpenChange={setAssistOpen} nav={{ menu: Object.fromEntries(modules), href: sectionHref }} guide={modules.map(([k, m]) => `${m.label}\n${m.sections.map((s) => `  ${s.label} (${sectionHref(k, s.key)})`).join("\n")}`).join("\n").slice(0, 5800)} />}
+      <RecordPage portal="teacher" home="/teacher" />
       <ReportHost />
     </TeacherContext.Provider>
   );

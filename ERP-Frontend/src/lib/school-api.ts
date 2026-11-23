@@ -41,8 +41,12 @@ export interface SetupStatus {
   complete: boolean;
 }
 
+/** The staff self-service screens (help desk, calendar, claims, payslips) are shared by the Teacher and Accounts portals: they ask for /teacher/..., and inside the Accounts portal that means /accounts/... */
+const portalPath = (path: string) => (path.startsWith("/teacher/") && typeof window !== "undefined" && window.location.pathname.startsWith("/accounts") ? path.replace("/teacher/", "/accounts/") : path);
+
 /** Call any authenticated backend path, e.g. `/school/years` or `/sis/students`. */
-export async function schoolFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function schoolFetch<T>(rawPath: string, init: RequestInit = {}): Promise<T> {
+  const path = portalPath(rawPath);
   const headers = await getAuthHeaders();
   let res: Response;
   try {

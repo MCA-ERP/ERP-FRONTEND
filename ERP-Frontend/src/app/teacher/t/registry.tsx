@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { TeacherQuickActions } from "./quick";
 import { Notifications, CheckIn, EventDuties, PendingTasks, TodaysClasses } from "./dash-pages";
 import { MyRequests, RaiseRequest } from "./help-pages";
 import { ComingUp, MonthView } from "./cal-pages";
@@ -29,7 +30,7 @@ type Go = (tab: string) => void;
 export function renderPage(module: string, section: string, page: string, go: Go): ReactNode {
   const k = `${module}/${section}/${page}`;
   switch (k) {
-    case "dashboard/my-dashboard/todays-classes": return <TodaysClasses key={k} go={go} />;
+    case "dashboard/my-dashboard/todays-classes": return <div key={k}><TeacherQuickActions /><TodaysClasses go={go} /></div>;
     case "dashboard/my-dashboard/pending-tasks": return <PendingTasks key={k} />;
     case "dashboard/my-dashboard/notifications": return <Notifications key={k} />;
     case "dashboard/my-dashboard/check-in": return <CheckIn key={k} />;

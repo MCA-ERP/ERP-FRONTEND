@@ -53,8 +53,8 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
           <Field label="Full name"><input className={inputCls} required minLength={2} maxLength={120} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
           <Field label="Gender"><select className={inputCls} value={f.gender} onChange={(e) => setF({ ...f, gender: e.target.value })}>{["Female", "Male", "Other"].map((g) => <option key={g}>{g}</option>)}</select></Field>
           <Field label="Date of birth"><input type="date" className={inputCls} value={f.date_of_birth} max={nowIst()} onChange={(e) => setF({ ...f, date_of_birth: e.target.value })} /></Field>
-          <Field label="Department"><input className={inputCls} list="hr-dept" maxLength={60} value={f.department} onChange={(e) => setF({ ...f, department: e.target.value })} /><datalist id="hr-dept">{lists.data?.departments.map((d) => <option key={d} value={d} />)}</datalist></Field>
-          <Field label="Designation"><input className={inputCls} list="hr-desig" maxLength={100} value={f.designation} onChange={(e) => setF({ ...f, designation: e.target.value })} /><datalist id="hr-desig">{lists.data?.designations.map((d) => <option key={d} value={d} />)}</datalist></Field>
+          <Field label="Department"><select className={inputCls} value={f.department} onChange={(e) => setF({ ...f, department: e.target.value })}><option value="">Choose a department</option>{lists.data?.departments.map((d) => <option key={d}>{d}</option>)}</select></Field>
+          <Field label="Designation"><select className={inputCls} value={f.designation} onChange={(e) => setF({ ...f, designation: e.target.value })}><option value="">Choose a designation</option>{lists.data?.designations.map((d) => <option key={d}>{d}</option>)}</select></Field>
           <Field label="Type"><select className={inputCls} value={f.staff_type} onChange={(e) => setF({ ...f, staff_type: e.target.value })}><option>Teaching</option><option>Non-teaching</option></select></Field>
           <Field label="Joining date"><input type="date" required className={inputCls} value={f.joined_on} onChange={(e) => setF({ ...f, joined_on: e.target.value })} /></Field>
           <Field label="Mobile"><input className={inputCls} maxLength={30} value={f.mobile} onChange={(e) => setF({ ...f, mobile: e.target.value })} /></Field>
@@ -62,7 +62,7 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
           <Field label="Monthly salary (₹)"><input type="number" min={0} className={inputCls} value={f.monthly_salary} onChange={(e) => setF({ ...f, monthly_salary: e.target.value })} /></Field>
           <Field label="Qualification"><input className={inputCls} maxLength={120} value={f.qualification} onChange={(e) => setF({ ...f, qualification: e.target.value })} /></Field>
           <Field label="PAN"><input className={inputCls} maxLength={10} placeholder="ABCDE1234F" value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
-          <Field label="Login role"><select className={inputCls} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Automatic</option>{lists.data?.roles.map((r) => <option key={r}>{r}</option>)}</select></Field>
+          <Field label="Login role"><select className={inputCls} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Automatic</option>{[...new Set(lists.data?.roles ?? [])].map((r) => <option key={r}>{r}</option>)}</select></Field>
         </FormCard>
         <Creds list={creds} close={() => setCreds([])} />
       </div>

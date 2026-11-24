@@ -33,7 +33,7 @@ export function MeritPages({ tab }: { tab: MeritTab }) {
   return tab === "merit-list" ? <MeritList /> : tab === "ranking-rules" ? <RankingRules /> : tab === "seat-matrix" ? <SeatMatrix /> : <SeatTracking />;
 }
 
-interface Merit { programmes: string[]; programme: Prog; cutoff: number | null; rows: { id: string; code: string; child: string; category: string; test: number | null; score: number | null; rank: number; state: string }[] }
+interface Merit { programmes: string[]; programme: Prog; cutoff: number | null; rows: { id: string; code: string; child: string; category: string; test: number | null; interview: number | null; score: number | null; rank: number; state: string }[] }
 function MeritList() {
   const [prog, setProg] = useState("");
   const { data, error, loading } = useLoad(() => schoolFetch<Merit>(`/school/front-office/admission/merit${prog ? `?programme=${encodeURIComponent(prog)}` : ""}`), [prog]);
@@ -51,12 +51,12 @@ function MeritList() {
         </label>
         {p && <span className="text-[13px] text-slate-600">Score = {p.test_weight ? `test ${p.test_weight}% + ` : ""}interview {p.interview_weight}% · {p.seats_on_merit} seats on merit</span>}
       </div>
-      <Note>Rank is by the written-test percentage; ties go to the older child. Interview scores are not recorded yet, so a child with no test marks shows as “Not assessed”.</Note>
+      <Note>{p && p.test_weight === 0 ? `${p.name} has no written test. Rank is by the child-and-parent interaction score; ties go to the older child.` : "Rank is by the weighted written-test and interview score; ties go to the older child. A child with no score yet shows as “Not assessed”."}</Note>
       <Tiles items={[{ label: "Ranked", value: scored, sub: "assessment done" }, { label: "Eligible for offer", value: n("Eligible for offer"), sub: `top ${p?.seats_on_merit ?? 0}` }, { label: "Waitlist", value: n("Waitlist"), sub: "in rank order" }, { label: "Cut-off score", value: data?.cutoff ?? "—", sub: data?.cutoff == null ? "no scores yet" : "last seat on merit" }]} />
-      <ListPanel title={`Merit list · ${p?.name ?? ""}`} noun="candidates" search={search} onSearch={setSearch} exportName="merit-list" head={["Rank", "Application", "Child", "Category", "Test %", "Status"]}
-        exportRows={rows.map((r) => [r.rank, r.code, r.child, r.category, r.test, r.state])}
-        tableHead={["Rank", "Application", "Child", "Category", "Test", "Score", "Status"]} empty={loading ? "Loading…" : "No candidates for this programme yet."}
-        rows={rows.map((r) => [r.rank, r.code, <b key="c" className="font-semibold text-slate-900">{r.child}</b>, r.category, r.test ?? "—", <b key="s">{r.score ?? "—"}</b>, <Chip key="st" tone={r.state === "Eligible for offer" || r.state === "Offered" ? "info" : r.state === "Waitlist" ? "warn" : "mute"}>{r.state}</Chip>])} />
+      <ListPanel title={`Merit list · ${p?.name ?? ""}`} noun="candidates" search={search} onSearch={setSearch} exportName="merit-list" head={["Rank", "Application", "Child", "Category", "Test %", "Interview", "Score", "Status"]}
+        exportRows={rows.map((r) => [r.rank, r.code, r.child, r.category, r.test, r.interview, r.score, r.state])}
+        tableHead={["Rank", "Application", "Child", "Category", "Test", "Interview", "Score", "Status"]} empty={loading ? "Loading…" : "No candidates for this programme yet."}
+        rows={rows.map((r) => [r.rank, r.code, <b key="c" className="font-semibold text-slate-900">{r.child}</b>, r.category, r.test ?? "—", r.interview ?? "—", <b key="s">{r.score ?? "—"}</b>, <Chip key="st" tone={r.state === "Eligible for offer" || r.state === "Offered" ? "info" : r.state === "Waitlist" ? "warn" : "mute"}>{r.state}</Chip>])} />
     </div>
   );
 }

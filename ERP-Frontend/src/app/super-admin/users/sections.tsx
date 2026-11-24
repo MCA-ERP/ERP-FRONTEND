@@ -18,22 +18,22 @@ export const USERS_SECTIONS: UsersSection[] = [
     key: "platform", label: "Platform Users", pages: [
       {
         key: "super", title: "Super Admin", description: "People with full control of the platform.",
-        render: () => (<><Note tone="warn">Keep at least two Super Admins so the platform is never locked out. Every Super Admin must use two-factor sign-in.</Note><Directory fixedGroup="super_admin" layout="super" /></>),
+        render: () => (<><Note tone="warn">Keep at least two Super Admins so the platform is never locked out. Every Super Admin must use two-factor sign-in.</Note><Directory key="super_admin" fixedGroup="super_admin" layout="super" /></>),
       },
-      { key: "support", title: "Support Staff", description: "Your platform team: managers, finance, support and content.", render: () => <Directory fixedGroup="support_staff" layout="support" /> },
+      { key: "support", title: "Support Staff", description: "Your platform team: managers, finance, support and content.", render: () => <Directory key="support_staff" fixedGroup="support_staff" layout="support" /> },
     ],
   },
   {
     key: "school", label: "School Users", pages: [
-      { key: "admins", title: "School Admin", description: "Administrators of each school.", render: () => <Directory fixedGroup="school_admin" layout="admins" /> },
-      { key: "principals", title: "Principal", description: "Principals of each school.", render: () => <Directory fixedGroup="principal" layout="principals" /> },
+      { key: "admins", title: "School Admin", description: "Administrators of each school.", render: () => <Directory key="school_admin" fixedGroup="school_admin" layout="admins" /> },
+      { key: "principals", title: "Principal", description: "Principals of each school.", render: () => <Directory key="principal" fixedGroup="principal" layout="principals" /> },
     ],
   },
   {
     key: "staff", label: "Staff Users", pages: [
-      { key: "teachers", title: "Teachers", description: "Teacher accounts across all schools.", render: () => <Directory fixedGroup="teachers" layout="teachers" /> },
-      { key: "accountants", title: "Accountants", description: "Staff who collect fees and manage accounts.", render: () => <Directory fixedGroup="accountants" layout="accountants" /> },
-      { key: "other", title: "Other Staff", description: "Receptionists, librarians, transport and other staff.", render: () => <Directory fixedGroup="other_staff" layout="otherstaff" /> },
+      { key: "teachers", title: "Teachers", description: "Teacher accounts across all schools.", render: () => <Directory key="teachers" fixedGroup="teachers" layout="teachers" /> },
+      { key: "accountants", title: "Accountants", description: "Staff who collect fees and manage accounts.", render: () => <Directory key="accountants" fixedGroup="accountants" layout="accountants" /> },
+      { key: "other", title: "Other Staff", description: "Receptionists, librarians, transport and other staff.", render: () => <Directory key="other_staff" fixedGroup="other_staff" layout="otherstaff" /> },
     ],
   },
   {

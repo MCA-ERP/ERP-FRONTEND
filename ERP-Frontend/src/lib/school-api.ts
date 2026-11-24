@@ -42,7 +42,7 @@ export interface SetupStatus {
 }
 
 /** The staff self-service screens (help desk, calendar, claims, payslips) are shared by the Teacher, Accounts and Admissions portals: they ask for /teacher/..., and inside the Accounts (or Admissions) portal that means /accounts/... (or /admissions/...) */
-const portalPath = (path: string) => { if (!path.startsWith("/teacher/") || typeof window === "undefined") return path; const here = window.location.pathname; return here.startsWith("/accounts") ? path.replace("/teacher/", "/accounts/") : here.startsWith("/admissions") ? path.replace("/teacher/", "/admissions/") : path; };
+const portalPath = (path: string) => { if (!path.startsWith("/teacher/") || typeof window === "undefined") return path; const here = window.location.pathname; return here.startsWith("/accounts") ? path.replace("/teacher/", "/accounts/") : here.startsWith("/admissions") ? path.replace("/teacher/", "/admissions/") : here.startsWith("/principal") ? path.replace("/teacher/", "/principal/") : path; };
 
 /** Call any authenticated backend path, e.g. `/school/years` or `/sis/students`. */
 export async function schoolFetch<T>(rawPath: string, init: RequestInit = {}): Promise<T> {

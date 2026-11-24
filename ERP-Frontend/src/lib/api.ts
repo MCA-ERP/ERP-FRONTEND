@@ -103,12 +103,15 @@ export async function fetchServerUser(accessToken: string): Promise<ServerUser> 
 export const TEACHER_ROLES = ["Faculty", "ClassTeacher", "HOD"];
 /** The accountant has their own Accounts (Fee & Finance) portal. */
 export const ACCOUNTS_ROLES = ["Accountant"];
+/** The Admissions Head has their own Admissions portal. */
+export const ADMISSIONS_ROLES = ["AdmissionsHead"];
 
 /** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
   const staff = user.role === "SuperAdmin" || (!user.institutionId && (user.permissions ?? []).some((p) => p.startsWith("platform.")));
   if (staff) return "/super-admin";
   if (ACCOUNTS_ROLES.includes(user.role)) return "/accounts";
+  if (ADMISSIONS_ROLES.includes(user.role)) return "/admissions";
   return TEACHER_ROLES.includes(user.role) ? "/teacher" : "/school";
 }
 

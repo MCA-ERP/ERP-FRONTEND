@@ -30,7 +30,7 @@ export default function AccountsLayout({ children }: { children: ReactNode }) {
   const [badges, setBadges] = useState({ overdue: 0, unread: 0 });
   const [error, setError] = useState("");
   const [assistOpen, setAssistOpen] = useState(false);
-  const [shut, setShut] = useState<Record<string, boolean>>({});
+  const [pick, setPick] = useState<{ at: string; key: string | null } | null>(null); // one module is open at a time
   const [navOpen, setNavOpen] = useState(false);
   const [slim, setSlim] = useState(() => { try { return typeof window !== "undefined" && localStorage.getItem("school-sidebar") === "slim"; } catch { return false; } });
   const [fly, setFly] = useState<{ key: string; top: number } | null>(null);
@@ -108,13 +108,13 @@ export default function AccountsLayout({ children }: { children: ReactNode }) {
               {modules.map(([key, mod], idx, all) => {
                 const inside = key === "dashboard" ? pathname === "/accounts" || pathname.startsWith("/accounts/dashboard") : pathname.startsWith(`/accounts/${key}`);
                 const ModIcon = ICONS[key] ?? LayoutDashboard;
-                const open = shut[key] === undefined ? inside : !shut[key];
+                const open = pick && pick.at === (pathname.split("/")[2] ?? "") ? pick.key === key : inside;
                 const heading = idx === 0 || all[idx - 1][1].group !== mod.group ? mod.group : "";
                 const badge = key === "installment-dues" ? ctx.badges.overdue : 0;
                 return (
                   <div key={key}>
                     {heading && <p className={`px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{heading}</p>}
-                    <button type="button" aria-expanded={open} title={mod.label} onClick={(e) => { if (slim && window.matchMedia("(min-width: 1024px)").matches) { const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.key === key ? null : { key, top: r.top }); return; } setShut({ ...shut, [key]: open }); }}
+                    <button type="button" aria-expanded={open} title={mod.label} onClick={(e) => { if (slim && window.matchMedia("(min-width: 1024px)").matches) { const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.key === key ? null : { key, top: r.top }); return; } setPick({ at: pathname.split("/")[2] ?? "", key: open ? null : key }); }}
                       className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${slim ? "lg:justify-center lg:px-0" : ""} ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
                       <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />
                       <span className={`flex-1 ${slim ? "lg:hidden" : ""}`}>{mod.label}</span>

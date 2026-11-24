@@ -27,7 +27,7 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
-  const [me, setMe] = useState<{ name: string; line: string; school: { name: string; code: string }; badges: { documents: number; unread: number } } | null>(null);
+  const [me, setMe] = useState<{ name: string; line: string; school: { name: string; code: string; logo?: string | null }; badges: { documents: number; unread: number } } | null>(null);
   const [apps, setApps] = useState<FamilyApp[]>([]);
   const [activeId, setActiveId] = useState<string | null>(() => { try { return typeof window !== "undefined" ? localStorage.getItem("applicant-active") : null; } catch { return null; } });
   const [error, setError] = useState("");
@@ -102,7 +102,7 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
           <div role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize" onPointerDown={beginSb} onDoubleClick={resetSb} className="absolute inset-y-0 -right-1 z-20 hidden w-2 cursor-col-resize hover:bg-[#0294CE]/30 lg:block" />
           <div className={`px-5 pb-3 pt-5 ${slim ? "lg:px-4" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <div className="flex items-start justify-between gap-2"><div className="leading-[0]"><img src="/mca-logo.svg" alt="My Class Assist" style={{ width: 112, height: "auto" }} className={slim ? "lg:hidden" : ""} /><img src="/mca-mark.svg" alt="" className={`hidden size-8 ${slim ? "lg:block" : ""}`} /></div><button type="button" onClick={toggleSlim} aria-label={slim ? "Open sidebar" : "Close sidebar"} title={slim ? "Open sidebar" : "Close sidebar"} className="absolute -right-3.5 top-7 z-30 hidden size-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-[#0294CE] lg:flex">{slim ? <PanelLeftOpen className="size-4" aria-hidden="true" /> : <PanelLeftClose className="size-4" aria-hidden="true" />}</button></div>
+            <div className="flex items-start justify-between gap-2"><div className="leading-[0]"><img src={ctx.school.logo || "/mca-logo.svg"} alt={ctx.school.logo ? ctx.school.name : "My Class Assist"} style={{ width: 112, height: "auto", maxHeight: 72, objectFit: "contain" }} className={slim ? "lg:hidden" : ""} /><img src="/mca-mark.svg" alt="" className={`hidden size-8 ${slim ? "lg:block" : ""}`} /></div><button type="button" onClick={toggleSlim} aria-label={slim ? "Open sidebar" : "Close sidebar"} title={slim ? "Open sidebar" : "Close sidebar"} className="absolute -right-3.5 top-7 z-30 hidden size-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-[#0294CE] lg:flex">{slim ? <PanelLeftOpen className="size-4" aria-hidden="true" /> : <PanelLeftClose className="size-4" aria-hidden="true" />}</button></div>
             <p className={`mt-2 truncate text-[13px] font-semibold text-slate-900 ${slim ? "lg:hidden" : ""}`}>{ctx.school.name}</p>
             <p className={`text-[11px] font-medium uppercase tracking-wide text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>Applicant portal · Families</p>
           </div>

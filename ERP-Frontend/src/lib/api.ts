@@ -107,6 +107,8 @@ export const ACCOUNTS_ROLES = ["Accountant"];
 export const ADMISSIONS_ROLES = ["AdmissionsHead"];
 /** A family applying for admission has the Applicant portal. */
 export const APPLICANT_ROLES = ["Applicant"];
+/** The Principal has their own Principal portal: the decision layer over the school's records. */
+export const PRINCIPAL_ROLES = ["Principal"];
 
 /** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
@@ -115,6 +117,7 @@ export function homePathFor(user: ServerUser): string {
   if (ACCOUNTS_ROLES.includes(user.role)) return "/accounts";
   if (ADMISSIONS_ROLES.includes(user.role)) return "/admissions";
   if (APPLICANT_ROLES.includes(user.role)) return "/applicant";
+  if (PRINCIPAL_ROLES.includes(user.role)) return "/principal";
   return TEACHER_ROLES.includes(user.role) ? "/teacher" : "/school";
 }
 

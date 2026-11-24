@@ -7,7 +7,7 @@ import { armPrint, downloadCsv } from "@/components/admin/csv";
 export interface YearOpt { id: string; name: string }
 
 /** The bar above a Dashboard page: pick the academic year, search this page, and print it as a report. */
-export function PageBar({ years, year, onYear, name }: { years: YearOpt[]; year: string; onYear: (id: string) => void; name: string }) {
+export function PageBar({ years, year, onYear, name, label = "Print" }: { years: YearOpt[]; year: string; onYear: (id: string) => void; name: string; label?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [q, setQ] = useState("");
   const scope = () => ref.current?.closest<HTMLElement>("[data-report]") ?? null;
@@ -34,7 +34,7 @@ export function PageBar({ years, year, onYear, name }: { years: YearOpt[]; year:
           <Search className="size-4 text-slate-400" aria-hidden="true" />
           <input value={q} onChange={(e) => search(e.target.value)} placeholder="Search this page" aria-label="Search this page" className="w-full bg-transparent text-[13px] outline-none" />
         </label>
-        <button type="button" onClick={print} className="rounded-full bg-[#026f9b] px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-[#014a67]">Print</button>
+        <button type="button" onClick={print} className="rounded-full bg-[#026f9b] px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-[#014a67]">{label}</button>
       </div>
     </div>
   );

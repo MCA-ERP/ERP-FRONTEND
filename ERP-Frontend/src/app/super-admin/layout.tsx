@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useScrollActive } from "@/components/admin/use-scroll-active";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -55,6 +56,8 @@ void FileBarChart;
 
 const matches = (pathname: string, href: string) => (href === "/super-admin" ? pathname === href : pathname === href || pathname.startsWith(href + "/"));
 /** The most specific link that fits the address, so a child does not also light up its parent's other links. */
+/** A page that is not a menu link (like /super-admin/schools or /super-admin/support) still belongs to the menu group of the same area, so that group opens. */
+const groupByArea = (pathname: string, hrefs: string[]) => { const seg = pathname.split("/")[2]; return seg ? hrefs.find((h) => h.startsWith(`/super-admin/${seg}/`)) ?? null : null; };
 const bestOf = (pathname: string, hrefs: string[]) => hrefs.filter((h) => matches(pathname, h)).sort((a, b) => b.length - a.length)[0] ?? null;
 
 /** Platform staff: SuperAdmin, or a user with no school who holds at least one platform permission. */
@@ -71,6 +74,7 @@ const initials = (u: ServerUser) => {
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
   const [error, setError] = useState("");
   const [navOpen, setNavOpen] = useState(false);
@@ -166,7 +170,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [shut, setShut] = useState<Record<string, boolean>>({});
   const openGroup = useMemo(() => {
     const all = items.flatMap((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])]);
-    const cur = bestOf(pathname, all);
+    const cur = bestOf(pathname, all) ?? groupByArea(pathname, all);
     return items.find((i) => [i.href, ...(i.children?.map((c) => c.href) ?? [])].includes(cur ?? ""))?.href ?? null;
   }, [items, pathname]);
   useEffect(() => { setShut({}); }, [openGroup]);
@@ -214,7 +218,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           const kids = item.children;
           const Icon = item.icon;
           const hrefs = [item.href, ...(kids?.map((k) => k.href) ?? [])];
-          const inGroup = hrefs.includes(current ?? "");
+          const inGroup = hrefs.includes(current ?? "") || (!current && hrefs.includes(groupByArea(pathname, allHrefs) ?? ""));
           const showKids = inGroup && !shut[item.href];
           const onParent = !kids?.length && current === item.href;
           const count = item.badge ? badges[item.badge] : 0;

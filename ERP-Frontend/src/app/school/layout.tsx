@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useScrollActive } from "@/components/admin/use-scroll-active";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import { Menu, X, PanelLeftClose, PanelLeftOpen, Award, BarChart3, BedDouble, Briefcase, Bus, CalendarCheck, ChevronDown, ClipboardCheck, Clock, FileText, GraduationCap, HeartPulse, IndianRupee, Landmark, LayoutDashboard, Library, MessageSquare, Monitor, Package, Settings, ShieldCheck, Trophy, UserRound, Users, UsersRound, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -23,11 +24,14 @@ const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, profile:
 export default function SchoolLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
   const [allowed, setAllowed] = useState<string[] | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState("");
-  const [shut, setShut] = useState<Record<string, boolean>>({});
+  const moduleNow = pathname.split("/")[2] ?? "";
+  const [shutState, setShutState] = useState<{ at: string; map: Record<string, boolean> }>({ at: "", map: {} });
+  const shut = shutState.at === moduleNow ? shutState.map : {}; // moving to another module starts fresh: the module you opened shows its submenu
   const [navOpen, setNavOpen] = useState(false);
   const [slim, setSlim] = useState(() => { try { return typeof window !== "undefined" && localStorage.getItem("school-sidebar") === "slim"; } catch { return false; } });
   const [assistOpen, setAssistOpen] = useState(false);
@@ -116,7 +120,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
               return (
                 <div key={key}>
                   {heading && <p className={`px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#026f9b] ${slim ? "lg:hidden" : ""}`}>{heading}</p>}
-                  <button type="button" aria-expanded={open} title={mod.label} onClick={(e) => { if (slim && window.matchMedia("(min-width: 1024px)").matches) { const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.key === key ? null : { key, top: r.top }); return; } setShut({ ...shut, [key]: open }); }}
+                  <button type="button" aria-expanded={open} title={mod.label} onClick={(e) => { if (slim && window.matchMedia("(min-width: 1024px)").matches) { const r = e.currentTarget.getBoundingClientRect(); setFly(fly?.key === key ? null : { key, top: r.top }); return; } setShutState({ at: moduleNow, map: { ...shut, [key]: open } }); }}
                     className={`flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-[13.5px] ${slim ? "lg:justify-center lg:px-0" : ""} ${inside ? "font-bold text-slate-900" : "font-medium text-slate-800 hover:bg-white/50"}`}>
                     <ModIcon className="size-[18px] shrink-0" aria-hidden="true" />
                     <span className={`flex-1 ${slim ? "lg:hidden" : ""}`}>{mod.label}</span>

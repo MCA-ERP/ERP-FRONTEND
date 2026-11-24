@@ -153,6 +153,7 @@ export default function LoginView() {
                 <button type="submit" className={styles.submit} disabled={L.isSubmitting}>{L.isSubmitting ? "Signing in…" : "Sign in"}</button>
               </form>
               <p className={styles.help}>Trouble signing in? Contact your administrator.</p>
+              <p className={styles.help}>Applying for admission? <Link href="/apply" className={styles.linkBtn}>Create a family account</Link></p>
             </>
           )}
         </div>

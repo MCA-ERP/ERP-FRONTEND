@@ -26,7 +26,7 @@ export default function SiteHome() {
   // One handler for the whole page: any link or button opens the pop-up instead of going anywhere.
   const onClickCapture = (e: MouseEvent<HTMLDivElement>) => {
     const target = e.target as Element;
-    if (target.closest("[data-dialog]")) return;
+    if (target.closest("[data-dialog]") || target.closest("[data-go]")) return; // [data-go] links really go (the family sign-up)
     const hit = target.closest("a, button, [role='button']");
     if (!hit) return;
     e.preventDefault();
@@ -48,6 +48,7 @@ export default function SiteHome() {
           {NAV.map((n) => <a key={n} href={`#${n.toLowerCase().replace(/\s+/g, "-")}`} className="hover:text-[#026f9b]">{n}</a>)}
         </nav>
         <div className="flex items-center gap-3">
+          <a href="/apply" data-go="" className="rounded-full border border-[#026f9b] px-5 py-2 text-[13px] font-semibold text-[#026f9b] hover:bg-[#dceff9]">Apply for admission</a>
           <button type="button" className="rounded-full border border-[#026f9b] px-5 py-2 text-[13px] font-semibold text-[#026f9b] hover:bg-[#dceff9]">School Log in</button>
           <button type="button" className="rounded-full bg-[#026f9b] px-5 py-2 text-[13px] font-semibold text-white hover:bg-[#014a67]">Parent Login</button>
           <button type="button" aria-label="Open menu" className="grid h-9 w-9 place-items-center rounded-lg border border-slate-200 md:hidden">

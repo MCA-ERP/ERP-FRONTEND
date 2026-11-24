@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useScrollActive } from "@/components/admin/use-scroll-active";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import { Menu, X, PanelLeftClose, PanelLeftOpen, BarChart3, BookOpen, CalendarCheck, CalendarDays, ChevronDown, ClipboardCheck, ClipboardList, Clock, FileText, GraduationCap, LayoutDashboard, Library, MessageSquare, Monitor, PenLine, UserRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -23,6 +24,7 @@ const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, profile:
 export default function TeacherLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [line, setLine] = useState("Teacher");

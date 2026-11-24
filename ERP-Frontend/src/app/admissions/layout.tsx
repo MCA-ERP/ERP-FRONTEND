@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useScrollActive } from "@/components/admin/use-scroll-active";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import { Menu, X, PanelLeftClose, PanelLeftOpen, Briefcase, ChartColumn, ChevronDown, ClipboardCheck, FileText, GraduationCap, IndianRupee, Landmark, LayoutDashboard, MessageSquare, Settings2, SquareCheckBig, UserRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -24,6 +25,7 @@ const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, mywork: 
 export default function AdmissionsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [line, setLine] = useState("Admissions Head");

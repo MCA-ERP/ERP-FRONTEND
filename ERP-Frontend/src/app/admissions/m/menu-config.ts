@@ -31,6 +31,7 @@ export const MENU: Record<string, MenuModule> = {
   ] },
   enquiries: { label: "Enquiries", group: "Pre-admission", sections: [
     { key: "admission-enquiry", label: "Admission Enquiry", pages: [{ key: "new-enquiry", title: "New Enquiry" }, { key: "enquiry-list", title: "Enquiry List" }] },
+    { key: "family-portal", label: "Family Portal", pages: [{ key: "family-messages", title: "Family Messages" }, { key: "family-slots", title: "Family Slots" }] },
   ] },
   leads: { label: "Leads & Follow-up", group: "Pre-admission", sections: [
     { key: "lead-management", label: "Lead Management", pages: [{ key: "leads", title: "Leads" }, { key: "followups-due", title: "Follow-ups Due" }, { key: "followup-history", title: "Follow-up History" }] },
@@ -100,6 +101,7 @@ export const NEEDS: Record<string, string[]> = {
   "online-application": ["online_admissions"], "approval/merit-list": ["online_admissions"], "approval/seat-matrix": ["online_admissions"], "approval/offers": ["online_admissions"],
   "applications/applications/online-applications": ["online_admissions"], "applications/applications/by-programme": ["online_admissions"], "verification/verification/programme-rules": ["online_admissions"],
   "fee-assignment/fee-assignment/fee-plans": ["fees"],
+  "enquiries/family-portal": ["online_admissions"],
 };
 
 /** The 11 steps of an admission, each with the page that does the work. */

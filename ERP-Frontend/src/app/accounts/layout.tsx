@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useScrollActive } from "@/components/admin/use-scroll-active";
 import { useDragWidth } from "@/components/admin/use-drag-width";
 import { Menu, X, PanelLeftClose, PanelLeftOpen, BarChart3, Briefcase, CalendarClock, Calculator, ChevronDown, CreditCard, FileText, GraduationCap, IndianRupee, LayoutDashboard, ListChecks, Percent, Receipt, TriangleAlert, Wallet, ChartColumn } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -24,6 +25,7 @@ const ICONS: Record<string, LucideIcon> = { dashboard: LayoutDashboard, mywork: 
 export default function AccountsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  useScrollActive(pathname);
   const [user, setUser] = useState<ServerUser | null>(null);
   const [school, setSchool] = useState<{ name: string; code: string } | null>(null);
   const [line, setLine] = useState("Accountant");

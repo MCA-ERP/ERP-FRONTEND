@@ -5,6 +5,7 @@ import { MyRequests, RaiseRequest } from "../../teacher/t/help-pages";
 import { ComingUp, MonthView } from "../../teacher/t/cal-pages";
 import { Claims, Payslips } from "../../teacher/t/profile-pages";
 import { Notifications, Overview, Pipeline } from "./dash-pages";
+import { FamilyMessages, FamilySlots } from "./family-pages";
 import { EnquiryList, FollowupHistory, Leads, NewEnquiry } from "./lead-pages";
 import { Confirmation, FeePlans, PortalAccounts } from "./onboard-pages";
 import { AdmissionReports, AssignFees, Admitted, Allocate, FeeStructure, Register, SectionStrength, type ReportTab } from "./onb2-pages";
@@ -31,6 +32,8 @@ export function renderPage(module: string, section: string, page: MenuPage, go: 
     case "mywork/my-payslips/payslips": return <Payslips key={k} />;
     case "enquiries/admission-enquiry/new-enquiry": return <NewEnquiry key={k} />;
     case "enquiries/admission-enquiry/enquiry-list": return <EnquiryList key={k} />;
+    case "enquiries/family-portal/family-messages": return <FamilyMessages key={k} />;
+    case "enquiries/family-portal/family-slots": return <FamilySlots key={k} />;
     case "leads/lead-management/leads": return <Leads key={k} due={false} />;
     case "leads/lead-management/followups-due": return <Leads key={k} due />;
     case "leads/lead-management/followup-history": return <FollowupHistory key={k} />;

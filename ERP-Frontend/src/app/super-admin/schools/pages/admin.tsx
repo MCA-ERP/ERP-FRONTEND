@@ -23,7 +23,7 @@ const TYPES = ["Campus admin", "Primary admin", "Accounts admin", "Academic admi
 const tempPassword = () => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
   const bytes = crypto.getRandomValues(new Uint32Array(12));
-  return Array.from(bytes, (b) => chars[b % chars.length]).join("") + "7";
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("") + "7#"; // ends with a number and a symbol, which the password rules may require
 };
 
 export function SchoolAdmin({ tab }: { tab: AdminTab }) {

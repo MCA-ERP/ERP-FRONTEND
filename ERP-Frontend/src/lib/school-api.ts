@@ -44,7 +44,7 @@ export interface SetupStatus {
 /** The staff self-service screens (help desk, calendar, claims, payslips) are shared by several portals: they ask for
  *  /teacher/..., and inside another portal that means that portal's own path. Fee & Finance also draws the School Admin's
  *  payroll approval and salary payment screens, which become its own /accounts/pay/... paths. */
-const SHARED_PORTALS = ["accounts", "admissions", "principal", "hr"];
+const SHARED_PORTALS = ["accounts", "admissions", "principal", "hr", "transport"];
 const portalPath = (path: string) => {
   if (typeof window === "undefined") return path;
   const portal = window.location.pathname.split("/")[1];

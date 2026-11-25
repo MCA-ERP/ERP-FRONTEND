@@ -120,7 +120,7 @@ export function NewApplication() {
             {pick("gender", "Gender", ["Female", "Male", "Other"])}
             {pick("class_sought", "Class applying for", CLASSES)}
             {pick("blood_group", "Blood group", BLOOD)}
-            {input("aadhaar", "Aadhaar (optional)", { max: 20 })}
+            <Field label="Aadhaar (optional)"><input className={`${inputCls} [-webkit-text-security:disc]`} inputMode="numeric" autoComplete="off" maxLength={14} placeholder="12 digits" pattern="\d{4}[ \-]?\d{4}[ \-]?\d{4}" title="Aadhaar has 12 digits" value={f.aadhaar} onChange={(e) => set("aadhaar", e.target.value)} /></Field>
             {input("mother_tongue", "Mother tongue", { max: 40 })}
           </>}
           {step === 1 && <>

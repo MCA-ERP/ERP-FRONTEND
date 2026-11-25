@@ -115,7 +115,7 @@ export function ParentRequestPages({ tab }: { tab: ReqTab }) {
         extra={addBtn} tableHead={["Request no.", "Parent", "Student", "Type", "Details", "Raised", "Status", ""]} empty={loading ? "Loading…" : "No requests yet."}
         rows={rows.map((r) => [r.code, r.parent, <span key="s" className="font-semibold text-[#026f9b]">{r.student || "—"}</span>, cfg.label, r.details, day(r.raised_on), <Chip key="t" tone={tone(r.status)}>{r.status}</Chip>, <button key="v" type="button" className={small} onClick={() => setView(r)}>View details</button>])} />
       <Detail r={view} close={() => setView(null)} left={view && open(view.status) ? <><button type="button" className={quietCls} disabled={act.busy} onClick={() => void set(view, "Rejected")}>Reject</button><button type="button" className={primaryCls} disabled={act.busy} onClick={() => void set(view, "Approved")}>Approve</button></> : undefined} />
-      <NewRequest open={adding} close={() => setAdding(false)} kind={kind} onSaved={reload} />
+      <NewRequest open={adding} close={() => setAdding(false)} kind={kind} types={kind === "other" ? ["General", "New transport", "Stop change", "Route transfer"] : undefined} onSaved={reload} />
     </div>
   );
 }

@@ -14,6 +14,9 @@ import { Field, FormCard, ListPanel, has, pct } from "./fo-pages";
 import { Row, day, small } from "./dash-pages";
 import { Foot, FormFoot, okBox, primaryCls } from "./fee-pages";
 
+/** An identity number shows as dots while it is typed (not a password box, so browsers don't offer to save it). */
+const HIDDEN = "[-webkit-text-security:disc]";
+
 const H = "/school/hr";
 const nowIst = () => new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 interface Cred { name?: string; emp_code?: string; email?: string; temporary_password?: string; role?: string }
@@ -64,7 +67,7 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
           <Field label="Email"><input type="email" required className={inputCls} value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
           <Field label="Monthly salary (₹)"><input type="number" min={0} className={inputCls} value={f.monthly_salary} onChange={(e) => setF({ ...f, monthly_salary: e.target.value })} /></Field>
           <Field label="Qualification"><input className={inputCls} maxLength={120} value={f.qualification} onChange={(e) => setF({ ...f, qualification: e.target.value })} /></Field>
-          <Field label="PAN"><input className={inputCls} maxLength={10} placeholder="ABCDE1234F" value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
+          <Field label="PAN"><input className={`${inputCls} ${f.pan ? HIDDEN : ""}`} maxLength={10} autoComplete="off" spellCheck={false} placeholder="ABCDE1234F" value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
           {!isHr && <Field label="Login role"><select className={inputCls} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Automatic</option>{[...new Set(lists.data?.roles ?? [])].map((r) => <option key={r}>{r}</option>)}</select></Field>}
         </FormCard>
         <Creds list={creds} close={() => setCreds([])} />
@@ -125,14 +128,14 @@ export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualifica
   if (tab === "personal") return (
     <div>{err}{bar}{okBox(msg)}
       <fieldset disabled={locked} className="contents">
-      <FormCard title="Personal details" cols="lg:grid-cols-5" onSubmit={(e) => void save(e, { name: v("name", x.name), gender: v("gender", x.gender) || null, date_of_birth: v("dob", x.date_of_birth) || null, blood_group: v("blood", x.blood_group) || null, marital_status: v("marital", x.marital_status) || null, pan: v("pan", x.pan), aadhaar: d.aadhaar?.trim() || undefined })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
+      <FormCard title="Personal details" cols="lg:grid-cols-5" onSubmit={(e) => void save(e, { name: v("name", x.name), gender: v("gender", x.gender) || null, date_of_birth: v("dob", x.date_of_birth) || null, blood_group: v("blood", x.blood_group) || null, marital_status: v("marital", x.marital_status) || null, pan: d.pan, aadhaar: d.aadhaar?.trim() || undefined })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
         <Field label="Full name"><input className={inputCls} required minLength={2} value={v("name", x.name)} onChange={(e) => setD({ ...d, name: e.target.value })} /></Field>
         <Field label="Gender"><select className={inputCls} value={v("gender", x.gender)} onChange={(e) => setD({ ...d, gender: e.target.value })}><option value="">—</option>{["Male", "Female", "Other"].map((g) => <option key={g}>{g}</option>)}</select></Field>
         <Field label="Date of birth"><input type="date" className={inputCls} value={v("dob", x.date_of_birth)} onChange={(e) => setD({ ...d, dob: e.target.value })} /></Field>
         <Field label="Blood group"><select className={inputCls} value={v("blood", x.blood_group)} onChange={(e) => setD({ ...d, blood: e.target.value })}><option value="">—</option>{["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((g) => <option key={g}>{g}</option>)}</select></Field>
         <Field label="Marital status"><select className={inputCls} value={v("marital", x.marital_status)} onChange={(e) => setD({ ...d, marital: e.target.value })}><option value="">—</option>{["Single", "Married", "Other"].map((g) => <option key={g}>{g}</option>)}</select></Field>
-        <Field label="PAN"><input className={inputCls} maxLength={10} value={v("pan", x.pan)} onChange={(e) => setD({ ...d, pan: e.target.value.toUpperCase() })} /></Field>
-        <Field label="Aadhaar"><input className={inputCls} maxLength={14} placeholder="12 digits" value={d.aadhaar ?? x.aadhaar} onFocus={(e) => e.target.select()} onChange={(e) => setD({ ...d, aadhaar: e.target.value })} /></Field>
+        <Field label="PAN"><input className={`${inputCls} ${d.pan ? HIDDEN : ""}`} maxLength={10} autoComplete="off" spellCheck={false} placeholder="ABCDE1234F" value={d.pan ?? x.pan ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => setD({ ...d, pan: e.target.value.toUpperCase() })} /></Field>
+        <Field label="Aadhaar"><input className={`${inputCls} ${d.aadhaar ? HIDDEN : ""}`} maxLength={14} autoComplete="off" inputMode="numeric" placeholder="12 digits" value={d.aadhaar ?? x.aadhaar} onFocus={(e) => e.target.select()} onChange={(e) => setD({ ...d, aadhaar: e.target.value })} /></Field>
       </FormCard>
       </fieldset>
     </div>

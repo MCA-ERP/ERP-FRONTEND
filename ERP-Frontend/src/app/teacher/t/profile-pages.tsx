@@ -321,7 +321,7 @@ export function Competencies() {
 interface Rule { ctype: string; limit_amount: number; per: string; receipt_above: number; approver: string; limit_text: string; receipt_text: string }
 interface Claim { id: string; code: string; ctype: string; description: string; claim_on: string; amount: number; receipts: number; status: string; paid_on: string | null }
 const claimTone = (s: string) => (s === "Paid" || s === "Approved" ? "good" : s === "Rejected" ? "bad" : "info") as "good" | "bad" | "info";
-export function Claims({ view, go }: { view: "submit" | "list"; go: (tab: string) => void }) {
+export function Claims({ view, go, empty = "You have not submitted a claim yet." }: { view: "submit" | "list"; go: (tab: string) => void; empty?: string }) {
   const { data, error, loading, reload } = useLoad(() => schoolFetch<{ rules: Rule[]; items: Claim[] }>("/teacher/claims"), []);
   const today = new Date().toLocaleDateString("en-CA");
   const blank = { ctype: "", claim_on: today, amount: "", description: "" };
@@ -372,7 +372,7 @@ export function Claims({ view, go }: { view: "submit" | "list"; go: (tab: string
       {data && (
         <Panel title="My claims" sub={`${data.items.length} ${data.items.length === 1 ? "claim" : "claims"}`} right={<ExportPrint name="my-claims" head={["Claim", "Type", "For", "Date", "Amount", "Status"]} rows={items.map((c) => [c.code, c.ctype, c.description, c.claim_on, c.amount, c.status])} />}>
           <Search_ q={q} onQ={setQ} label="Search my claims" />
-          <SimpleTable head={[{ h: "Claim" }, { h: "Type" }, { h: "For" }, { h: "Date" }, { h: "Amount" }, { h: "Status" }]} empty="You have not submitted a claim yet." rows={items.map((c) => [c.code, c.ctype, c.description, day(c.claim_on), rupees(c.amount), <Chip key="s" tone={claimTone(c.status)}>{c.status}</Chip>])} />
+          <SimpleTable head={[{ h: "Claim" }, { h: "Type" }, { h: "For" }, { h: "Date" }, { h: "Amount" }, { h: "Status" }]} empty={empty} rows={items.map((c) => [c.code, c.ctype, c.description, day(c.claim_on), rupees(c.amount), <Chip key="s" tone={claimTone(c.status)}>{c.status}</Chip>])} />
         </Panel>
       )}
     </div>

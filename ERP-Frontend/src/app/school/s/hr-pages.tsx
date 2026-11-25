@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useSchool } from "../context";
 import type { FormEvent } from "react";
 import { json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
@@ -11,7 +13,7 @@ import { Field, ListPanel, has } from "./fo-pages";
 import { Row, day, small } from "./dash-pages";
 import { Foot, FormFoot, okBox } from "./fee-pages";
 
-interface S { id: string; emp_code: string; name: string; email: string; department: string; designation: string; role: string; type: "Teaching" | "Non-teaching"; mobile: string; joined_on: string | null; status: string }
+interface S { id: string; emp_code: string; name: string; email: string; department: string; designation: string; role: string; type: "Teaching" | "Non-teaching"; mobile: string; joined_on: string | null; status: string; senior?: boolean }
 export const STEPS = ["Create employee profile", "Assign department, designation and salary", "Record daily attendance", "Process employee leave", "Calculate salary and deductions", "HR verifies payroll", "Finance officer approves", "Generate payslips and payments"];
 
 export function StaffDirectoryPages({ tab }: { tab: "all-staff" | "teaching-staff" | "non-teaching-staff" }) {
@@ -21,6 +23,7 @@ export function StaffDirectoryPages({ tab }: { tab: "all-staff" | "teaching-staf
   const lists = useLoad(() => schoolFetch<{ departments: string[]; designations: string[] }>("/school/hr/registration"), []);
   const [view, setView] = useState<S | null>(null); const [edit, setEdit] = useState<{ id: string; department: string; designation: string; staff_type: string; mobile: string; joined_on: string } | null>(null);
   const [msg, setMsg] = useState("");
+  const isHr = useSchool().user.role === "HR"; const router = useRouter();
   const x = d.data;
   const scope = (x?.items ?? []).filter((s) => (tab === "all-staff" ? true : tab === "teaching-staff" ? s.type === "Teaching" : s.type === "Non-teaching"));
   const depts = [...new Set(scope.map((s) => s.department).filter(Boolean))].sort();
@@ -31,10 +34,10 @@ export function StaffDirectoryPages({ tab }: { tab: "all-staff" | "teaching-staf
   return (
     <div className="space-y-5" data-report><ErrorBanner message={d.error || act.error} />{okBox(msg)}
       <ListPanel title={title} noun="staff" search={search} onSearch={setSearch} exportName={tab} head={["Employee", "Name", "Department", "Designation", "Type", "Mobile", "Joined", "Status"]} exportRows={rows.map((s) => [s.emp_code, s.name, s.department, s.designation, s.type, s.mobile, day(s.joined_on), s.status])}
-        extra={<select aria-label="Department" className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[13px]" value={dept} onChange={(e) => setDept(e.target.value)}><option value="">All departments</option>{depts.map((n) => <option key={n}>{n}</option>)}</select>}
+        filters={<select aria-label="Department" className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[13px]" value={dept} onChange={(e) => setDept(e.target.value)}><option value="">All departments ({scope.length})</option>{depts.map((n) => <option key={n}>{n}</option>)}</select>}
         tableHead={["Name", "Department", "Designation", "Type", "Mobile", "Joined", "Status", ""]} empty={d.loading ? "Loading…" : "No staff yet."}
         rows={rows.map((s) => [<span key="n"><b className="font-semibold text-slate-900">{s.name}</b><span className="block text-[11px] text-slate-500">{s.emp_code}</span></span>, s.department || "—", s.designation ? <span key="d" className="rounded border border-slate-200 px-1.5 py-0.5 text-[11px] text-slate-600">{s.designation}</span> : "—", s.type, s.mobile || "—", day(s.joined_on), <Chip key="s" tone={s.status === "Active" ? "good" : "warn"}>{s.status}</Chip>,
-          <span key="b" className="flex gap-1.5"><button type="button" className={small} onClick={() => open(s)}>Profile</button><button type="button" className={small} onClick={() => setView(s)}>View details</button></span>])} />
+          <span key="b" className="flex gap-1.5">{isHr ? <><button type="button" className={small} onClick={() => router.push(`/hr/employees/employee-profile?staff=${s.id}`)}>Profile</button><button type="button" className={`${small} disabled:cursor-not-allowed disabled:opacity-40`} disabled={s.senior} title={s.senior ? "Only the School Admin can edit this record" : undefined} onClick={() => open(s)}>Edit</button></> : <button type="button" className={small} onClick={() => open(s)}>Profile</button>}<button type="button" className={small} onClick={() => setView(s)}>View details</button></span>])} />
       <Modal open={!!view} title={view ? `${view.name} · ${view.emp_code}` : ""} onClose={() => setView(null)}>{view && <><dl><Row k="Department" v={view.department || "—"} /><Row k="Designation" v={view.designation || "—"} /><Row k="Login role" v={view.role} /><Row k="Type" v={view.type} /><Row k="Email" v={view.email} /><Row k="Mobile" v={view.mobile || "—"} /><Row k="Joined" v={day(view.joined_on)} /><Row k="Status" v={view.status} /></dl><Foot close={() => setView(null)} /></>}</Modal>
       <Modal open={!!edit} title="Staff profile" onClose={() => setEdit(null)}>{edit && <form onSubmit={save} className="space-y-3">
         <div className="grid grid-cols-2 gap-3"><Field label="Department"><select className={inputCls} value={edit.department} onChange={(e) => setEdit({ ...edit, department: e.target.value })}><option value="">Choose a department</option>{[...new Set([...(lists.data?.departments ?? []), edit.department].filter(Boolean))].map((d) => <option key={d}>{d}</option>)}</select></Field><Field label="Designation"><select className={inputCls} value={edit.designation} onChange={(e) => setEdit({ ...edit, designation: e.target.value })}><option value="">Choose a designation</option>{[...new Set([...(lists.data?.designations ?? []), edit.designation].filter(Boolean))].map((d) => <option key={d}>{d}</option>)}</select></Field></div>
@@ -46,6 +49,10 @@ export function StaffDirectoryPages({ tab }: { tab: "all-staff" | "teaching-staf
 
 /** The HR and payroll workflow strip shown above every HR page. */
 export function HrFlow() {
+  const here = usePathname(); // the HR portal shows the workflow on its dashboard only
+  return here.startsWith("/hr") ? null : <HrFlowStrip />;
+}
+function HrFlowStrip() {
   const d = useLoad(() => schoolFetch<{ month: string; steps: boolean[]; payroll?: string }>("/school/hr/flow"), []);
   const x = d.data; const done = x?.steps.filter(Boolean).length ?? 0; const next = x?.steps.findIndex((v) => !v) ?? 0;
   return (

@@ -46,10 +46,10 @@ export function FormCard({ title, onSubmit, onDiscard, busy, error, children, co
 }
 
 /** A table panel: heading, count, Export / Print, search box, the table. */
-export function ListPanel({ title, noun, search, onSearch, exportName, head, exportRows, tableHead, rows, empty, extra, hideSearch }: { title: string; noun: string; search: string; onSearch: (s: string) => void; exportName: string; head: string[]; exportRows: (string | number | null | undefined)[][]; tableHead: string[]; rows: ReactNode[][]; empty: string; extra?: ReactNode; hideSearch?: boolean }) {
+export function ListPanel({ title, noun, search, onSearch, exportName, head, exportRows, tableHead, rows, empty, extra, hideSearch, filters }: { filters?: ReactNode; title: string; noun: string; search: string; onSearch: (s: string) => void; exportName: string; head: string[]; exportRows: (string | number | null | undefined)[][]; tableHead: string[]; rows: ReactNode[][]; empty: string; extra?: ReactNode; hideSearch?: boolean }) {
   return (
     <Panel title={title} sub={`${rows.length} ${noun}`} right={<span className="flex items-center gap-2">{extra}<ExportPrint name={exportName} head={head} rows={exportRows} /></span>}>
-      {!hideSearch && <div className="border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder={`Search ${title.toLowerCase()}`} aria-label={`Search ${title.toLowerCase()}`} value={search} onChange={(e) => onSearch(e.target.value)} /></div>}
+      {!hideSearch && <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 p-4"><input className={`${inputCls} max-w-xs`} placeholder={`Search ${title.toLowerCase()}`} aria-label={`Search ${title.toLowerCase()}`} value={search} onChange={(e) => onSearch(e.target.value)} />{filters}</div>}
       <SimpleTable head={tableHead.map((h) => ({ h }))} rows={rows} empty={empty} />
     </Panel>
   );

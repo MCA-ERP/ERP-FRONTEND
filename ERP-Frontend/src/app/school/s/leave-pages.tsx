@@ -9,6 +9,7 @@ import { Chip, Tiles } from "@/components/admin/dash-ui";
 import { ExportPrint } from "@/components/admin/export-print";
 import { ErrorBanner, Modal, btnPrimary, inputCls, useLoad } from "@/components/admin/ui";
 import { Row, day, small } from "./dash-pages";
+import { useSchool } from "../context";
 import { useGoTab } from "./tab-context";
 
 interface Balance { type: "Casual" | "Sick" | "Earned"; allowed: number; taken: number; pending: number; balance: number; details: string }
@@ -74,15 +75,16 @@ function Apply({ data, loading, onApplied }: { data: Leave | null; loading: bool
 
 function Requests({ data, loading }: { data: Leave | null; loading: boolean }) {
   const [view, setView] = useState<Request | null>(null);
+  const isHr = useSchool().user.role === "HR"; // this portal's table has no row actions
   const reqs = data?.requests ?? [];
   const pending = reqs.filter((r) => r.status === "Pending");
   return (
     <div className="space-y-5">
-      {!pending.length && !loading && <p className="rounded-2xl border border-[#c0e4f3] bg-[#f3f9fd] px-4 py-3 text-[13px] text-slate-700">No leave requests waiting. Apply from the Apply tab and it appears here with its approval route.</p>}
+      {!pending.length && !loading && <p className="rounded-2xl border border-[#c0e4f3] bg-[#f3f9fd] px-4 py-3 text-[13px] text-slate-700">{isHr ? "No leave requests yet." : "No leave requests waiting."} Apply from the Apply tab and it appears here with its approval route.</p>}
       {!!pending.length && <p className="rounded-2xl border border-[#f0d9a8] bg-[#fdf6e7] px-4 py-3 text-[13px] text-slate-800">{pending.length} {pending.length === 1 ? "request is" : "requests are"} waiting for {data?.approver}.</p>}
       <Panel title="Earlier this year" sub={`${reqs.length} ${reqs.length === 1 ? "request" : "requests"}`} right={<ExportPrint name="my-leave-requests" head={["Leave", "From", "To", "Days", "Status"]} rows={reqs.map((r) => [label(r.leave_type), day(r.from_date), day(r.to_date), n1(r.days), r.status])} />}>
-        <SimpleTable head={[{ h: "Leave" }, { h: "From" }, { h: "To" }, { h: "Days" }, { h: "Status" }, { h: "" }]} empty={loading ? "Loading…" : "No leave requests yet."}
-          rows={reqs.map((r) => [<b key="l" className="font-semibold text-slate-900">{label(r.leave_type)}</b>, day(r.from_date), day(r.to_date), n1(r.days), <Chip key="s" tone={TONE[r.status]}>{r.status}</Chip>, <button key="v" type="button" className={small} onClick={() => setView(r)}>View details</button>])} />
+        <SimpleTable head={[{ h: "Leave" }, { h: "From" }, { h: "To" }, { h: "Days" }, { h: "Status" }, ...(isHr ? [] : [{ h: "" }])]} empty={loading ? "Loading…" : "No leave requests yet."}
+          rows={reqs.map((r) => [<b key="l" className="font-semibold text-slate-900">{label(r.leave_type)}</b>, day(r.from_date), day(r.to_date), n1(r.days), <Chip key="s" tone={TONE[r.status]}>{r.status}</Chip>, ...(isHr ? [] : [<button key="v" type="button" className={small} onClick={() => setView(r)}>View details</button>])])} />
       </Panel>
       <Modal open={!!view} title={view ? label(view.leave_type) : ""} onClose={() => setView(null)}>{view && <>
         <dl><Row k="From" v={day(view.from_date)} /><Row k="To" v={day(view.to_date)} /><Row k="Days" v={`${n1(view.days)}${view.half_day ? " (half day)" : ""}`} /><Row k="Reason" v={view.reason || "—"} /><Row k="Cover" v={view.cover_note ?? "—"} /><Row k="Status" v={view.status} /></dl>

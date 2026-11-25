@@ -8,6 +8,8 @@ import { escapeHtml } from "@/components/admin/csv";
 import { useAction } from "@/components/admin/dash";
 import { Chip, Tiles } from "@/components/admin/dash-ui";
 import { ErrorBanner, Modal, inputCls, useLoad } from "@/components/admin/ui";
+import { Tile as HrTile, Tiles as HrTiles } from "../../hr/h/ui";
+import { useSchool } from "../context";
 import { Field, ListPanel, has, printHtml } from "./fo-pages";
 import { Row, day, small } from "./dash-pages";
 import { Foot, FormFoot, primaryCls } from "./fee-pages";
@@ -48,6 +50,7 @@ export function OnboardingPages({ tab }: { tab: "new-joiners" | "joining-checkli
 interface Pb { id: string; staff_id: string; name: string; detail: string; started_on: string; ends_on: string; reviewer: string; status: string; reviews: number; rating: number | null; shown: string }
 const stars = (n: number) => "★".repeat(Math.round(n)) + "☆".repeat(5 - Math.round(n));
 export function ProbationPages() {
+  const isHr = useSchool().user.role === "HR";
   const p = useLoad(() => schoolFetch<{ staff: { id: string; name: string }[]; items: Pb[]; on: number; due: number; confirmed: number; extended: number; note: string }>(`${H}/probation`), []);
   const act = useAction(() => p.reload());
   const [search, setSearch] = useState(""); const [adding, setAdding] = useState(false); const [f, setF] = useState({ staff_id: "", started_on: nowIst(), months: "6", reviewer: "" });
@@ -57,7 +60,7 @@ export function ProbationPages() {
   const add = async (e: FormEvent) => { e.preventDefault(); if (await act.run(() => schoolFetch(`${H}/probation`, json("POST", { staff_id: f.staff_id || x?.staff[0]?.id, started_on: f.started_on, months: Number(f.months), reviewer: f.reviewer })))) setAdding(false); };
   return (
     <div className="space-y-5" data-report><ErrorBanner message={p.error || act.error} />
-      <Tiles items={[{ label: "On probation", value: x?.on ?? 0, sub: "" }, { label: "Decision due", value: x?.due ?? 0, sub: "Within 30 days" }, { label: "Confirmed this year", value: x?.confirmed ?? 0, sub: "" }, { label: "Extended", value: x?.extended ?? 0, sub: "" }]} />
+      {isHr ? <HrTiles><HrTile label="On probation" value={x?.on ?? 0} /><HrTile tone="amber" label="Decision due this month" value={x?.due ?? 0} sub="Before probation ends" /><HrTile label="Confirmed this year" value={x?.confirmed ?? 0} /><HrTile label="Extended" value={x?.extended ?? 0} /></HrTiles> : <Tiles items={[{ label: "On probation", value: x?.on ?? 0, sub: "" }, { label: "Decision due", value: x?.due ?? 0, sub: "Within 30 days" }, { label: "Confirmed this year", value: x?.confirmed ?? 0, sub: "" }, { label: "Extended", value: x?.extended ?? 0, sub: "" }]} />}
       <ListPanel title="Probation" noun="staff" search={search} onSearch={setSearch} exportName="probation" head={["Staff", "Joined", "Probation ends", "Reviews", "Latest rating", "Reviewer", "Status"]} exportRows={rows.map((i) => [i.name, day(i.started_on), day(i.ends_on), i.reviews, i.rating ?? "", i.reviewer, i.shown])}
         extra={<button type="button" className={small} onClick={() => setAdding(true)}>+ Add to probation</button>} tableHead={["Staff", "Joined", "Probation ends", "Reviews", "Latest rating", "Reviewer", "Status", ""]} empty={p.loading ? "Loading…" : "Nobody is on probation."}
         rows={rows.map((i) => [<span key="n"><b className="font-semibold text-slate-900">{i.name}</b><span className="block text-[11px] text-slate-500">{i.detail}</span></span>, day(i.started_on), day(i.ends_on), `${i.reviews} done`, i.rating !== null ? <span key="r"><span className="text-[#d9902f]">{stars(i.rating)}</span> {i.rating}</span> : "—", i.reviewer || "—", <Chip key="s" tone={i.shown === "Confirmed" ? "good" : i.shown === "Due for decision" ? "warn" : i.shown === "Ended" ? "bad" : "info"}>{i.shown}</Chip>,

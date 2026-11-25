@@ -52,14 +52,15 @@ const IDEAS = [
 ];
 
 /** The "Ask AI" button in the corner of the Super Admin portal, with its chat panel. */
-export function Assist({ scope = "admin", push = false, onOpenChange, nav, guide }: { scope?: "admin" | "school" | "teacher" | "accounts" | "admissions" | "applicant" | "hr"; push?: boolean; onOpenChange?: (open: boolean) => void; nav?: NavConfig; guide?: string }) {
+export function Assist({ scope = "admin", push = false, onOpenChange, nav, guide }: { scope?: "admin" | "school" | "teacher" | "accounts" | "admissions" | "applicant" | "hr" | "transport"; push?: boolean; onOpenChange?: (open: boolean) => void; nav?: NavConfig; guide?: string }) {
   const teacher = scope === "teacher";
   const acct = scope === "accounts";
   const adm = scope === "admissions";
   const fam = scope === "applicant";
   const hr = scope === "hr";
-  const guided = teacher || acct || adm || fam || hr;
-  const base = hr ? "/hr" : acct ? "/accounts" : adm ? "/admissions" : fam ? "/applicant" : "/teacher";
+  const bus = scope === "transport";
+  const guided = teacher || acct || adm || fam || hr || bus;
+  const base = bus ? "/transport" : hr ? "/hr" : acct ? "/accounts" : adm ? "/admissions" : fam ? "/applicant" : "/teacher";
   const school = scope === "school" || guided;
   const pathname = usePathname();
   const router = useRouter();
@@ -166,7 +167,7 @@ export function Assist({ scope = "admin", push = false, onOpenChange, nav, guide
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 bg-gradient-to-br from-[#dceff9] to-white px-5 py-4">
               <div className="flex min-w-0 items-start gap-2.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#026f9b] text-white"><Sparkles className="size-[18px]" aria-hidden="true" /></span>
-                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">{hr ? "Ask about staff, attendance, leave, hiring and payroll status. I answer from your school's HR records and never change anything." : fam ? "Ask about your application, documents, fees and the school's admission details. I answer only from your own records and the school's public information, and never change anything." : adm ? "Ask about enquiries, leads, applications and seats. I answer from your school's admission records and can add enquiries, make leads, log follow-ups and send applications when you ask." : acct ? "Ask about collections, dues, receipts and concessions. I answer from your school's fee records and never change anything." : teacher ? "Ask about your day, classes and students. I answer from your own records and never change anything." : school ? "Ask about your school. I answer from your school's live data and can export lists, but never change anything." : "Ask about your platform. I answer from live data and can export lists, but never change anything."}</p></div>
+                <div className="min-w-0"><p className="font-semibold text-[#026f9b]">MCA Assist</p><p className="text-xs leading-snug text-slate-500">{bus ? "Ask about vehicles, drivers, routes, trips and students on the bus. I answer from your school's transport records and never change anything." : hr ? "Ask about staff, attendance, leave, hiring and payroll status. I answer from your school's HR records and never change anything." : fam ? "Ask about your application, documents, fees and the school's admission details. I answer only from your own records and the school's public information, and never change anything." : adm ? "Ask about enquiries, leads, applications and seats. I answer from your school's admission records and can add enquiries, make leads, log follow-ups and send applications when you ask." : acct ? "Ask about collections, dues, receipts and concessions. I answer from your school's fee records and never change anything." : teacher ? "Ask about your day, classes and students. I answer from your own records and never change anything." : school ? "Ask about your school. I answer from your school's live data and can export lists, but never change anything." : "Ask about your platform. I answer from live data and can export lists, but never change anything."}</p></div>
               </div>
               <div className="flex shrink-0 items-center gap-1">
                 <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>

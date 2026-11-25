@@ -111,6 +111,8 @@ export const APPLICANT_ROLES = ["Applicant"];
 export const PRINCIPAL_ROLES = ["Principal"];
 /** The HR Manager has their own HR portal: staff, attendance, leave, payroll and recruitment. */
 export const HR_ROLES = ["HR"];
+/** The Transport Manager has their own Transport portal: vehicles, crew, routes, trips and transport fees. */
+export const TRANSPORT_ROLES = ["TransportManager"];
 
 /** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
@@ -121,6 +123,7 @@ export function homePathFor(user: ServerUser): string {
   if (APPLICANT_ROLES.includes(user.role)) return "/applicant";
   if (PRINCIPAL_ROLES.includes(user.role)) return "/principal";
   if (HR_ROLES.includes(user.role)) return "/hr";
+  if (TRANSPORT_ROLES.includes(user.role)) return "/transport";
   return TEACHER_ROLES.includes(user.role) ? "/teacher" : "/school";
 }
 

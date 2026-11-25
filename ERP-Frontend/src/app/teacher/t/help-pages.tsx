@@ -47,7 +47,7 @@ function TicketTable({ items, withMeta, onOpen }: { items: Ticket[]; withMeta: b
   );
 }
 
-export function RaiseRequest() {
+export function RaiseRequest({ example = "One line, for example: Bus late at my stop" }: { example?: string }) {
   const cats = useLoad(() => schoolFetch<{ items: { name: string; handled_by: string; reply_hours: number }[] }>("/teacher/help/categories"), []);
   const mine = useLoad(() => schoolFetch<Tickets>("/teacher/help/tickets"), []);
   const blank = { category: "", subject: "", details: "", priority: "Normal", attachment_name: "" };
@@ -73,7 +73,7 @@ export function RaiseRequest() {
         <div className="space-y-4 p-5">
           {act.error && <ErrorBanner message={act.error} />}
           <Lbl label="What is it about?"><select className={`${inputCls} w-auto min-w-[14rem]`} value={cat?.name ?? ""} onChange={(e) => setF({ ...f, category: e.target.value })}>{list.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}</select></Lbl>
-          <Lbl label="Subject"><input className={inputCls} required minLength={3} maxLength={250} placeholder="One line, for example: Bus late at my stop" value={f.subject} onChange={(e) => setF({ ...f, subject: e.target.value })} /></Lbl>
+          <Lbl label="Subject"><input className={inputCls} required minLength={3} maxLength={250} placeholder={example} value={f.subject} onChange={(e) => setF({ ...f, subject: e.target.value })} /></Lbl>
           <Lbl label="Details"><textarea className={`${inputCls} min-h-[5.5rem]`} required minLength={3} maxLength={4000} placeholder="What happened, when, and what you need" value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} /></Lbl>
           <div className="grid gap-4 sm:grid-cols-2">
             <Lbl label="Priority"><select className={`${inputCls} w-auto min-w-[10rem]`} value={f.priority} onChange={(e) => setF({ ...f, priority: e.target.value })}><option>Normal</option><option>High</option><option>Low</option></select></Lbl>

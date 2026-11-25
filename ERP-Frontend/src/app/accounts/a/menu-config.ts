@@ -29,6 +29,7 @@ export const MENU: Record<string, MenuModule> = {
     { key: "ai-insights", label: "AI Insights", pages: [{ key: "insights", title: "Insights" }, { key: "alert-rules", title: "Alert Rules" }] },
     { key: "my-claims", label: "My Claims", pages: [{ key: "submit-a-claim", title: "Submit a Claim" }, { key: "my-claims", title: "My Claims" }] },
     { key: "hiring-budget", label: "Hiring Budget", pages: [{ key: "post-approvals", title: "Post Approvals" }, { key: "salary-budget", title: "Salary Budget" }, { key: "final-settlements", title: "Final Settlements" }] },
+    { key: "payroll-approval", label: "Payroll Approval", pages: [{ key: "finance-approval", title: "Finance Approval", src: ["payroll", "payroll-approval", "finance-approval"] }, { key: "approval-history", title: "Approval History", src: ["payroll", "payroll-approval", "approval-history"] }, { key: "payment-register", title: "Payment Register", src: ["payroll", "salary-payments", "payment-register"] }, { key: "payment-status", title: "Payment Status", src: ["payroll", "salary-payments", "payment-status"] }] },
     { key: "help-desk", label: "Help Desk", pages: [{ key: "raise-a-request", title: "Raise a Request" }, { key: "my-requests", title: "My Requests" }] },
     { key: "school-calendar", label: "School Calendar", pages: [{ key: "month-view", title: "Month View" }, { key: "coming-up", title: "Coming Up" }] },
   ] },
@@ -87,7 +88,7 @@ export const MENU: Record<string, MenuModule> = {
 /** What a page needs in the school's plan (any one). The whole portal needs Fee & Finance; these pages need more. Keys: module/section or module/section/page. */
 export const NEEDS: Record<string, string[]> = {
   "dashboard/my-claims": ["employee_self_service"], "mywork/my-payslips": ["employee_self_service"],
-  "dashboard/hiring-budget": ["hr_payroll", "payroll"], "dashboard/finance-dashboard/staff-exit-clearance": ["hr_payroll", "payroll"],
+  "dashboard/hiring-budget": ["hr_payroll", "payroll"], "dashboard/payroll-approval": ["hr_payroll", "payroll"], "dashboard/finance-dashboard/staff-exit-clearance": ["hr_payroll", "payroll"],
 };
 
 export const sectionHref = (module: string, section: string) => `/accounts/${module}/${section}`;

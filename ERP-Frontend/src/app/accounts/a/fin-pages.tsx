@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import type { FormEvent } from "react";
 import { json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
 import { Panel, SimpleTable, useAction } from "@/components/admin/dash";
 import { Chip } from "@/components/admin/dash-ui";
-import { ErrorBanner, Modal, useLoad } from "@/components/admin/ui";
+import { ErrorBanner, Modal, inputCls, useLoad } from "@/components/admin/ui";
 import { ListPanel, has } from "../../school/s/fo-pages";
 import { inr } from "../../school/s/fee-pages";
 import { Head } from "../../teacher/t/head";
@@ -111,10 +112,13 @@ export function SalaryBudget() {
   );
 }
 
-interface Settle { id: string; name: string; designation: string; years: number; last_day: string; lines: { item: string; amount: number }[]; net: number; status: string; waiting_for: string }
+interface Settle { id: string; name: string; designation: string; years: number; last_day: string; lines: { item: string; amount: number }[]; net: number; status: string; waiting_for: string; paid_on?: string | null; paid_ref?: string | null }
 const sign = (n: number) => (n < 0 ? `− ${inr(Math.abs(n))}` : inr(n));
 export function FinalSettlements() {
   const r = useLoad(() => schoolFetch<{ items: Settle[] }>("/accounts/hiring/settlements"), []);
+  const act = useAction(() => r.reload());
+  const [pay, setPay] = useState<Settle | null>(null); const [f, setF] = useState({ tds: "0", reference: "" });
+  const record = async (e: FormEvent) => { e.preventDefault(); if (pay && await act.run(() => schoolFetch(`/accounts/hiring/settlements/${pay.id}/pay`, json("POST", { tds: Number(f.tds) || 0, reference: f.reference })))) setPay(null); };
   return (
     <div className="space-y-5">
       <Head title="Final Settlements" subtitle="Final settlements HR has sent for payment. Check the working, then pay." />
@@ -124,8 +128,11 @@ export function FinalSettlements() {
         <Panel key={s.id} title={`${s.name} · ${s.designation}`} sub={`${s.years} years · last day ${dmy(s.last_day)}`} right={<Chip tone={s.status === "Pending" ? "warn" : "good"}>{s.status}</Chip>}>
           <SimpleTable head={[{ h: "Item" }, { h: "Amount" }]} rows={[...s.lines.map((l) => [l.item, sign(l.amount)]), [<b key="n">Net payable</b>, <b key="a">{inr(s.net)}</b>]]} />
           {s.waiting_for && <p className="px-5 py-3 text-right text-[12px] text-slate-500">{s.waiting_for}</p>}
+          {s.status === "Ready for Finance" && <div className="flex justify-end px-5 py-3"><button type="button" className="rounded-full bg-[#026f9b] px-3.5 py-1.5 text-[12px] font-semibold text-white hover:bg-[#014a67]" onClick={() => { setPay(s); setF({ tds: "0", reference: "" }); }}>Record payment</button></div>}
+          {s.status === "Paid" && <p className="px-5 py-3 text-right text-[12px] text-slate-500">Paid on {dmy(s.paid_on ?? "")}{s.paid_ref ? ` · ${s.paid_ref}` : ""}</p>}
         </Panel>
       ))}
+      <Modal open={!!pay} title={pay ? `Pay settlement · ${pay.name}` : ""} onClose={() => setPay(null)}>{pay && <form onSubmit={record} className="space-y-3"><ErrorBanner message={act.error} /><label className="block text-[13px] text-slate-700">Tax deducted (TDS, ₹)<input type="number" min={0} max={pay.net} required className={`${inputCls} mt-1`} value={f.tds} onChange={(e) => setF({ ...f, tds: e.target.value })} /></label><label className="block text-[13px] text-slate-700">Payment reference<input required minLength={2} maxLength={80} placeholder="UTR or cheque number" className={`${inputCls} mt-1`} value={f.reference} onChange={(e) => setF({ ...f, reference: e.target.value })} /></label><p className="text-[13px] font-semibold text-slate-900">Amount to pay: {inr(Math.max(0, pay.net - (Number(f.tds) || 0)))}</p><p className="text-[12px] text-slate-500">This records a payment you have made. No money is moved from here, and it can&apos;t be changed afterwards.</p><div className="flex justify-end gap-2 border-t border-slate-100 pt-3"><button type="button" className="rounded-full border border-slate-200 px-3.5 py-1.5 text-[12px] font-semibold" onClick={() => setPay(null)}>Cancel</button><button type="submit" disabled={act.busy} className="rounded-full bg-[#026f9b] px-3.5 py-1.5 text-[12px] font-semibold text-white disabled:opacity-50">Record payment</button></div></form>}</Modal>
     </div>
   );
 }

@@ -109,6 +109,8 @@ export const ADMISSIONS_ROLES = ["AdmissionsHead"];
 export const APPLICANT_ROLES = ["Applicant"];
 /** The Principal has their own Principal portal: the decision layer over the school's records. */
 export const PRINCIPAL_ROLES = ["Principal"];
+/** The HR Manager has their own HR portal: staff, attendance, leave, payroll and recruitment. */
+export const HR_ROLES = ["HR"];
 
 /** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
@@ -118,6 +120,7 @@ export function homePathFor(user: ServerUser): string {
   if (ADMISSIONS_ROLES.includes(user.role)) return "/admissions";
   if (APPLICANT_ROLES.includes(user.role)) return "/applicant";
   if (PRINCIPAL_ROLES.includes(user.role)) return "/principal";
+  if (HR_ROLES.includes(user.role)) return "/hr";
   return TEACHER_ROLES.includes(user.role) ? "/teacher" : "/school";
 }
 

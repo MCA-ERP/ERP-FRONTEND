@@ -34,7 +34,7 @@ const money = (paise: number) => "₹" + (paise / 100).toLocaleString("en-IN", {
 const tempPassword = () => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
   const bytes = crypto.getRandomValues(new Uint32Array(12));
-  return Array.from(bytes, (b) => chars[b % chars.length]).join("") + "7";
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("") + "7#"; // ends with a number and a symbol, which the password rules may require
 };
 
 /** Add School: register a school in seven steps, from details to activation. Nothing is saved until the last step. */

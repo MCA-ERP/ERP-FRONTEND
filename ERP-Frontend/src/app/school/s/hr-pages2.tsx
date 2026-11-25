@@ -4,6 +4,8 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
+import { useSchool } from "../context";
+import { Head } from "../../teacher/t/head";
 import { downloadCsv } from "@/components/admin/csv";
 import { Panel, useAction } from "@/components/admin/dash";
 import { Chip, Tiles } from "@/components/admin/dash-ui";
@@ -41,6 +43,7 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
   const blank = { name: "", gender: "Female", date_of_birth: "", department: "", designation: "", staff_type: "Teaching", joined_on: nowIst(), mobile: "", email: "", monthly_salary: "", qualification: "", pan: "", role: "" };
   const [f, setF] = useState(blank);
   const [creds, setCreds] = useState<Cred[]>([]);
+  const isHr = useSchool().user.role === "HR"; // HR's logins get their role from the type and designation
   const [msg, setMsg] = useState("");
   const [rows, setRows] = useState<ReturnType<typeof parseCsv>>([]);
   const [res, setRes] = useState<{ valid: number; invalid: number; rows: { row: number; ok: boolean; error?: string }[] } | null>(null);
@@ -62,7 +65,7 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
           <Field label="Monthly salary (₹)"><input type="number" min={0} className={inputCls} value={f.monthly_salary} onChange={(e) => setF({ ...f, monthly_salary: e.target.value })} /></Field>
           <Field label="Qualification"><input className={inputCls} maxLength={120} value={f.qualification} onChange={(e) => setF({ ...f, qualification: e.target.value })} /></Field>
           <Field label="PAN"><input className={inputCls} maxLength={10} placeholder="ABCDE1234F" value={f.pan} onChange={(e) => setF({ ...f, pan: e.target.value.toUpperCase() })} /></Field>
-          <Field label="Login role"><select className={inputCls} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Automatic</option>{[...new Set(lists.data?.roles ?? [])].map((r) => <option key={r}>{r}</option>)}</select></Field>
+          {!isHr && <Field label="Login role"><select className={inputCls} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Automatic</option>{[...new Set(lists.data?.roles ?? [])].map((r) => <option key={r}>{r}</option>)}</select></Field>}
         </FormCard>
         <Creds list={creds} close={() => setCreds([])} />
       </div>
@@ -98,9 +101,11 @@ export function EmployeeRegistrationPages({ tab }: { tab: "add-employee" | "bulk
 // ═════════════ employee profile ═════════════
 interface Prof { id: string; name: string; email: string; designation: string; status: string; emp_code: string; department: string; mobile: string | null; gender: string | null; date_of_birth: string | null; blood_group: string | null; marital_status: string | null; pan: string | null; aadhaar: string; address: string | null; emergency_contact: string | null; qualifications: { id: string; title: string; place: string; year: number | null; result: string }[]; experience: { id: string; organisation: string; role: string; from_on: string; to_on: string | null }[] }
 export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualification" | "experience" }) {
-  const dir = useLoad(() => schoolFetch<{ items: { id: string; name: string; designation: string; emp_code: string }[] }>(`${H}/directory`), []);
-  const [pick, setPick] = useState("");
+  const dir = useLoad(() => schoolFetch<{ items: { id: string; name: string; designation: string; emp_code: string; senior?: boolean }[] }>(`${H}/directory`), []);
+  const [pick, setPick] = useState(() => (typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("staff") ?? ""));
+  const isHr = useSchool().user.role === "HR";
   const id = pick || dir.data?.items[0]?.id || "";
+  const locked = isHr && !!dir.data?.items.find((s) => s.id === id)?.senior; // School Admin, Principal and Vice Principal are read-only for HR
   const p = useLoad(() => (id ? schoolFetch<Prof>(`${H}/profile/${id}`) : Promise.resolve(null)), [id]);
   const act = useAction(() => p.reload());
   const [d, setD] = useState<Record<string, string>>({});
@@ -109,7 +114,9 @@ export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualifica
   const [adding, setAdding] = useState(false);
   const [q, setQ] = useState({ title: "", place: "", year: "", result: "", organisation: "", role: "", from_on: "", to_on: "" });
   const x = p.data; const v = (k: string, cur: string | null | undefined) => d[k] ?? cur ?? "";
-  const err = <ErrorBanner message={dir.error || p.error || act.error} />;
+  const who = x?.name ?? "the chosen employee";
+  const title = { personal: ["Personal", `Details for ${who}.`], contact: ["Contact", `Details for ${who}.`], qualification: ["Qualification", `Qualifications for ${who}.`], experience: ["Experience", `Work history for ${who}.`] }[tab];
+  const err = <><ErrorBanner message={dir.error || p.error || act.error} />{isHr && <Head title={title[0]} subtitle={title[1]} />}{locked && <p className="mb-4 rounded-xl border border-[#f1dcae] bg-[#fdf6e7] px-4 py-2.5 text-[13px] text-slate-800">View only. Only the School Admin can edit this record.</p>}</>;
   const bar = (
     <div className="mb-5 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2.5"><label className="inline-flex items-center gap-2 rounded-full border border-[#c0e4f3] bg-[#f3f9fd] py-0.5 pl-3.5 pr-2 text-[13px] text-[#026f9b]">Employee<select aria-label="Employee" value={id} onChange={(e) => { setPick(e.target.value); setD({}); setMsg(""); }} className="max-w-[26rem] cursor-pointer bg-transparent py-1.5 font-semibold text-slate-900 outline-none">{!dir.data?.items.length && <option value="">No staff</option>}{dir.data?.items.map((s) => <option key={s.id} value={s.id}>{s.name}{s.designation ? ` · ${s.designation}` : ""}</option>)}</select></label>{x && <><Chip tone={x.status === "Active" ? "good" : "warn"}>{x.status}</Chip><span className="ml-auto text-[12px] text-slate-500">{x.emp_code} · {x.department || "No department"}</span></>}</div>
   );
@@ -117,25 +124,29 @@ export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualifica
   const save = async (e: FormEvent, body: Record<string, unknown>) => { e.preventDefault(); setMsg(""); if (await act.run(() => schoolFetch(`${H}/profile/${id}`, json("PUT", body)))) { setD({}); setMsg("Saved."); } };
   if (tab === "personal") return (
     <div>{err}{bar}{okBox(msg)}
-      <FormCard title="Personal details" cols="lg:grid-cols-5" onSubmit={(e) => void save(e, { name: v("name", x.name), gender: v("gender", x.gender) || null, date_of_birth: v("dob", x.date_of_birth) || null, blood_group: v("blood", x.blood_group) || null, marital_status: v("marital", x.marital_status) || null, pan: v("pan", x.pan), aadhaar: v("aadhaar", "") || undefined })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
+      <fieldset disabled={locked} className="contents">
+      <FormCard title="Personal details" cols="lg:grid-cols-5" onSubmit={(e) => void save(e, { name: v("name", x.name), gender: v("gender", x.gender) || null, date_of_birth: v("dob", x.date_of_birth) || null, blood_group: v("blood", x.blood_group) || null, marital_status: v("marital", x.marital_status) || null, pan: v("pan", x.pan), aadhaar: d.aadhaar?.trim() || undefined })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
         <Field label="Full name"><input className={inputCls} required minLength={2} value={v("name", x.name)} onChange={(e) => setD({ ...d, name: e.target.value })} /></Field>
         <Field label="Gender"><select className={inputCls} value={v("gender", x.gender)} onChange={(e) => setD({ ...d, gender: e.target.value })}><option value="">—</option>{["Male", "Female", "Other"].map((g) => <option key={g}>{g}</option>)}</select></Field>
         <Field label="Date of birth"><input type="date" className={inputCls} value={v("dob", x.date_of_birth)} onChange={(e) => setD({ ...d, dob: e.target.value })} /></Field>
         <Field label="Blood group"><select className={inputCls} value={v("blood", x.blood_group)} onChange={(e) => setD({ ...d, blood: e.target.value })}><option value="">—</option>{["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((g) => <option key={g}>{g}</option>)}</select></Field>
         <Field label="Marital status"><select className={inputCls} value={v("marital", x.marital_status)} onChange={(e) => setD({ ...d, marital: e.target.value })}><option value="">—</option>{["Single", "Married", "Other"].map((g) => <option key={g}>{g}</option>)}</select></Field>
         <Field label="PAN"><input className={inputCls} maxLength={10} value={v("pan", x.pan)} onChange={(e) => setD({ ...d, pan: e.target.value.toUpperCase() })} /></Field>
-        <Field label="Aadhaar"><input className={inputCls} maxLength={14} placeholder={x.aadhaar || "12 digits"} value={d.aadhaar ?? ""} onChange={(e) => setD({ ...d, aadhaar: e.target.value })} /></Field>
+        <Field label="Aadhaar"><input className={inputCls} maxLength={14} placeholder="12 digits" value={d.aadhaar ?? x.aadhaar} onFocus={(e) => e.target.select()} onChange={(e) => setD({ ...d, aadhaar: e.target.value })} /></Field>
       </FormCard>
+      </fieldset>
     </div>
   );
   if (tab === "contact") return (
     <div>{err}{bar}{okBox(msg)}
-      <FormCard title="Contact details" cols="lg:grid-cols-2" onSubmit={(e) => void save(e, { mobile: v("mobile", x.mobile), address: v("address", x.address), emergency_contact: v("emergency", x.emergency_contact) })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
+      <fieldset disabled={locked} className="contents">
+      <FormCard title="Contact details" cols="lg:grid-cols-5" onSubmit={(e) => void save(e, { mobile: v("mobile", x.mobile), address: v("address", x.address), emergency_contact: d.emergency })} onDiscard={() => { setD({}); setMsg(""); }} busy={act.busy} error="">
         <Field label="Mobile"><input className={inputCls} maxLength={30} value={v("mobile", x.mobile)} onChange={(e) => setD({ ...d, mobile: e.target.value })} /></Field>
         <Field label="Email"><input className={inputCls} readOnly value={x.email} /></Field>
-        <div className="sm:col-span-2"><Field label="Address"><textarea rows={3} maxLength={300} className={inputCls} value={v("address", x.address)} onChange={(e) => setD({ ...d, address: e.target.value })} /></Field></div>
-        <Field label="Emergency contact"><input className={inputCls} maxLength={160} value={v("emergency", x.emergency_contact)} onChange={(e) => setD({ ...d, emergency: e.target.value })} /></Field>
+        <div className="sm:col-span-2 lg:col-span-5"><Field label="Address"><textarea rows={3} maxLength={300} className={inputCls} value={v("address", x.address)} onChange={(e) => setD({ ...d, address: e.target.value })} /></Field></div>
+        <Field label="Emergency contact"><input className={inputCls} maxLength={160} value={v("emergency", x.emergency_contact)} onFocus={(e) => e.target.select()} onChange={(e) => setD({ ...d, emergency: e.target.value })} /></Field>
       </FormCard>
+      </fieldset>
     </div>
   );
   const isQ = tab === "qualification";
@@ -144,12 +155,12 @@ export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualifica
   return (
     <div data-report>{err}{bar}
       {isQ ? <ListPanel title="Qualifications" noun="qualifications" hideSearch search="" onSearch={() => undefined} exportName="qualifications" head={["Qualification", "Institution", "Year", "Result"]} exportRows={x.qualifications.map((r) => [r.title, r.place, r.year, r.result])}
-        extra={<button type="button" className={small} onClick={() => setAdding(true)}>+ Add qualification</button>} tableHead={["Qualification", "Institution", "Year", "Result", ""]} empty="No qualifications recorded."
+        extra={locked ? null : <button type="button" className={small} onClick={() => setAdding(true)}>+ Add qualification</button>} tableHead={["Qualification", "Institution", "Year", "Result", ""]} empty="No qualifications recorded."
         rows={x.qualifications.map((r) => [<b key="t" className="font-semibold text-slate-900">{r.title}</b>, r.place || "—", r.year ?? "—", r.result || "—", <button key="v" type="button" className={small} onClick={() => setView({ kind: "qualification", id: r.id, rows: [["Qualification", r.title], ["Institution", r.place || "—"], ["Year", String(r.year ?? "—")], ["Result", r.result || "—"]] })}>View details</button>])} />
         : <ListPanel title="Experience" noun="jobs" hideSearch search="" onSearch={() => undefined} exportName="experience" head={["Organisation", "Role", "From", "To"]} exportRows={x.experience.map((r) => [r.organisation, r.role, day(r.from_on), r.to_on ? day(r.to_on) : "Present"])}
-          extra={<button type="button" className={small} onClick={() => setAdding(true)}>+ Add experience</button>} tableHead={["Organisation", "Role", "From", "To", ""]} empty="No experience recorded."
+          extra={locked ? null : <button type="button" className={small} onClick={() => setAdding(true)}>+ Add experience</button>} tableHead={["Organisation", "Role", "From", "To", ""]} empty="No experience recorded."
           rows={x.experience.map((r) => [<b key="o" className="font-semibold text-slate-900">{r.organisation}</b>, r.role, day(r.from_on), r.to_on ? day(r.to_on) : "Present", <button key="v" type="button" className={small} onClick={() => setView({ kind: "experience", id: r.id, rows: [["Organisation", r.organisation], ["Role", r.role], ["From", day(r.from_on)], ["To", r.to_on ? day(r.to_on) : "Present"]] })}>View details</button>])} />}
-      <Modal open={!!view} title={view?.kind === "qualification" ? "Qualification" : "Experience"} onClose={() => setView(null)}>{view && <><dl>{view.rows.map(([k, val]) => <Row key={k} k={k} v={val} />)}</dl><Foot close={() => setView(null)} left={<button type="button" className={small} disabled={act.busy} onClick={() => void remove()}>Remove</button>} /></>}</Modal>
+      <Modal open={!!view} title={view?.kind === "qualification" ? "Qualification" : "Experience"} onClose={() => setView(null)}>{view && <><dl>{view.rows.map(([k, val]) => <Row key={k} k={k} v={val} />)}</dl><Foot close={() => setView(null)} left={locked ? undefined : <button type="button" className={small} disabled={act.busy} onClick={() => void remove()}>Remove</button>} /></>}</Modal>
       <Modal open={adding} title={isQ ? "Add a qualification" : "Add experience"} onClose={() => setAdding(false)}><form onSubmit={add} className="space-y-3">
         {isQ ? <><Field label="Qualification"><input className={inputCls} required minLength={2} maxLength={100} value={q.title} onChange={(e) => setQ({ ...q, title: e.target.value })} /></Field><Field label="Institution"><input className={inputCls} maxLength={120} value={q.place} onChange={(e) => setQ({ ...q, place: e.target.value })} /></Field><div className="grid grid-cols-2 gap-3"><Field label="Year"><input type="number" min={1950} max={2100} className={inputCls} value={q.year} onChange={(e) => setQ({ ...q, year: e.target.value })} /></Field><Field label="Result"><input className={inputCls} maxLength={60} value={q.result} onChange={(e) => setQ({ ...q, result: e.target.value })} /></Field></div></>
           : <><Field label="Organisation"><input className={inputCls} required minLength={2} maxLength={120} value={q.organisation} onChange={(e) => setQ({ ...q, organisation: e.target.value })} /></Field><Field label="Role"><input className={inputCls} required minLength={2} maxLength={100} value={q.role} onChange={(e) => setQ({ ...q, role: e.target.value })} /></Field><div className="grid grid-cols-2 gap-3"><Field label="From"><input type="date" required className={inputCls} value={q.from_on} onChange={(e) => setQ({ ...q, from_on: e.target.value })} /></Field><Field label="To (empty if present)"><input type="date" className={inputCls} value={q.to_on} onChange={(e) => setQ({ ...q, to_on: e.target.value })} /></Field></div></>}
@@ -160,7 +171,7 @@ export function ProfilePages({ tab }: { tab: "personal" | "contact" | "qualifica
 
 // ═════════════ departments and designations ═════════════
 export function DepartmentPages({ tab }: { tab: "department-list" | "add-department" }) {
-  const l = useLoad(() => schoolFetch<{ campuses: { id: string; name: string }[]; staff: { id: string; name: string }[]; items: { id: string; name: string; head: string; campus: string; staff: number; status: string }[] }>(`${H}/departments`), []);
+  const l = useLoad(() => schoolFetch<{ campuses: { id: string; name: string }[]; staff: { id: string; name: string; department: string }[]; items: { id: string; name: string; head: string; campus: string; staff: number; status: string }[] }>(`${H}/departments`), []);
   const act = useAction(() => l.reload());
   const [search, setSearch] = useState(""); const [msg, setMsg] = useState("");
   const [view, setView] = useState<{ id: string; name: string; head: string; campus: string; staff: number; status: string } | null>(null);
@@ -168,10 +179,9 @@ export function DepartmentPages({ tab }: { tab: "department-list" | "add-departm
   const x = l.data; const all = x?.items ?? []; const rows = all.filter((i) => has(i, search)); const a = all.filter((i) => i.status === "Active").length;
   if (tab === "add-department") {
     const save = async (e: FormEvent) => { e.preventDefault(); setMsg(""); if (await act.run(() => schoolFetch(`${H}/departments`, json("POST", { name: f.name, head_id: f.head_id || null, campus_id: f.campus_id || null })))) { setF({ name: "", head_id: "", campus_id: "" }); setMsg("Saved. It appears in the Department List."); } };
-    return <div>{okBox(msg)}<FormCard title="Add Department" cols="lg:grid-cols-3" onSubmit={save} onDiscard={() => { setF({ name: "", head_id: "", campus_id: "" }); setMsg(""); }} busy={act.busy} error={l.error || act.error}>
+    return <div>{okBox(msg)}<FormCard title="Add Department" cols="lg:grid-cols-3"onSubmit={save} onDiscard={() => { setF({ name: "", head_id: "", campus_id: "" }); setMsg(""); }} busy={act.busy} error={l.error || act.error}>
       <Field label="Department"><input className={inputCls} required minLength={2} maxLength={60} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-      <Field label="Head"><select className={inputCls} value={f.head_id} onChange={(e) => setF({ ...f, head_id: e.target.value })}><option value="">None yet</option>{x?.staff.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></Field>
-      <Field label="Campus"><select className={inputCls} value={f.campus_id} onChange={(e) => setF({ ...f, campus_id: e.target.value })}><option value="">Both</option>{x?.campuses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></Field></FormCard></div>;
+      <Field label="Head"><select className={inputCls} value={f.head_id} onChange={(e) => setF({ ...f, head_id: e.target.value })}><option value="">None yet</option>{x?.staff.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></Field>      <Field label="Campus"><select className={inputCls} value={f.campus_id} onChange={(e) => setF({ ...f, campus_id: e.target.value })}><option value="">Both</option>{x?.campuses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></Field></FormCard></div>;
   }
   return (
     <div className="space-y-5" data-report><ErrorBanner message={l.error || act.error} />{okBox(msg)}
@@ -193,10 +203,9 @@ export function DesignationPages({ tab }: { tab: "designation-list" | "add-desig
   const all = l.data?.items ?? []; const rows = all.filter((i) => has(i, search)); const a = all.filter((i) => i.status === "Active").length;
   if (tab === "add-designation") {
     const save = async (e: FormEvent) => { e.preventDefault(); setMsg(""); if (await act.run(() => schoolFetch(`${H}/designations`, json("POST", f)))) { setF({ name: "", level: "L1", pay_band: "" }); setMsg("Saved. It appears in the Designation List."); } };
-    return <div>{okBox(msg)}<FormCard title="Add Designation" cols="lg:grid-cols-3" onSubmit={save} onDiscard={() => { setF({ name: "", level: "L1", pay_band: "" }); setMsg(""); }} busy={act.busy} error={l.error || act.error}>
+    return <div>{okBox(msg)}<FormCard title="Add Designation" cols="lg:grid-cols-3"onSubmit={save} onDiscard={() => { setF({ name: "", level: "L1", pay_band: "" }); setMsg(""); }} busy={act.busy} error={l.error || act.error}>
       <Field label="Designation"><input className={inputCls} required minLength={2} maxLength={100} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-      <Field label="Level"><select className={inputCls} value={f.level} onChange={(e) => setF({ ...f, level: e.target.value })}>{["L1", "L2", "L3", "L4", "L5", "L6"].map((x) => <option key={x}>{x}</option>)}</select></Field>
-      <Field label="Pay band"><input className={inputCls} maxLength={40} placeholder="₹1.2 – 1.6 L" value={f.pay_band} onChange={(e) => setF({ ...f, pay_band: e.target.value })} /></Field></FormCard></div>;
+      <Field label="Level"><select className={inputCls} value={f.level} onChange={(e) => setF({ ...f, level: e.target.value })}>{["L1", "L2", "L3", "L4", "L5", "L6"].map((x) => <option key={x}>{x}</option>)}</select></Field>      <Field label="Pay band"><input className={inputCls} maxLength={40} placeholder="₹1.2 – 1.6 L" value={f.pay_band} onChange={(e) => setF({ ...f, pay_band: e.target.value })} /></Field></FormCard></div>;
   }
   return (
     <div className="space-y-5" data-report><ErrorBanner message={l.error || act.error} />{okBox(msg)}

@@ -5,18 +5,18 @@ import type { FormEvent, ReactNode } from "react";
 import { json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
 import { Panel, SimpleTable, useAction } from "@/components/admin/dash";
-import { Chip, Tiles } from "@/components/admin/dash-ui";
+import { Chip } from "@/components/admin/dash-ui";
 import { ExportPrint } from "@/components/admin/export-print";
 import { ErrorBanner, btnGhost, btnPrimary, inputCls, useLoad } from "@/components/admin/ui";
-import { Empty, NOT_YET, day } from "./dash-pages";
+import { NOT_YET, day } from "./dash-pages";
 
-interface Profile {
+export interface Profile {
   name: string; email: string; mobile: string | null; designation: string; joined_on: string; campus: string | null; school: string | null;
   contact: { alt_phone: string; personal_email: string; date_of_birth: string; blood_group: string; home_address: string; emergency_name: string; emergency_relation: string; emergency_phone: string };
 }
 const initials = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
-const Field = ({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) => (
+export const Field = ({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) => (
   <label className="block min-w-0"><span className="mb-1 block text-[12.5px] font-medium text-slate-900">{label}</span>{children}{hint && <span className="mt-1 block text-[11.5px] text-slate-500">{hint}</span>}</label>
 );
 
@@ -49,7 +49,7 @@ export function PersonalDetails({ tab }: { tab: PersonalTab }) {
 const BLOOD = ["", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 const RELATION = ["", "Spouse", "Parent", "Sibling", "Child", "Friend", "Other"];
 
-function ContactForm({ p, onSaved }: { p: Profile; onSaved: () => void }) {
+export function ContactForm({ p, onSaved }: { p: Profile; onSaved: () => void }) {
   const fromProfile = () => ({ mobile: p.mobile ?? "", ...p.contact });
   const [f, setF] = useState(fromProfile);
   const [saved, setSaved] = useState(false);
@@ -133,18 +133,5 @@ function Documents() {
     <Panel title="My documents" sub="0 documents" right={<ExportPrint name="my-documents" head={["Document", "File", "Status"]} rows={[]} />}>
       <SimpleTable head={[{ h: "Document" }, { h: "File" }, { h: "Status" }]} empty="No documents on file yet. Uploading will be available once file storage is set up." rows={[]} />
     </Panel>
-  );
-}
-
-export function Payslips() {
-  return (
-    <div data-report>
-      <Tiles items={[{ label: "Net pay", value: "—", sub: NOT_YET }, { label: "Gross", value: "—", sub: NOT_YET }, { label: "Deductions", value: "—", sub: NOT_YET }, { label: "This year", value: "—", sub: NOT_YET }]} />
-      <div className="mt-5">
-        <Panel title="All my payslips" sub="0 months" right={<ExportPrint name="my-payslips" head={["Month", "Net pay", "Status"]} rows={[]} />}>
-          <Empty text="No payslips yet. They appear here once payroll is processed for you." />
-        </Panel>
-      </div>
-    </div>
   );
 }

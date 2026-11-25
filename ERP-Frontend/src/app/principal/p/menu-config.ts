@@ -21,7 +21,7 @@ export const MENU: Record<string, MenuModule> = {
   ] },
   profile: { label: "My Profile", group: "Overview", sections: [
     { key: "personal-details", label: "Personal Details", school: ["profile", "personal-details"], pages: details.pages.map((p) => ({ key: p.key, title: p.title })) },
-    { key: "my-payslips", label: "My Payslips", school: ["mywork", "my-payslips"], pages: [{ key: "payslips", title: "Payslips" }] },
+    { key: "my-payslips", label: "My Payslips", pages: [{ key: "payslips", title: "Payslips" }] },
   ] },
   mywork: { label: "My Work", group: "Overview", sections: [
     { key: "my-leave", label: "My Leave", school: ["mywork", "my-leave"], pages: leave.pages.map((p) => ({ key: p.key, title: p.title })) },

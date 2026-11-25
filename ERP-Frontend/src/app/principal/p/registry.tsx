@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { renderPage as renderSchoolPage } from "../../school/s/registry";
 import { MyRequests, RaiseRequest } from "../../teacher/t/help-pages";
 import { ComingUp, MonthView } from "../../teacher/t/cal-pages";
+import { Payslips } from "../../teacher/t/profile-pages";
 import { AdmissionsTab, AttendanceTab, FeesTab, SchoolStatistics, WithBar } from "./dash-pages";
 import { Approvals, Concerns, Decided } from "./approval-pages";
 import { NotificationSettings, PasswordSettings, ProfileSettings } from "./settings-pages";
@@ -15,6 +16,7 @@ type Go = (tab: string) => void;
 export function renderPage(module: string, section: string, page: MenuPage, go: Go, school?: [string, string]): ReactNode {
   const k = `${module}/${section}/${page.key}`;
   switch (k) {
+    case "profile/my-payslips/payslips": return <Payslips key={k} />;
     case "dashboard/overview/school-statistics": return <SchoolStatistics key={k} />;
     case "dashboard/overview/attendance": return <AttendanceTab key={k} />;
     case "dashboard/overview/fees": return <FeesTab key={k} />;

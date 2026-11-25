@@ -3,6 +3,7 @@ import { AccountsQuickActions } from "./quick";
 import { renderPage as renderSchoolPage } from "../../school/s/registry";
 import { MyRequests, RaiseRequest } from "../../teacher/t/help-pages";
 import { ComingUp, MonthView } from "../../teacher/t/cal-pages";
+import { PayrollApprovalPages, SalaryPaymentPages } from "../../school/s/pay-pages2";
 import { Claims, Payslips } from "../../teacher/t/profile-pages";
 import { ExitClearance, LeadershipLive, Notifications, Overview, SentMessages } from "./dash-pages";
 import { AlertRules, FinalSettlements, Insights, PostApprovals, SalaryBudget } from "./fin-pages";
@@ -31,6 +32,11 @@ export function renderPage(module: string, section: string, page: MenuPage, go: 
     case "dashboard/hiring-budget/post-approvals": return <PostApprovals key={k} />;
     case "dashboard/hiring-budget/salary-budget": return <SalaryBudget key={k} />;
     case "dashboard/hiring-budget/final-settlements": return <FinalSettlements key={k} />;
+    // the School Admin screens, on the Accounts portal own /accounts/pay paths
+    case "dashboard/payroll-approval/finance-approval": return <PayrollApprovalPages key={k} tab="finance-approval" />;
+    case "dashboard/payroll-approval/approval-history": return <PayrollApprovalPages key={k} tab="approval-history" />;
+    case "dashboard/payroll-approval/payment-register": return <SalaryPaymentPages key={k} tab="payment-register" />;
+    case "dashboard/payroll-approval/payment-status": return <SalaryPaymentPages key={k} tab="payment-status" />;
     case "dashboard/help-desk/raise-a-request": return <RaiseRequest key={k} />;
     case "dashboard/help-desk/my-requests": return <MyRequests key={k} go={go} />;
     case "dashboard/school-calendar/month-view": return <MonthView key={k} />;

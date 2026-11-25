@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { AcademicOverview, Alerts, ExamOverview, FeeOverview, RecentActivity } from "./dash-pages2";
-import { PersonalDetails, Payslips } from "./profile-pages";
+import { PersonalDetails } from "./profile-pages";
+import { Payslips } from "../../teacher/t/profile-pages";
 import { AppointmentPages, CallPages, EnquiryPages, PostPages, VisitorPages } from "./fo-pages";
 import { MyLeave } from "./leave-pages";
 import { ComplaintPages, GatePassPages, HelpDeskPages, ReportPages } from "./fo-pages2";

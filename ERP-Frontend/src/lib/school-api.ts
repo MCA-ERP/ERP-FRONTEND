@@ -41,8 +41,18 @@ export interface SetupStatus {
   complete: boolean;
 }
 
-/** The staff self-service screens (help desk, calendar, claims, payslips) are shared by the Teacher, Accounts and Admissions portals: they ask for /teacher/..., and inside the Accounts (or Admissions) portal that means /accounts/... (or /admissions/...) */
-const portalPath = (path: string) => { if (!path.startsWith("/teacher/") || typeof window === "undefined") return path; const here = window.location.pathname; return here.startsWith("/accounts") ? path.replace("/teacher/", "/accounts/") : here.startsWith("/admissions") ? path.replace("/teacher/", "/admissions/") : here.startsWith("/principal") ? path.replace("/teacher/", "/principal/") : path; };
+/** The staff self-service screens (help desk, calendar, claims, payslips) are shared by several portals: they ask for
+ *  /teacher/..., and inside another portal that means that portal's own path. Fee & Finance also draws the School Admin's
+ *  payroll approval and salary payment screens, which become its own /accounts/pay/... paths. */
+const SHARED_PORTALS = ["accounts", "admissions", "principal", "hr"];
+const portalPath = (path: string) => {
+  if (typeof window === "undefined") return path;
+  const portal = window.location.pathname.split("/")[1];
+  if (portal === "accounts" && path.startsWith("/school/pay/")) return path.replace("/school/pay/", "/accounts/pay/");
+  if (!path.startsWith("/teacher/")) return path;
+  if (portal === "school" && path.startsWith("/teacher/payslips")) return path.replace("/teacher/payslips", "/school/me/payslips");
+  return SHARED_PORTALS.includes(portal) ? path.replace("/teacher/", `/${portal}/`) : path;
+};
 
 /** Call any authenticated backend path, e.g. `/school/years` or `/sis/students`. */
 export async function schoolFetch<T>(rawPath: string, init: RequestInit = {}): Promise<T> {

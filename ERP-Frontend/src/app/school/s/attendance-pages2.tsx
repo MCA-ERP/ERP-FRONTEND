@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { json } from "@/lib/admin-api";
 import { schoolFetch } from "@/lib/school-api";
+import { useSchool } from "../context";
 import { Panel, SimpleTable, useAction } from "@/components/admin/dash";
 import { Chip, ColumnChart, Tiles } from "@/components/admin/dash-ui";
 import { ErrorBanner, Modal, btnGhost, btnPrimary, inputCls, useLoad } from "@/components/admin/ui";
@@ -270,6 +271,7 @@ export type LeaveTab = "student-leave" | "staff-leave" | "leave-approval";
 
 export function LeavePages({ tab }: { tab: LeaveTab }) {
   const { data, error, loading, reload } = useLoad(() => schoolFetch<LeaveData>(`${S}/leaves`), []);
+  const isHr = useSchool().user.role === "HR"; // staff leave is decided up the approval chain, not by HR
   const act = useAction(reload);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<Leave | null>(null);
@@ -284,7 +286,7 @@ export function LeavePages({ tab }: { tab: LeaveTab }) {
   const span = (l: Leave) => (l.to_date !== l.from_date ? `${day(l.from_date)} – ${day(l.to_date)}` : day(l.from_date));
   const detail = <Modal open={!!view} title={view ? `${view.ref} · ${view.name}` : ""} onClose={() => setView(null)}>{view && <>
     <dl><Row k="For" v={view.who} /><Row k={view.who === "Student" ? "Class" : "Role"} v={view.detail} /><Row k="Leave type" v={view.leave_type} /><Row k="Dates" v={`${span(view)} · ${view.days} day${view.days === 1 ? "" : "s"}`} /><Row k="Applied" v={day(view.applied_on)} /><Row k="Status" v={view.status} /></dl>
-    <Foot close={() => setView(null)} left={view.status === "Pending" ? <><button type="button" className={quietCls} disabled={act.busy} onClick={() => void decide(view, "Rejected")}>{view.who === "Staff" ? "Send back" : "Reject"}</button><button type="button" className={primaryCls} disabled={act.busy} onClick={() => void decide(view, "Approved")}>Approve</button></> : undefined} /></>}</Modal>;
+    <Foot close={() => setView(null)} left={view.status === "Pending" && !(isHr && view.who === "Staff") ? <><button type="button" className={quietCls} disabled={act.busy} onClick={() => void decide(view, "Rejected")}>{view.who === "Staff" ? "Send back" : "Reject"}</button><button type="button" className={primaryCls} disabled={act.busy} onClick={() => void decide(view, "Approved")}>Approve</button></> : undefined} /></>}</Modal>;
   if (tab === "student-leave") {
     const rows = stu.filter((l) => has(l, search));
     return (
@@ -310,7 +312,7 @@ export function LeavePages({ tab }: { tab: LeaveTab }) {
         <ListPanel title="Leave waiting for approval" noun="requests" search={search} onSearch={setSearch} exportName="staff-leave" head={["Request", "Employee", "Role", "Leave", "Dates", "Days", "Waiting (h)"]} exportRows={rows.map((l) => [l.ref, l.name, l.detail, l.leave_type, span(l), l.days, l.waiting_hours])}
           tableHead={["Request", "Employee", "Leave", "Waiting", "Status", ""]} empty={loading ? "Loading…" : "No staff leave is waiting."}
           rows={rows.map((l) => [l.ref, <div key="e"><p className="font-semibold text-slate-900">{l.name}</p><p className="text-xs text-slate-400">{l.detail}</p></div>, <div key="l"><p className="text-slate-900">{l.leave_type}</p><p className="text-xs text-slate-400">{span(l)} · {l.days} day{l.days === 1 ? "" : "s"}</p></div>, `${l.waiting_hours} h`, <Chip key="s" tone="info">With Principal</Chip>,
-            <span key="a" className="flex gap-1.5"><button type="button" className={primaryCls} disabled={act.busy} onClick={() => void decide(l, "Approved")}>Approve</button><button type="button" className={small} disabled={act.busy} onClick={() => void decide(l, "Rejected")}>Send back</button></span>])} />
+            isHr ? "" : <span key="a" className="flex gap-1.5"><button type="button" className={primaryCls} disabled={act.busy} onClick={() => void decide(l, "Approved")}>Approve</button><button type="button" className={small} disabled={act.busy} onClick={() => void decide(l, "Rejected")}>Send back</button></span>])} />
         {detail}
       </div>
     );

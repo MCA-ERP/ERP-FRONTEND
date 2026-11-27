@@ -1,0 +1,37 @@
+name: Deploy Frontend UAT
+
+on:
+  push:
+    branches: [uat, uat-frontend]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ERP-Frontend
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_API_URL: ${{ secrets.UAT_NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_BACKEND_URL: https://uat-api.myclassassist.in/health
+      NEXT_PUBLIC_ADMIN_DASHBOARD_URL: https://uat-admin.myclassassist.in
+      NEXT_PUBLIC_SCHOOL_DASHBOARD_URL: https://uat-erp.myclassassist.in
+      NEXT_PUBLIC_APP_DOMAIN: myclassassist.in
+      NEXT_PUBLIC_COOKIE_DOMAIN: .myclassassist.in
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ERP-Frontend/package-lock.json
+      - run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
+      # Vercel automatically deploys pushes to the UAT branch via its GitHub integration.

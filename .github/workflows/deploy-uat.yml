@@ -14,9 +14,9 @@ jobs:
       run:
         working-directory: ERP-Frontend
     env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      NEXT_PUBLIC_API_URL: ${{ secrets.UAT_NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.UAT_NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-placeholder' }}
+      NEXT_PUBLIC_API_URL: ${{ secrets.UAT_NEXT_PUBLIC_API_URL || 'https://uat-api.myclassassist.in/api/v1' }}
       NEXT_PUBLIC_BACKEND_URL: https://uat-api.myclassassist.in/health
       NEXT_PUBLIC_ADMIN_DASHBOARD_URL: https://uat-admin.myclassassist.in
       NEXT_PUBLIC_SCHOOL_DASHBOARD_URL: https://uat-erp.myclassassist.in

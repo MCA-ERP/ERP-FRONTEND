@@ -38,7 +38,7 @@ export default function SchoolHubPage() {
       <Link href="/super-admin/schools" className="mb-2 inline-block text-sm font-semibold text-mca-blue">← All schools</Link>
       <PageHeader
         title={s?.name ?? "School"}
-        subtitle={s ? `${s.code}${s.city ? " · " + s.city : ""}${s.board ? " · " + s.board : ""}` : undefined}
+        subtitle={s ? `${s.code}${s.branch ? " · " + s.branch + " branch" : ""}${s.city ? " · " + s.city : ""}${s.board ? " · " + s.board : ""}` : undefined}
         action={s && <div className="flex items-center gap-3"><PlanTag code={s.plan_code} name={s.plan_name} /><StatusPill status={s.status} /></div>}
       />
       <ErrorBanner message={school.error} />

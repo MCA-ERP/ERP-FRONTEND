@@ -114,6 +114,9 @@ export const HR_ROLES = ["HR"];
 /** The Transport Manager has their own Transport portal: vehicles, crew, routes, trips and transport fees. */
 export const TRANSPORT_ROLES = ["TransportManager"];
 
+/** A parent has the Parent portal, which shows only their own children. */
+export const PARENT_ROLES = ["Parent"];
+
 /** Where a signed-in user belongs: platform staff use the admin portal, teachers the Teacher portal, everyone else the school portal. */
 export function homePathFor(user: ServerUser): string {
   const staff = user.role === "SuperAdmin" || (!user.institutionId && (user.permissions ?? []).some((p) => p.startsWith("platform.")));
@@ -121,6 +124,7 @@ export function homePathFor(user: ServerUser): string {
   if (ACCOUNTS_ROLES.includes(user.role)) return "/accounts";
   if (ADMISSIONS_ROLES.includes(user.role)) return "/admissions";
   if (APPLICANT_ROLES.includes(user.role)) return "/applicant";
+  if (PARENT_ROLES.includes(user.role)) return "/parent";
   if (PRINCIPAL_ROLES.includes(user.role)) return "/principal";
   if (HR_ROLES.includes(user.role)) return "/hr";
   if (TRANSPORT_ROLES.includes(user.role)) return "/transport";

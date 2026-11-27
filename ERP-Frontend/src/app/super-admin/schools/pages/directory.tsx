@@ -28,8 +28,8 @@ export function SchoolDirectory({ tab }: { tab: DirectoryTab }) {
   const counts = data?.counts;
 
   const exportCsv = () =>
-    downloadCsv(`schools-${tab}`, ["Code", "School", "Board", "State", "Plan", "Students", "Campuses", "Status", "Renews"],
-      items.map((s) => [s.code, s.name, s.board, s.state, s.plan_name, s.students, s.campuses ?? "", s.status, s.trial_ends_on ?? s.renews_on]));
+    downloadCsv(`schools-${tab}`, ["Code", "School", "Branch", "Board", "State", "Plan", "Students", "Campuses", "Status", "Renews"],
+      items.map((s) => [s.code, s.name, s.branch ?? "", s.board, s.state, s.plan_name, s.students, s.campuses ?? "", s.status, s.trial_ends_on ?? s.renews_on]));
 
   return (
     <div className="space-y-5">
@@ -55,10 +55,11 @@ export function SchoolDirectory({ tab }: { tab: DirectoryTab }) {
           </select>
         </div>
         <SimpleTable
-          head={[{ h: "School" }, { h: "Board" }, { h: "State" }, { h: "Plan" }, { h: "Students", right: true }, { h: "Campuses", right: true }, { h: "Status" }, { h: "Renews" }, { h: "" }]}
+          head={[{ h: "School" }, { h: "Branch" }, { h: "Board" }, { h: "State" }, { h: "Plan" }, { h: "Students", right: true }, { h: "Campuses", right: true }, { h: "Status" }, { h: "Renews" }, { h: "" }]}
           empty={loading ? "Loading…" : "No schools match."}
           rows={items.map((s: SchoolRow) => [
             <div key="s"><p className="font-semibold text-slate-900">{s.name}</p><p className="text-xs text-slate-400">{s.code}{s.city ? ` · ${s.city}` : ""}</p></div>,
+            s.branch || "—",
             s.board ? <Tag key="b">{s.board}</Tag> : "—",
             s.state || "—",
             <PlanTag key="p" code={s.plan_code} name={s.plan_name} />,

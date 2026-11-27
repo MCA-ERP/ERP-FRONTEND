@@ -17,7 +17,7 @@ const DOC_AFF = ["Board affiliation certificate", "Affiliation renewal letter", 
 
 interface Doc { number: string; link: string }
 interface Data {
-  name: string; board: string; type: string; medium: string; classes: string; students: string; udise: string; affiliation: string; established: string; city: string; state: string; email: string; phone: string;
+  name: string; branch: string; board: string; type: string; medium: string; classes: string; students: string; udise: string; affiliation: string; established: string; city: string; state: string; email: string; phone: string;
   docs: Record<string, Doc>;
   campusName: string; campusHead: string; campusAddress: string; campusPin: string;
   plan: string; start: "trial" | "paid";
@@ -25,7 +25,7 @@ interface Data {
   modules: Record<string, boolean>;
 }
 const blank: Data = {
-  name: "", board: "CBSE", type: TYPES[0], medium: "English", classes: CLASSES[2], students: "", udise: "", affiliation: "", established: "", city: "", state: "Telangana", email: "", phone: "",
+  name: "", branch: "", board: "CBSE", type: TYPES[0], medium: "English", classes: CLASSES[2], students: "", udise: "", affiliation: "", established: "", city: "", state: "Telangana", email: "", phone: "",
   docs: {}, campusName: "Main campus", campusHead: "", campusAddress: "", campusPin: "", plan: "", start: "trial", adminName: "", adminEmail: "", adminPhone: "", modules: {},
 };
 
@@ -98,7 +98,7 @@ export function AddSchool() {
     try {
       setBusy("Creating the school…");
       const created = await adminFetch<{ school: { id: string } }>("/schools", json("POST", {
-        name: d.name.trim(), type: d.type, board: d.board, city: d.city.trim(), state: d.state, contact_email: d.email.trim(), contact_phone: d.phone.trim() || null,
+        name: d.name.trim(), branch: d.branch.trim() || null, type: d.type, board: d.board, city: d.city.trim(), state: d.state, contact_email: d.email.trim(), contact_phone: d.phone.trim() || null,
         medium_of_instruction: d.medium, classes_offered: d.classes, student_estimate: students, udise_code: d.udise.trim() || null,
         affiliation_number: d.affiliation.trim() || null, established_year: d.established ? Number(d.established) : null,
         plan_code: plan!.code, status: d.start === "trial" ? "Trial" : "Active",
@@ -191,6 +191,7 @@ export function AddSchool() {
 
           {step === 0 && (<>
             {text("name", "School name", { req: true, full: true, ph: "e.g. Green Valley High School" })}
+            {text("branch", "Branch", { full: true, ph: "e.g. Kukatpally", hint: "Fill this if the school has more than one branch" })}
             {pick("board", "Board", BOARDS)}{pick("type", "School type", TYPES)}{pick("medium", "Medium of instruction", MEDIUMS)}{pick("classes", "Classes offered", CLASSES)}
             {text("students", "Number of students", { type: "number", req: true, ph: "800" })}{text("udise", "UDISE+ code", { ph: "11 digits" })}
             {text("affiliation", "Affiliation number", { ph: "From the board certificate" })}{text("established", "Year established", { type: "number", ph: "2008" })}
@@ -259,7 +260,7 @@ export function AddSchool() {
           {step === 6 && (
             <dl className="grid gap-2 text-sm sm:col-span-2 sm:grid-cols-[160px_1fr]">
               {([
-                ["School", `${d.name} · ${d.board} · ${d.medium} medium`, 0], ["Location", `${d.city}, ${d.state}`, 0], ["Students", students.toLocaleString("en-IN"), 0],
+                ["School", `${d.name} · ${d.board} · ${d.medium} medium`, 0], ["Branch", d.branch.trim() || "—", 0], ["Location", `${d.city}, ${d.state}`, 0], ["Students", students.toLocaleString("en-IN"), 0],
                 ["Documents", `${docRows.filter(({ t }) => hasDoc(t)).length} added`, 1], ["Campus", `${d.campusName} · ${d.campusAddress}`, 2],
                 ["Plan", `${plan?.name ?? ""} · ${d.start === "trial" ? "14-day free trial" : "Paid from today"}`, 3],
                 ["Annual value", plan ? `${money(plan.price_per_student_paise * students)} + GST` : "", 3], ["School admin", `${d.adminName} · ${d.adminEmail}`, 4],

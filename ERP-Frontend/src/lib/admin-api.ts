@@ -15,6 +15,7 @@ export interface SchoolRow {
   name: string;
   type: string | null;
   board: string | null;
+  branch?: string | null;
   city: string | null;
   state: string | null;
   status: SchoolStatus;

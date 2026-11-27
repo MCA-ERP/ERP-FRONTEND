@@ -47,7 +47,8 @@ function TicketTable({ items, withMeta, onOpen }: { items: Ticket[]; withMeta: b
   );
 }
 
-export function RaiseRequest({ example = "One line, for example: Bus late at my stop" }: { example?: string }) {
+export function RaiseRequest({ example = "One line, for example: Bus late at my stop", forChildren }: { example?: string; /** the Parent portal: which child the request is for */ forChildren?: { options: [string, string][]; initial: string } }) {
+  const [kid, setKid] = useState(forChildren?.initial ?? "");
   const cats = useLoad(() => schoolFetch<{ items: { name: string; handled_by: string; reply_hours: number }[] }>("/teacher/help/categories"), []);
   const mine = useLoad(() => schoolFetch<Tickets>("/teacher/help/tickets"), []);
   const blank = { category: "", subject: "", details: "", priority: "Normal", attachment_name: "" };
@@ -60,7 +61,7 @@ export function RaiseRequest({ example = "One line, for example: Bus late at my 
   const cat = list.find((c) => c.name === (f.category || list[0]?.name));
   const submit = async (e: FormEvent) => {
     e.preventDefault(); setDone("");
-    const ok = await act.run(async () => { const r = await schoolFetch<{ code: string }>("/teacher/help/tickets", json("POST", { ...f, category: cat?.name ?? f.category, attachment_name: f.attachment_name || undefined })); setDone(`Request ${r.code} sent.`); });
+    const ok = await act.run(async () => { const r = await schoolFetch<{ code: string }>("/teacher/help/tickets", json("POST", { ...f, category: cat?.name ?? f.category, attachment_name: f.attachment_name || undefined, ...(forChildren ? { student_id: kid } : {}) })); setDone(`Request ${r.code} sent.`); });
     if (ok) { setF(blank); setFileKey((k) => k + 1); }
   };
   return (
@@ -72,11 +73,14 @@ export function RaiseRequest({ example = "One line, for example: Bus late at my 
         <div className="flex items-baseline gap-2 border-b border-slate-100 px-5 py-3.5"><h2 className="text-base text-slate-900">New request</h2><span className="text-xs text-slate-500">Goes straight to the right team</span></div>
         <div className="space-y-4 p-5">
           {act.error && <ErrorBanner message={act.error} />}
-          <Lbl label="What is it about?"><select className={`${inputCls} w-auto min-w-[14rem]`} value={cat?.name ?? ""} onChange={(e) => setF({ ...f, category: e.target.value })}>{list.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}</select></Lbl>
+          <div className="flex flex-wrap gap-4">
+            <Lbl label="What is it about?"><select className={`${inputCls} w-auto min-w-[14rem]`} value={cat?.name ?? ""} onChange={(e) => setF({ ...f, category: e.target.value })}>{list.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}</select></Lbl>
+            {forChildren && <Lbl label="For which child?"><select className={`${inputCls} w-auto min-w-[14rem]`} value={kid} onChange={(e) => setKid(e.target.value)}>{forChildren.options.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></Lbl>}
+          </div>
           <Lbl label="Subject"><input className={inputCls} required minLength={3} maxLength={250} placeholder={example} value={f.subject} onChange={(e) => setF({ ...f, subject: e.target.value })} /></Lbl>
           <Lbl label="Details"><textarea className={`${inputCls} min-h-[5.5rem]`} required minLength={3} maxLength={4000} placeholder="What happened, when, and what you need" value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} /></Lbl>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Lbl label="Priority"><select className={`${inputCls} w-auto min-w-[10rem]`} value={f.priority} onChange={(e) => setF({ ...f, priority: e.target.value })}><option>Normal</option><option>High</option><option>Low</option></select></Lbl>
+            <Lbl label="Priority"><select className={`${inputCls} w-auto min-w-[10rem] ${forChildren ? "!w-[14rem]" : ""}`} value={f.priority} onChange={(e) => setF({ ...f, priority: e.target.value })}><option>Normal</option><option>High</option><option>Low</option></select></Lbl>
             <Lbl label="Attach a photo or file (optional)"><input key={fileKey} type="file" accept=".pdf,.jpg,.jpeg,.png" className="block w-full text-[13px] text-slate-700 file:mr-3 file:rounded-md file:border file:border-slate-300 file:bg-slate-50 file:px-2 file:py-1 file:text-[13px]" onChange={(e) => setF({ ...f, attachment_name: e.target.files?.[0]?.name ?? "" })} /></Lbl>
           </div>
           {cat && <p className="text-[12px] text-slate-600"><b>{cat.handled_by}</b> will reply within <b>{cat.reply_hours} hours</b>. If not, it goes to the School Admin automatically.</p>}

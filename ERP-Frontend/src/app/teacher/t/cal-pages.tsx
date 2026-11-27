@@ -16,7 +16,7 @@ const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart
 const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 
 /** Downloads the dates as a calendar file that opens in the phone's calendar app. */
-function downloadIcs(items: Ev[]) {
+export function downloadIcs(items: (Pick<Ev, "id" | "title" | "event_date" | "end_date" | "kind" | "note">)[]) {
   const esc = (s: string) => s.replace(/[\\;,]/g, (c) => `\\${c}`).replace(/\n/g, "\\n");
   const compact = (s: string) => s.replace(/-/g, "");
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//My Class Assist//School Calendar//EN"];
@@ -34,7 +34,7 @@ function downloadIcs(items: Ev[]) {
 
 const Add = ({ items }: { items: Ev[] }) => <button type="button" disabled={!items.length} className={whiteBtn} onClick={() => downloadIcs(items)}>Add all to my phone calendar</button>;
 
-export function MonthView() {
+export function MonthView({ subtitle = "Holidays, exams, PTMs, events, fee due dates and staff dates in one place. The School Admin keeps it up to date." }: { subtitle?: string } = {}) {
   const [cursor, setCursor] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
   const [on, setOn] = useState<Record<string, boolean>>(() => Object.fromEntries(KINDS.map((k) => [k, true])));
   const gridFrom = addDays(cursor, -((cursor.getDay() + 6) % 7));
@@ -49,7 +49,7 @@ export function MonthView() {
   }, [cursor]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div data-report>
-      <Head title="Month View" subtitle="Holidays, exams, PTMs, events, fee due dates and staff dates in one place. The School Admin keeps it up to date." action={<Add items={data?.items ?? []} />} />
+      <Head title="Month View" subtitle={subtitle} action={<Add items={data?.items ?? []} />} />
       <ErrorBanner message={error} />
       <section className="rounded-2xl border border-slate-200 bg-white p-4">
         <div className="mb-3 flex flex-wrap items-center gap-2">

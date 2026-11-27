@@ -124,11 +124,11 @@ export default function LoginView() {
               <div>
                 <h1 className={styles.title}>Sign in</h1>
               </div>
-              <p className={styles.sub}>Use your email, or your student ID.</p>
+              <p className={styles.sub}>Use your email, your student ID, or a parent&apos;s mobile number.</p>
               {L.feedback && <div role={L.feedbackType === "error" ? "alert" : "status"} className={`${styles.alert} ${L.feedbackType === "error" ? styles.error : styles.success}`}>{L.feedback}</div>}
               <form onSubmit={L.handleLogin} className={styles.form} noValidate>
                 <div className={styles.field}>
-                  <label htmlFor="user-email">Email or student ID</label>
+                  <label htmlFor="user-email">Email, student ID or mobile</label>
                   <input
                     id="user-email" type="text" inputMode="email" autoCapitalize="none" autoComplete="username" required
                     disabled={L.isSubmitting} value={L.email} onChange={(e) => L.setEmail(e.target.value)}

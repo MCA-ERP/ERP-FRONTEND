@@ -57,6 +57,7 @@ export default function SchoolLayout({ children }: { children: ReactNode }) {
         if (!live) return;
         if (me.mustChangePassword) return router.replace("/change-password");
         if (homePathFor(me) !== "/school") return router.replace(homePathFor(me));
+        if (me.role === "Student") throw new Error("There is no student portal yet. Please ask your school.");
 
         const res = await fetch(`${API_BASE}/institution`, { headers: await getAuthHeaders(), cache: "no-store" });
         const body = await res.json().catch(() => ({}));

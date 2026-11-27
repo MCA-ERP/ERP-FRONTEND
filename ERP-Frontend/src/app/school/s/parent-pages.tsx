@@ -267,7 +267,7 @@ export function ParentAccessPages({ tab }: { tab: AccessTab }) {
   const all = data?.items ?? [];
   const base = tab === "create-login" ? all.filter((p) => p.login === "Not installed") : all;
   const rows = base.filter((p) => has({ n: p.name, s: p.students.map((k) => k.name), m: p.mobile }, search));
-  const go = async (p: Parent, action: string, ok: string) => { setMsg(""); if (await act.run(() => schoolFetch(`${PM}/${p.id}/login`, json("PUT", { action })))) setMsg(ok); };
+  const go = async (p: Parent, action: string, ok: string) => { setMsg(""); let made = ""; if (await act.run(async () => { const r = await schoolFetch<{ credential?: { login_id: string; temporary_password: string } }>(`${PM}/${p.id}/login`, json("PUT", { action })); if (r.credential) made = ` Sign in with ${r.credential.login_id} and the temporary password ${r.credential.temporary_password} (shown once; it is changed at first sign-in).`; })) setMsg(ok + made); };
   const title = { "create-login": "Create Login", "reset-password": "Reset Password", "activate-deactivate": "Activate / Deactivate" }[tab];
   return (
     <div data-report>

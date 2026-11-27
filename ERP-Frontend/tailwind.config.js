@@ -57,5 +57,6 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  // size-4, size-[18px] and the like (built into Tailwind from 3.4; this project is on 3.3)
+  plugins: [require('tailwindcss/plugin')(({ matchUtilities, theme }) => matchUtilities({ size: (value) => ({ width: value, height: value }) }, { values: { ...theme('spacing'), full: '100%' } }))],
 };
